@@ -36,12 +36,12 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.star_rate_rounded,
             onTap: () => _launchUrl('https://www.google.com'),
           ),
-          _buildSettingsItem(
-            context: context,
-            title: 'Share App',
-            icon: Icons.share_rounded,
-            onTap: () => _shareApp(context),
-          ),
+          // _buildSettingsItem(
+          //   context: context,
+          //   title: 'Share App',
+          //   icon: Icons.share_rounded,
+          //   onTap: () => _shareApp(context),
+          // ),
           _buildSettingsItem(
             context: context,
             title: 'Send Feedback',
@@ -103,7 +103,7 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '© ${DateTime.now().year} App Name',
+                  '© ${DateTime.now().year} AI Plant Identifier',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                         color: isDarkMode ? Colors.white70 : Colors.black87,
