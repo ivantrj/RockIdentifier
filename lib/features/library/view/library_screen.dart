@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:math';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -53,7 +54,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(child: CircularProgressIndicator()),
+        builder: (context) => const _FunLoadingDialog(),
       );
       try {
         final savedPath = await _saveImageToAppDir(pickedFile.path);
@@ -445,6 +446,99 @@ class _CloseFabButton extends StatelessWidget {
         child: const Padding(
           padding: EdgeInsets.all(12),
           child: Icon(Icons.close, color: Colors.white, size: 28),
+        ),
+      ),
+    );
+  }
+}
+
+class _FunLoadingDialog extends StatefulWidget {
+  const _FunLoadingDialog();
+
+  @override
+  State<_FunLoadingDialog> createState() => _FunLoadingDialogState();
+}
+
+class _FunLoadingDialogState extends State<_FunLoadingDialog> with SingleTickerProviderStateMixin {
+  static const List<String> funTexts = [
+    'Talking to the plants...',
+    'Analyzing leaves...',
+    'Looking for green clues...',
+    'Consulting the garden gnomes...',
+    'Photosynthesizing...',
+    'Sniffing the soil...',
+    'Counting petals...',
+    'Checking for root rot...',
+    'Asking the bees...',
+    'Comparing chlorophyll...',
+  ];
+  late final AnimationController _controller;
+  late final Animation<double> _animation;
+  late String _currentText;
+  late int _textIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _textIndex = Random().nextInt(funTexts.length);
+    _currentText = funTexts[_textIndex];
+    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 1))..repeat(reverse: true);
+    _animation =
+        Tween<double>(begin: 0.85, end: 1.15).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    // Change text every 2 seconds
+    Future.doWhile(() async {
+      await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return false;
+      setState(() {
+        _textIndex = (_textIndex + 1) % funTexts.length;
+        _currentText = funTexts[_textIndex];
+      });
+      return true;
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Dialog(
+      backgroundColor: isDarkMode ? const Color(0xFF23232B) : Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 36),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ScaleTransition(
+              scale: _animation,
+              child: Icon(
+                HugeIcons.strokeRoundedPlant02,
+                color: Colors.green[600],
+                size: 64,
+              ),
+            ),
+            const SizedBox(height: 32),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 400),
+              child: Text(
+                _currentText,
+                key: ValueKey(_currentText),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: isDarkMode ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const CircularProgressIndicator(color: Colors.green, strokeWidth: 3),
+          ],
         ),
       ),
     );
