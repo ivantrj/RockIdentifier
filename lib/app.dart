@@ -5,6 +5,8 @@ import 'package:PlantMate/features/library/view/library_screen.dart';
 import 'core/navigation/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'services/theme_service.dart';
+import 'main.dart' as main;
+import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -23,7 +25,19 @@ class App extends StatelessWidget {
       // Define the initial route or home widget
       // Using onGenerateRoute is more flexible for passing arguments later
       // initialRoute: AppRoutes.appShell, // Start with the shell
-      home: const LibraryScreen(), // Set the new LibraryScreen as the home
+      home: Builder(
+        builder: (context) {
+          // Show paywall if not subscribed
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            if (!main.RevenueCatService.isSubscribed) {
+              await RevenueCatUI.presentPaywallIfNeeded(
+                "pro",
+              );
+            }
+          });
+          return const LibraryScreen();
+        },
+      ),
       onGenerateRoute: AppRouter.generateRoute,
     );
   }

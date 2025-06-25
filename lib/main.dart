@@ -5,6 +5,7 @@ import 'package:PlantMate/services/theme_service.dart';
 import 'app.dart';
 import 'locator.dart'; // Import the locator setup
 import 'package:fimber/fimber.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 Future<void> main() async {
   Fimber.plantTree(DebugTree());
@@ -12,6 +13,9 @@ Future<void> main() async {
 
   // Setup GetIt locator
   await setupLocator(); // Call the setup function
+
+  // Initialize RevenueCat
+  await RevenueCatService.init();
 
   runApp(
     MultiProvider(
@@ -21,4 +25,21 @@ Future<void> main() async {
       child: const App(),
     ),
   );
+}
+
+// RevenueCatService singleton
+class RevenueCatService {
+  static bool _isSubscribed = false;
+  static bool get isSubscribed => _isSubscribed;
+
+  static Future<void> init() async {
+    await Purchases.setLogLevel(LogLevel.debug);
+    await Purchases.configure(PurchasesConfiguration('appl_WIxVHTvDllVjgIKVbNZTWSuTQrU'));
+    try {
+      final purchaserInfo = await Purchases.getCustomerInfo();
+      _isSubscribed = purchaserInfo.entitlements.active.isNotEmpty;
+    } catch (e) {
+      _isSubscribed = false;
+    }
+  }
 }

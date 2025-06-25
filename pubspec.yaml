@@ -24,6 +24,8 @@ dependencies:
   path: ^1.9.1
   rename_app: ^1.6.3
   flutter_launcher_icons: ^0.14.4
+  purchases_flutter: ^8.10.3
+  purchases_ui_flutter: ^8.10.3
 
 dev_dependencies:
   flutter_test:
