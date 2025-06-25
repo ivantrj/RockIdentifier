@@ -654,40 +654,108 @@ class ItemDetailScreen extends StatelessWidget {
 
   Widget _buildGroupedInfoCard(BuildContext context, String label, dynamic value) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: isDarkMode ? AppTheme.darkCardColor : AppTheme.lightCardColor,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.08 : 0.04),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
+    final displayValue = value is List ? value.join(', ') : value.toString();
+    return GestureDetector(
+      onTap: () => _showInfoModal(context, label, displayValue),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: isDarkMode ? AppTheme.darkCardColor : AppTheme.lightCardColor,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(isDarkMode ? 0.08 : 0.04),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              label,
+              style: AppTheme.labelStyle
+                  .copyWith(fontSize: 13, color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.7)),
+            ),
+            const SizedBox(height: 4),
+            Flexible(
+              child: Text(
+                displayValue,
+                style: AppTheme.cardSubtitleStyle.copyWith(
+                    fontSize: 14, color: isDarkMode ? Colors.white : Colors.black, fontWeight: FontWeight.w500),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            label,
-            style: AppTheme.labelStyle
-                .copyWith(fontSize: 13, color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.7)),
-          ),
-          const SizedBox(height: 4),
-          Flexible(
-            child: Text(
-              value is List ? value.join(', ') : value.toString(),
-              style: AppTheme.cardSubtitleStyle
-                  .copyWith(fontSize: 14, color: isDarkMode ? Colors.white : Colors.black, fontWeight: FontWeight.w500),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  void _showInfoModal(BuildContext context, String label, String value) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+        return DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 0.4,
+          minChildSize: 0.2,
+          maxChildSize: 0.85,
+          builder: (context, scrollController) => Container(
+            decoration: BoxDecoration(
+              color: isDarkMode ? AppTheme.darkCardColor : Colors.white,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.12),
+                  blurRadius: 16,
+                  offset: const Offset(0, -2),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+            child: ListView(
+              controller: scrollController,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[400],
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                Text(
+                  label,
+                  style: AppTheme.cardTitleStyle.copyWith(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: isDarkMode ? Colors.white : Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 18),
+                Text(
+                  value,
+                  style: AppTheme.cardSubtitleStyle.copyWith(
+                    fontSize: 16,
+                    color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.9),
+                    height: 1.5,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
