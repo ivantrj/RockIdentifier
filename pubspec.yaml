@@ -1,0 +1,30 @@
+name: template_flutter_mvvm
+description: "A new Flutter project."
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ^3.6.2
+
+dependencies:
+  cupertino_icons: ^1.0.8
+  fimber: ^0.7.0
+  flutter:
+    sdk: flutter
+  get_it: ^8.0.3
+  hugeicons: ^0.0.11
+  iconsax: ^0.0.8
+  lucide_icons: ^0.257.0
+  provider: ^6.1.4
+  shared_preferences: ^2.5.3
+  url_launcher: ^6.2.5
+  image_picker: ^1.0.7
+  path_provider: ^2.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
