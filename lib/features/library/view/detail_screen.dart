@@ -22,83 +22,18 @@ class ItemDetailScreen extends StatelessWidget {
     final toxicity = details['Toxicity'] as Map<String, dynamic>?;
     final wikipediaUrl = details['Wikipedia'] as String?;
 
+    // Collapsing hero image logic
+    final double minHeroHeight = 80;
+    final double maxHeroHeight = 300;
+    final ValueNotifier<double> heroHeight = ValueNotifier(maxHeroHeight);
+
     return Scaffold(
       backgroundColor: isDarkMode ? AppTheme.darkBackgroundColor : AppTheme.lightBackgroundColor,
-      appBar: _buildMinimalAppBar(context, isDarkMode),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Hero image section
-            _buildCleanHeroImage(context),
-            const SizedBox(height: 32),
-
-            // Plant identification card
-            _buildIdentificationCard(context, isDarkMode, wikipediaUrl),
-            const SizedBox(height: 32),
-
-            // Care guide section
-            if (careGuide != null) ...[
-              _buildSectionHeader(context, 'Plant Care', HugeIcons.strokeRoundedPlant02),
-              const SizedBox(height: 16),
-              _buildCareGuideCards(context, careGuide),
-              const SizedBox(height: 32),
-            ],
-
-            // Safety information
-            if (toxicity != null) ...[
-              _buildSectionHeader(context, 'Safety Information', HugeIcons.strokeRoundedPlant02),
-              const SizedBox(height: 16),
-              _buildToxicityCards(context, toxicity),
-              const SizedBox(height: 24),
-            ],
-
-            // Estimated Price (smaller, less intrusive)
-            if (details['Estimated Price'] != null) ...[
-              _buildEstimatedPriceRow(context, details['Estimated Price']),
-              const SizedBox(height: 24),
-            ],
-
-            // Grouped Info Section
-            _buildGroupedInfoSection(context, details),
-
-            const SizedBox(height: 40),
-          ],
-        ),
-      ),
-    );
-  }
-
-  PreferredSizeWidget _buildMinimalAppBar(BuildContext context, bool isDarkMode) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      leading: Container(
-        margin: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
-        decoration: BoxDecoration(
-          color: isDarkMode ? AppTheme.darkCardColor : AppTheme.lightCardColor,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: IconButton(
-          icon: Icon(
-            HugeIcons.strokeRoundedArrowLeft01,
-            size: 20,
-            color: isDarkMode ? Colors.white : Colors.black,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      actions: [
-        Container(
-          margin: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Container(
+          margin: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
           decoration: BoxDecoration(
             color: isDarkMode ? AppTheme.darkCardColor : AppTheme.lightCardColor,
             borderRadius: BorderRadius.circular(16),
@@ -112,14 +47,129 @@ class ItemDetailScreen extends StatelessWidget {
           ),
           child: IconButton(
             icon: Icon(
-              HugeIcons.strokeRoundedDelete02,
+              HugeIcons.strokeRoundedArrowLeft01,
               size: 20,
-              color: Colors.red.shade400,
+              color: isDarkMode ? Colors.white : Colors.black,
             ),
-            onPressed: () => _showDeleteDialog(context),
+            onPressed: () => Navigator.pop(context),
           ),
         ),
-      ],
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              item.result,
+              style: AppTheme.pageTitleStyle.copyWith(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: isDarkMode ? Colors.white : Colors.black,
+                height: 1.2,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            if (item.subtitle.isNotEmpty)
+              Text(
+                item.subtitle,
+                style: AppTheme.cardSubtitleStyle.copyWith(
+                  fontSize: 13,
+                  fontStyle: FontStyle.italic,
+                  color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.7),
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+          ],
+        ),
+        actions: [
+          Container(
+            margin: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
+            decoration: BoxDecoration(
+              color: isDarkMode ? AppTheme.darkCardColor : AppTheme.lightCardColor,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: IconButton(
+              icon: Icon(
+                HugeIcons.strokeRoundedDelete02,
+                size: 20,
+                color: Colors.red.shade400,
+              ),
+              onPressed: () => _showDeleteDialog(context),
+            ),
+          ),
+        ],
+      ),
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (scrollNotification) {
+          if (scrollNotification.metrics.axis == Axis.vertical) {
+            final offset = scrollNotification.metrics.pixels;
+            final newHeight = (maxHeroHeight - offset).clamp(minHeroHeight, maxHeroHeight);
+            heroHeight.value = newHeight;
+          }
+          return false;
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Collapsing Hero image section
+              ValueListenableBuilder<double>(
+                valueListenable: heroHeight,
+                builder: (context, height, child) {
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 120),
+                    curve: Curves.ease,
+                    height: height,
+                    width: double.infinity,
+                    child: _buildCleanHeroImage(context),
+                  );
+                },
+              ),
+              const SizedBox(height: 32),
+
+              // Plant identification card
+              _buildIdentificationCard(context, isDarkMode, wikipediaUrl),
+              const SizedBox(height: 32),
+
+              // Care guide section
+              if (careGuide != null) ...[
+                _buildSectionHeader(context, 'Plant Care', HugeIcons.strokeRoundedPlant02),
+                const SizedBox(height: 16),
+                _buildCareGuideCards(context, careGuide),
+                const SizedBox(height: 32),
+              ],
+
+              // Safety information
+              if (toxicity != null) ...[
+                _buildSectionHeader(context, 'Safety Information', HugeIcons.strokeRoundedPlant02),
+                const SizedBox(height: 16),
+                _buildToxicityCards(context, toxicity),
+                const SizedBox(height: 24),
+              ],
+
+              // Estimated Price (smaller, less intrusive)
+              if (details['Estimated Price'] != null) ...[
+                _buildEstimatedPriceRow(context, details['Estimated Price']),
+                const SizedBox(height: 24),
+              ],
+
+              // Grouped Info Section
+              _buildGroupedInfoSection(context, details),
+
+              const SizedBox(height: 40),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
