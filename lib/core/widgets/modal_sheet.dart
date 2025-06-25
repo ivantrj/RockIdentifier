@@ -1,6 +1,6 @@
 // lib/core/widgets/modal_sheet.dart
 import 'package:flutter/material.dart';
-import 'package:template_flutter_mvvm/core/widgets/primary_button.dart';
+import 'package:ai_plant_identifier/core/widgets/primary_button.dart';
 
 /// Shows a modal bottom sheet that matches the design in the image
 Future<T?> showAppModalSheet<T>({
@@ -12,7 +12,7 @@ Future<T?> showAppModalSheet<T>({
 }) {
   final brightness = MediaQuery.of(context).platformBrightness;
   final isDark = brightness == Brightness.dark;
-  
+
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: true,
@@ -33,7 +33,7 @@ Future<T?> showAppModalSheet<T>({
 Future<void> showChangePasswordSheet(BuildContext context) {
   final brightness = MediaQuery.of(context).platformBrightness;
   final isDark = brightness == Brightness.dark;
-  
+
   return showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -114,8 +114,7 @@ Future<void> showChangePasswordSheet(BuildContext context) {
               child: ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      const Color(0xFF6C3CE9), // Purple color from image
+                  backgroundColor: const Color(0xFF6C3CE9), // Purple color from image
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

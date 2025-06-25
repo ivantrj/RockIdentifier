@@ -1,6 +1,6 @@
 // lib/widgets/containers/app_card.dart
 import 'package:flutter/material.dart';
-import 'package:template_flutter_mvvm/core/theme/app_theme.dart';
+import 'package:ai_plant_identifier/core/theme/app_theme.dart';
 
 class AppCard extends StatelessWidget {
   final Widget child;
@@ -39,10 +39,10 @@ class AppCard extends StatelessWidget {
 
     // Determine if we should show a header
     final bool hasHeader = headerTitle != null;
-    
+
     // Use consistent margin regardless of theme
     final EdgeInsetsGeometry cardMargin = margin ?? AppTheme.cardMargin;
-    
+
     return Container(
       margin: cardMargin,
       decoration: BoxDecoration(

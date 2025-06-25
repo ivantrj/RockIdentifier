@@ -1,7 +1,7 @@
 // lib/core/navigation/app_router.dart
 import 'package:flutter/material.dart';
-import 'package:template_flutter_mvvm/features/library/view/library_screen.dart';
-import 'package:template_flutter_mvvm/features/settings/view/settings_screen.dart';
+import 'package:ai_plant_identifier/features/library/view/library_screen.dart';
+import 'package:ai_plant_identifier/features/settings/view/settings_screen.dart';
 import '../constants/app_constants.dart';
 // Import other screens as needed
 
@@ -17,8 +17,7 @@ class AppRouter {
         // Example of navigating to the settings screen directly (perhaps from somewhere else)
         // Normally, SettingsScreen will be displayed *within* the AppShellScreen.
         // This route might be useful if you want to push it modally or without the bottom bar.
-        return MaterialPageRoute(
-            builder: (_) => const SettingsScreen()); // Placeholder
+        return MaterialPageRoute(builder: (_) => const SettingsScreen()); // Placeholder
 
       // Add cases for other routes here
       // case AppRoutes.profile:

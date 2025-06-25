@@ -1,6 +1,6 @@
 // lib/core/widgets/category_card.dart
 import 'package:flutter/material.dart';
-import 'package:template_flutter_mvvm/core/theme/app_theme.dart';
+import 'package:ai_plant_identifier/core/theme/app_theme.dart';
 
 class CategoryCard extends StatelessWidget {
   final String title;
@@ -19,22 +19,22 @@ class CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
+
     // Adjust background color opacity for dark mode
     final adjustedBackgroundColor = isDarkMode
         ? backgroundColor.withValues(alpha: 0.3) // More subtle in dark mode
         : backgroundColor;
-    
+
     // Icon container colors
     final iconContainerColor = isDarkMode
         ? Colors.white.withValues(alpha: 0.15) // Subtle container in dark mode
         : Colors.white.withValues(alpha: 0.8);
-    
+
     // Icon color
     final iconColor = isDarkMode
         ? Colors.white.withValues(alpha: 0.9) // Bright icon in dark mode
         : const Color(0xFF4A6572); // Original color in light mode
-    
+
     return GestureDetector(
       onTap: onTap,
       child: Container(

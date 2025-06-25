@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:template_flutter_mvvm/data/models/identified_item.dart';
+import 'package:ai_plant_identifier/data/models/identified_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 

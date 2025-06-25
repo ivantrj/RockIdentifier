@@ -1,4 +1,4 @@
-name: template_flutter_mvvm
+name: ai_plant_identifier
 description: "A new Flutter project."
 publish_to: "none"
 version: 0.1.0
@@ -22,6 +22,7 @@ dependencies:
   path_provider: ^2.1.2
   http: ^1.4.0
   path: ^1.9.1
+  rename_app: ^1.6.3
 
 dev_dependencies:
   flutter_test:

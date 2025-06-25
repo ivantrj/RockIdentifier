@@ -3,16 +3,15 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:template_flutter_mvvm/data/models/identified_item.dart';
-import 'package:template_flutter_mvvm/core/theme/app_theme.dart';
+import 'package:ai_plant_identifier/data/models/identified_item.dart';
+import 'package:ai_plant_identifier/core/theme/app_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ItemDetailScreen extends StatelessWidget {
   final IdentifiedItem item;
   final VoidCallback onDelete;
 
-  const ItemDetailScreen(
-      {required this.item, required this.onDelete, super.key});
+  const ItemDetailScreen({required this.item, required this.onDelete, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,17 +42,14 @@ class ItemDetailScreen extends StatelessWidget {
                 _buildPlantInfoCard(context, isDarkMode, wikipediaUrl),
                 const SizedBox(height: 20),
                 // Care guide section
-                if (careGuide != null)
-                  _buildCareGuideSection(context, careGuide),
+                if (careGuide != null) _buildCareGuideSection(context, careGuide),
                 // Toxicity section
                 if (toxicity != null) _buildToxicitySection(context, toxicity),
                 const SizedBox(height: 16),
                 // Other details with improved cards
                 ...details.entries
-                    .where((e) => !['Care Guide', 'Toxicity', 'Wikipedia']
-                        .contains(e.key))
-                    .map((entry) =>
-                        _buildDetailCard(context, entry.key, entry.value)),
+                    .where((e) => !['Care Guide', 'Toxicity', 'Wikipedia'].contains(e.key))
+                    .map((entry) => _buildDetailCard(context, entry.key, entry.value)),
                 const SizedBox(height: 40),
               ],
             ),
@@ -70,14 +66,10 @@ class ItemDetailScreen extends StatelessWidget {
       leading: Container(
         margin: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
         decoration: BoxDecoration(
-          color: isDarkMode
-              ? Colors.black.withOpacity(0.3)
-              : Colors.white.withOpacity(0.3),
+          color: isDarkMode ? Colors.black.withOpacity(0.3) : Colors.white.withOpacity(0.3),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: isDarkMode
-                ? Colors.white.withOpacity(0.1)
-                : Colors.black.withOpacity(0.1),
+            color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.1),
             width: 0.5,
           ),
         ),
@@ -96,14 +88,10 @@ class ItemDetailScreen extends StatelessWidget {
         Container(
           margin: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
           decoration: BoxDecoration(
-            color: isDarkMode
-                ? Colors.black.withOpacity(0.3)
-                : Colors.white.withOpacity(0.3),
+            color: isDarkMode ? Colors.black.withOpacity(0.3) : Colors.white.withOpacity(0.3),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: isDarkMode
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.black.withOpacity(0.1),
+              color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.1),
               width: 0.5,
             ),
           ),
@@ -211,8 +199,7 @@ class ItemDetailScreen extends StatelessWidget {
                   : Container(
                       color: Colors.grey[300],
                       child: const Center(
-                        child: Icon(CupertinoIcons.photo,
-                            size: 48, color: Colors.white70),
+                        child: Icon(CupertinoIcons.photo, size: 48, color: Colors.white70),
                       ),
                     ),
               // Subtle overlay for better text readability
@@ -237,16 +224,13 @@ class ItemDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPlantInfoCard(
-      BuildContext context, bool isDarkMode, String? wikipediaUrl) {
+  Widget _buildPlantInfoCard(BuildContext context, bool isDarkMode, String? wikipediaUrl) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: isDarkMode
-                ? Colors.black.withOpacity(0.3)
-                : Colors.black.withOpacity(0.1),
+            color: isDarkMode ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 10),
             spreadRadius: -5,
@@ -259,14 +243,10 @@ class ItemDetailScreen extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
           child: Container(
             decoration: BoxDecoration(
-              color: isDarkMode
-                  ? AppTheme.darkCardColor.withOpacity(0.8)
-                  : AppTheme.lightCardColor.withOpacity(0.9),
+              color: isDarkMode ? AppTheme.darkCardColor.withOpacity(0.8) : AppTheme.lightCardColor.withOpacity(0.9),
               borderRadius: BorderRadius.circular(28),
               border: Border.all(
-                color: isDarkMode
-                    ? Colors.white.withOpacity(0.1)
-                    : Colors.black.withOpacity(0.05),
+                color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
                 width: 1,
               ),
             ),
@@ -284,10 +264,7 @@ class ItemDetailScreen extends StatelessWidget {
                             item.result,
                             style: AppTheme.pageTitleStyle.copyWith(
                               fontSize: 24,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .headlineLarge
-                                  ?.color,
+                              color: Theme.of(context).textTheme.headlineLarge?.color,
                             ),
                           ),
                           if (item.subtitle.isNotEmpty) ...[
@@ -296,10 +273,7 @@ class ItemDetailScreen extends StatelessWidget {
                               item.subtitle,
                               style: AppTheme.cardSubtitleStyle.copyWith(
                                 fontStyle: FontStyle.italic,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall
-                                    ?.color,
+                                color: Theme.of(context).textTheme.titleSmall?.color,
                               ),
                             ),
                           ],
@@ -308,8 +282,7 @@ class ItemDetailScreen extends StatelessWidget {
                     ),
                     // Confidence badge
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
@@ -351,8 +324,7 @@ class ItemDetailScreen extends StatelessWidget {
                     onTap: () => _launchUrl(wikipediaUrl),
                     borderRadius: BorderRadius.circular(16),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
                         color: AppTheme.primaryColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(16),
@@ -411,8 +383,7 @@ class ItemDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCareGuideSection(
-      BuildContext context, Map<String, dynamic> careGuide) {
+  Widget _buildCareGuideSection(BuildContext context, Map<String, dynamic> careGuide) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -424,10 +395,7 @@ class ItemDetailScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      AppTheme.accentColor,
-                      AppTheme.accentColor.withOpacity(0.7)
-                    ],
+                    colors: [AppTheme.accentColor, AppTheme.accentColor.withOpacity(0.7)],
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -451,8 +419,7 @@ class ItemDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildToxicitySection(
-      BuildContext context, Map<String, dynamic> toxicity) {
+  Widget _buildToxicitySection(BuildContext context, Map<String, dynamic> toxicity) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -495,9 +462,7 @@ class ItemDetailScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: isDarkMode
-                ? Colors.black.withOpacity(0.2)
-                : Colors.black.withOpacity(0.08),
+            color: isDarkMode ? Colors.black.withOpacity(0.2) : Colors.black.withOpacity(0.08),
             blurRadius: 15,
             offset: const Offset(0, 8),
             spreadRadius: -5,
@@ -510,14 +475,10 @@ class ItemDetailScreen extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
           child: Container(
             decoration: BoxDecoration(
-              color: isDarkMode
-                  ? AppTheme.darkCardColor.withOpacity(0.7)
-                  : AppTheme.lightCardColor.withOpacity(0.8),
+              color: isDarkMode ? AppTheme.darkCardColor.withOpacity(0.7) : AppTheme.lightCardColor.withOpacity(0.8),
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: isDarkMode
-                    ? Colors.white.withOpacity(0.08)
-                    : Colors.black.withOpacity(0.04),
+                color: isDarkMode ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.04),
                 width: 1,
               ),
             ),
@@ -564,10 +525,7 @@ class ItemDetailScreen extends StatelessWidget {
                               height: 6,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
-                                  colors: [
-                                    AppTheme.primaryColor,
-                                    AppTheme.secondaryColor
-                                  ],
+                                  colors: [AppTheme.primaryColor, AppTheme.secondaryColor],
                                 ),
                                 shape: BoxShape.circle,
                               ),
@@ -577,10 +535,7 @@ class ItemDetailScreen extends StatelessWidget {
                               child: Text(
                                 e.toString(),
                                 style: AppTheme.cardSubtitleStyle.copyWith(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.color,
+                                  color: Theme.of(context).textTheme.bodyMedium?.color,
                                   height: 1.5,
                                 ),
                               ),
@@ -609,8 +564,7 @@ class ItemDetailScreen extends StatelessWidget {
       context: context,
       builder: (context) => CupertinoAlertDialog(
         title: const Text('Delete Item'),
-        content: const Text(
-            'Are you sure you want to delete this item? This action cannot be undone.'),
+        content: const Text('Are you sure you want to delete this item? This action cannot be undone.'),
         actions: [
           CupertinoDialogAction(
             isDefaultAction: true,
@@ -640,8 +594,7 @@ class ItemDetailScreen extends StatelessWidget {
 
   IconData _getIconForTitle(String title) {
     final titleLower = title.toLowerCase();
-    if (titleLower.contains('characteristic'))
-      return CupertinoIcons.leaf_arrow_circlepath;
+    if (titleLower.contains('characteristic')) return CupertinoIcons.leaf_arrow_circlepath;
     if (titleLower.contains('habitat')) return CupertinoIcons.map;
     if (titleLower.contains('size')) return CupertinoIcons.resize;
     if (titleLower.contains('family')) return CupertinoIcons.tree;
@@ -658,20 +611,13 @@ class _CareGuideGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final items = <_CareItem>[];
 
-    if (careGuide['light'] != null)
-      items.add(_CareItem('☀️', 'Light', careGuide['light']));
-    if (careGuide['water'] != null)
-      items.add(_CareItem('💧', 'Water', careGuide['water']));
-    if (careGuide['soil'] != null)
-      items.add(_CareItem('🌱', 'Soil', careGuide['soil']));
-    if (careGuide['temperature'] != null)
-      items.add(_CareItem('🌡️', 'Temperature', careGuide['temperature']));
-    if (careGuide['humidity'] != null)
-      items.add(_CareItem('💦', 'Humidity', careGuide['humidity']));
-    if (careGuide['fertilizer'] != null)
-      items.add(_CareItem('🧪', 'Fertilizer', careGuide['fertilizer']));
-    if (careGuide['pruning'] != null)
-      items.add(_CareItem('✂️', 'Pruning', careGuide['pruning']));
+    if (careGuide['light'] != null) items.add(_CareItem('☀️', 'Light', careGuide['light']));
+    if (careGuide['water'] != null) items.add(_CareItem('💧', 'Water', careGuide['water']));
+    if (careGuide['soil'] != null) items.add(_CareItem('🌱', 'Soil', careGuide['soil']));
+    if (careGuide['temperature'] != null) items.add(_CareItem('🌡️', 'Temperature', careGuide['temperature']));
+    if (careGuide['humidity'] != null) items.add(_CareItem('💦', 'Humidity', careGuide['humidity']));
+    if (careGuide['fertilizer'] != null) items.add(_CareItem('🧪', 'Fertilizer', careGuide['fertilizer']));
+    if (careGuide['pruning'] != null) items.add(_CareItem('✂️', 'Pruning', careGuide['pruning']));
 
     return GridView.builder(
       shrinkWrap: true,
@@ -703,9 +649,7 @@ class _CareItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: isDarkMode
-                ? Colors.black.withOpacity(0.2)
-                : Colors.black.withOpacity(0.06),
+            color: isDarkMode ? Colors.black.withOpacity(0.2) : Colors.black.withOpacity(0.06),
             blurRadius: 10,
             offset: const Offset(0, 5),
             spreadRadius: -2,
@@ -718,14 +662,10 @@ class _CareItem extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
           child: Container(
             decoration: BoxDecoration(
-              color: isDarkMode
-                  ? AppTheme.darkCardColor.withOpacity(0.7)
-                  : AppTheme.lightCardColor.withOpacity(0.9),
+              color: isDarkMode ? AppTheme.darkCardColor.withOpacity(0.7) : AppTheme.lightCardColor.withOpacity(0.9),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: isDarkMode
-                    ? Colors.white.withOpacity(0.1)
-                    : Colors.black.withOpacity(0.05),
+                color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
                 width: 1,
               ),
             ),
@@ -854,9 +794,7 @@ class _ToxicityItem extends StatelessWidget {
           filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
           child: Container(
             decoration: BoxDecoration(
-              color: isDarkMode
-                  ? AppTheme.darkCardColor.withOpacity(0.7)
-                  : AppTheme.lightCardColor.withOpacity(0.9),
+              color: isDarkMode ? AppTheme.darkCardColor.withOpacity(0.7) : AppTheme.lightCardColor.withOpacity(0.9),
               borderRadius: BorderRadius.circular(18),
               border: Border.all(
                 color: statusColor.withOpacity(0.2),

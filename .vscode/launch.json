@@ -5,19 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "template_flutter_mvvm",
+            "name": "ai_plant_identifier",
             "request": "launch",
             "type": "dart",
             "flutterMode": "debug"
         },
         {
-            "name": "template_flutter_mvvm (profile mode)",
+            "name": "ai_plant_identifier (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "template_flutter_mvvm (release mode)",
+            "name": "ai_plant_identifier (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

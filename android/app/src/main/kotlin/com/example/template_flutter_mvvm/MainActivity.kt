@@ -1,4 +1,4 @@
-package com.example.template_flutter_mvvm
+package com.example.ai_plant_identifier
 
 import io.flutter.embedding.android.FlutterActivity
 

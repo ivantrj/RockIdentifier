@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:template_flutter_mvvm/core/theme/app_theme.dart';
-import 'package:template_flutter_mvvm/core/widgets/section_header.dart';
+import 'package:ai_plant_identifier/core/theme/app_theme.dart';
+import 'package:ai_plant_identifier/core/widgets/section_header.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
 
 class SettingsScreen extends StatelessWidget {
@@ -91,11 +91,9 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-
-
   Widget _buildAppInfo(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -103,8 +101,8 @@ class SettingsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isDarkMode 
-                  ? Colors.white.withValues(alpha: AppTheme.surfaceOverlayOpacity / 2) 
+              color: isDarkMode
+                  ? Colors.white.withValues(alpha: AppTheme.surfaceOverlayOpacity / 2)
                   : Colors.black.withValues(alpha: AppTheme.surfaceOverlayOpacity / 3),
               borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
             ),
@@ -157,7 +155,7 @@ class SettingsScreen extends StatelessWidget {
     VoidCallback? onTap,
   }) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
       elevation: AppTheme.cardElevation,
