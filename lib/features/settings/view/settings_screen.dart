@@ -46,7 +46,7 @@ class SettingsScreen extends StatelessWidget {
             context: context,
             title: 'Send Feedback',
             icon: Icons.feedback_rounded,
-            onTap: () => _launchUrl('mailto:support@example.com?subject=App Feedback'),
+            onTap: () => _launchUrl('mailto:hello.ivantrj@gmail.com?subject=App Feedback'),
           ),
 
           // Support Section
@@ -58,19 +58,13 @@ class SettingsScreen extends StatelessWidget {
             context: context,
             title: 'Privacy Policy',
             icon: Icons.privacy_tip_rounded,
-            onTap: () => _launchUrl('https://example.com/privacy'),
+            onTap: () => _launchUrl('https://www.ivantrj.com/app-privacy-policy'),
           ),
           _buildSettingsItem(
             context: context,
             title: 'Terms of Service',
             icon: Icons.description_rounded,
-            onTap: () => _launchUrl('https://example.com/terms'),
-          ),
-          _buildSettingsItem(
-            context: context,
-            title: 'Help & Support',
-            icon: Icons.help_center_rounded,
-            onTap: () => _launchUrl('https://example.com/support'),
+            onTap: () => _launchUrl('https://www.apple.com/legal/internet-services/itunes/dev/stdeula/'),
           ),
 
           // About Section
