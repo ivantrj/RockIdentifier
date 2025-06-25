@@ -1,4 +1,4 @@
-package com.example.ai_plant_identifier
+package com.example.PlantMate
 
 import io.flutter.embedding.android.FlutterActivity
 

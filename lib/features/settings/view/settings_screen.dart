@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:ai_plant_identifier/core/theme/app_theme.dart';
-import 'package:ai_plant_identifier/core/widgets/section_header.dart';
+import 'package:PlantMate/core/theme/app_theme.dart';
+import 'package:PlantMate/core/widgets/section_header.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
 
 class SettingsScreen extends StatelessWidget {

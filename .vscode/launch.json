@@ -5,19 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "ai_plant_identifier",
+            "name": "PlantMate",
             "request": "launch",
             "type": "dart",
             "flutterMode": "debug"
         },
         {
-            "name": "ai_plant_identifier (profile mode)",
+            "name": "PlantMate (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "ai_plant_identifier (release mode)",
+            "name": "PlantMate (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

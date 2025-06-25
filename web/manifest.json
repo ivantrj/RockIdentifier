@@ -1,6 +1,6 @@
 {
-     "name": "ai_plant_identifier",
-     "short_name": "ai_plant_identifier",
+     "name": "PlantMate",
+     "short_name": "PlantMate",
      "start_url": ".",
      "display": "standalone",
      "background_color": "#0175C2",

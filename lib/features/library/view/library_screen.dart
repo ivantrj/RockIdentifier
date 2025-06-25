@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
-import 'package:ai_plant_identifier/features/library/view/detail_screen.dart';
+import 'package:PlantMate/features/library/view/detail_screen.dart';
 import '../viewmodel/library_viewmodel.dart';
-import 'package:ai_plant_identifier/data/models/identified_item.dart';
+import 'package:PlantMate/data/models/identified_item.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:ui';

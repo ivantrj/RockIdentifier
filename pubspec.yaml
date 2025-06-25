@@ -1,4 +1,4 @@
-name: ai_plant_identifier
+name: PlantMate
 description: "A new Flutter project."
 publish_to: "none"
 version: 0.1.0
@@ -23,6 +23,7 @@ dependencies:
   http: ^1.4.0
   path: ^1.9.1
   rename_app: ^1.6.3
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:
@@ -31,3 +32,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"
+  min_sdk_android: 21

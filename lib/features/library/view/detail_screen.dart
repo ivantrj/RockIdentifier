@@ -3,8 +3,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:ai_plant_identifier/data/models/identified_item.dart';
-import 'package:ai_plant_identifier/core/theme/app_theme.dart';
+import 'package:PlantMate/data/models/identified_item.dart';
+import 'package:PlantMate/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 

@@ -1,7 +1,7 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ai_plant_identifier/services/theme_service.dart';
+import 'package:PlantMate/services/theme_service.dart';
 import 'app.dart';
 import 'locator.dart'; // Import the locator setup
 import 'package:fimber/fimber.dart';
