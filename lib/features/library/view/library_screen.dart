@@ -17,6 +17,7 @@ import '../../../main.dart' as main;
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:PlantMate/app.dart' as app;
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -220,14 +221,23 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                   tooltip: isSubscribed ? 'Thank you for subscribing!' : 'Unlock Premium',
                   onPressed: () async {
                     if (!isSubscribed) {
+                      if (!app.App.paywallOpen) {
+                        app.App.paywallOpen = true;
+                        await showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => const PaywallScreen(),
+                        );
+                        app.App.paywallOpen = false;
+                      }
+                    } else {
                       showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
                         backgroundColor: Colors.transparent,
                         builder: (context) => _PremiumThankYouModal(),
                       );
-                    } else {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PaywallScreen()));
                     }
                   },
                 ),

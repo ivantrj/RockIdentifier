@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 class PaywallScreen extends StatefulWidget {
@@ -82,7 +83,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           child: Column(
                             children: [
                               const SizedBox(height: 24),
-                              Icon(Icons.park_rounded, color: green, size: 64),
+                              Icon(HugeIcons.strokeRoundedPlant01, color: green, size: 88),
                               const SizedBox(height: 18),
                               const Text('Unlimited Access',
                                   style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
