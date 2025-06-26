@@ -17,7 +17,7 @@ class App extends StatelessWidget {
     final themeService = context.watch<ThemeService>();
 
     return MaterialApp(
-      title: 'Flutter MVVM Template', // Your app's title
+      title: 'PlantMate', // Your app's title
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
