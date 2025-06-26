@@ -226,17 +226,29 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                         await showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) => const PaywallScreen(),
+                          backgroundColor: Colors.white,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                          ),
+                          builder: (context) => FractionallySizedBox(
+                            heightFactor: 0.95, // % of the screen height, adjust as needed
+                            child: PaywallScreen(),
+                          ),
                         );
                         app.App.paywallOpen = false;
                       }
                     } else {
-                      showModalBottomSheet(
+                      await showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        builder: (context) => _PremiumThankYouModal(),
+                        backgroundColor: Colors.white,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                        ),
+                        builder: (context) => FractionallySizedBox(
+                          heightFactor: 0.95, // % of the screen height, adjust as needed
+                          child: PaywallScreen(),
+                        ),
                       );
                     }
                   },
