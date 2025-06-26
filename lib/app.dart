@@ -1,4 +1,5 @@
 // lib/app.dart
+import 'package:PlantMate/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:PlantMate/features/library/view/library_screen.dart';
@@ -6,7 +7,6 @@ import 'core/navigation/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'services/theme_service.dart';
 import 'main.dart' as main;
-import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -30,8 +30,10 @@ class App extends StatelessWidget {
           // Show paywall if not subscribed
           WidgetsBinding.instance.addPostFrameCallback((_) async {
             if (!main.RevenueCatService.isSubscribed) {
-              await RevenueCatUI.presentPaywallIfNeeded(
-                "pro",
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const PaywallScreen(),
+                ),
               );
             }
           });

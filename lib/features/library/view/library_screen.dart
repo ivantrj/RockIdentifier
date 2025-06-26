@@ -1,3 +1,4 @@
+import 'package:PlantMate/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
@@ -218,7 +219,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                   ),
                   tooltip: isSubscribed ? 'Thank you for subscribing!' : 'Unlock Premium',
                   onPressed: () async {
-                    if (isSubscribed) {
+                    if (!isSubscribed) {
                       showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
@@ -226,7 +227,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                         builder: (context) => _PremiumThankYouModal(),
                       );
                     } else {
-                      await RevenueCatUI.presentPaywall();
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PaywallScreen()));
                     }
                   },
                 ),
