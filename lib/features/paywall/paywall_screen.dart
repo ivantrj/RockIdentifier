@@ -236,7 +236,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
   Widget _buildPackages(ThemeData theme, Color green, Color lightGreen) {
     final packages = _offerings!.current!.availablePackages;
-    // Improved yearly and trial/weekly detection
     final yearlyList = packages.where(
       (p) => p.identifier.toLowerCase().contains('annual') || p.storeProduct.title.toLowerCase().contains('annual'),
     );
@@ -259,6 +258,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
             badge: 'SAVE 80%',
             badgeColor: Colors.red,
             onTap: () => setState(() => _selectedPackage = yearly),
+            customTitle: 'Yearly Pro',
+            customSubtitle: '${yearly.storeProduct.priceString} per year',
           ),
         if (trialWeekly != null)
           _packageTile(
@@ -269,6 +270,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
             badge: 'FREE',
             badgeColor: green,
             onTap: () => setState(() => _selectedPackage = trialWeekly),
+            customTitle: '3-Day Trial',
+            customSubtitle: 'then ${trialWeekly.storeProduct.priceString} per week',
           ),
       ],
     );
@@ -282,15 +285,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
     required String badge,
     required Color badgeColor,
     required VoidCallback onTap,
+    String? customTitle,
+    String? customSubtitle,
   }) {
-    final price = pkg.storeProduct.priceString;
-    final intro = pkg.storeProduct.introductoryPrice;
-    String subtitle = '';
-    if (intro != null && intro.periodNumberOfUnits > 0) {
-      subtitle = 'then $price';
-    } else if (pkg.storeProduct.description.isNotEmpty) {
-      subtitle = pkg.storeProduct.description;
-    }
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -316,36 +313,33 @@ class _PaywallScreenState extends State<PaywallScreen> {
                   Row(
                     children: [
                       Text(
-                        pkg.storeProduct.title,
+                        customTitle ?? pkg.storeProduct.title,
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                       ),
                       const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: badgeColor.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          badge,
-                          style: TextStyle(
-                            color: badgeColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
+                      if (badge.isNotEmpty)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: badgeColor.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            badge,
+                            style: TextStyle(
+                              color: badgeColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    price + (intro != null && intro.periodNumberOfUnits > 0 ? ' (Free Trial)' : ''),
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  if (subtitle.isNotEmpty)
+                  if ((customSubtitle ?? '').isNotEmpty)
                     Text(
-                      subtitle,
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      customSubtitle!,
+                      style: const TextStyle(fontSize: 15, color: Colors.black),
                     ),
                 ],
               ),
