@@ -30,7 +30,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
     });
     try {
       final offerings = await Purchases.getOfferings();
-      if (offerings.current != null && offerings.current!.availablePackages.isNotEmpty) {
+      if (offerings.current != null &&
+          offerings.current!.availablePackages.isNotEmpty) {
         setState(() {
           _offerings = offerings;
           _selectedPackage = offerings.current!.availablePackages.first;
@@ -74,7 +75,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
         child: _loading
             ? const Center(child: CircularProgressIndicator())
             : _error != null
-                ? Center(child: Text(_error!, style: const TextStyle(color: Colors.red)))
+                ? Center(
+                    child: Text(_error!,
+                        style: const TextStyle(color: Colors.red)))
                 : Stack(
                     children: [
                       Padding(
@@ -83,19 +86,27 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           child: Column(
                             children: [
                               const SizedBox(height: 24),
-                              Icon(HugeIcons.strokeRoundedPlant01, color: green, size: 88),
+                              Icon(HugeIcons.strokeRoundedPlant01,
+                                  color: green, size: 88),
                               const SizedBox(height: 18),
                               const Text('Unlimited Access',
-                                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+                                  style: TextStyle(
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.bold)),
                               const SizedBox(height: 18),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 32),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 32),
                                 child: Column(
                                   children: [
-                                    _featureRow(Icons.qr_code_scanner_rounded, 'Scan unlimited trees & wood', green),
-                                    _featureRow(Icons.search_rounded, 'Get unlimited identifications', green),
-                                    _featureRow(Icons.menu_book_rounded, 'Explore detailed wood & tree info', green),
-                                    _featureRow(Icons.lock_open_rounded, 'Remove annoying paywalls', green),
+                                    _featureRow(Icons.qr_code_scanner_rounded,
+                                        'Scan unlimited plants', green),
+                                    _featureRow(Icons.search_rounded,
+                                        'Get unlimited identifications', green),
+                                    _featureRow(Icons.menu_book_rounded,
+                                        'Explore detailed plant info', green),
+                                    _featureRow(Icons.lock_open_rounded,
+                                        'Remove annoying paywalls', green),
                                   ],
                                 ),
                               ),
@@ -115,7 +126,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 24),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24),
                               child: SizedBox(
                                 width: double.infinity,
                                 height: 54,
@@ -123,18 +135,26 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: green,
                                     foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                                    textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(14)),
+                                    textStyle: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                   onPressed: _purchasing ? null : _purchase,
                                   child: _purchasing
                                       ? const SizedBox(
                                           width: 24,
                                           height: 24,
-                                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+                                          child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                              strokeWidth: 3),
                                         )
                                       : Text(_selectedPackage != null &&
-                                              _selectedPackage!.identifier.toLowerCase().contains('week')
+                                              _selectedPackage!.identifier
+                                                  .toLowerCase()
+                                                  .contains('week')
                                           ? 'Try for Free'
                                           : 'Subscribe'),
                                 ),
@@ -200,7 +220,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
   Widget _buildTrialToggle(Color green) {
     final packages = _offerings!.current!.availablePackages;
     final yearlyList = packages.where(
-      (p) => p.identifier.toLowerCase().contains('annual') || p.storeProduct.title.toLowerCase().contains('annual'),
+      (p) =>
+          p.identifier.toLowerCase().contains('annual') ||
+          p.storeProduct.title.toLowerCase().contains('annual'),
     );
     final trialWeeklyList = packages.where(
       (p) =>
@@ -209,12 +231,14 @@ class _PaywallScreenState extends State<PaywallScreen> {
           (p.storeProduct.introductoryPrice != null),
     );
     final yearly = yearlyList.isNotEmpty ? yearlyList.first : null;
-    final trialWeekly = trialWeeklyList.isNotEmpty ? trialWeeklyList.first : null;
+    final trialWeekly =
+        trialWeeklyList.isNotEmpty ? trialWeeklyList.first : null;
     final isTrial = _selectedPackage == trialWeekly;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        const Text('Free Trial Enabled', style: TextStyle(fontWeight: FontWeight.w600)),
+        const Text('Free Trial Enabled',
+            style: TextStyle(fontWeight: FontWeight.w600)),
         CupertinoSwitch(
           value: isTrial,
           onChanged: (val) {
@@ -237,7 +261,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
   Widget _buildPackages(ThemeData theme, Color green, Color lightGreen) {
     final packages = _offerings!.current!.availablePackages;
     final yearlyList = packages.where(
-      (p) => p.identifier.toLowerCase().contains('annual') || p.storeProduct.title.toLowerCase().contains('annual'),
+      (p) =>
+          p.identifier.toLowerCase().contains('annual') ||
+          p.storeProduct.title.toLowerCase().contains('annual'),
     );
     final trialWeeklyList = packages.where(
       (p) =>
@@ -246,7 +272,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
           (p.storeProduct.introductoryPrice != null),
     );
     final yearly = yearlyList.isNotEmpty ? yearlyList.first : null;
-    final trialWeekly = trialWeeklyList.isNotEmpty ? trialWeeklyList.first : null;
+    final trialWeekly =
+        trialWeeklyList.isNotEmpty ? trialWeeklyList.first : null;
     return Column(
       children: [
         if (yearly != null)
@@ -271,7 +298,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
             badgeColor: green,
             onTap: () => setState(() => _selectedPackage = trialWeekly),
             customTitle: '3-Day Trial',
-            customSubtitle: 'then ${trialWeekly.storeProduct.priceString} per week',
+            customSubtitle:
+                'then ${trialWeekly.storeProduct.priceString} per week',
           ),
       ],
     );
@@ -295,7 +323,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: selected ? lightGreen : Colors.white,
-          border: Border.all(color: selected ? green : Colors.grey.shade300, width: selected ? 2 : 1),
+          border: Border.all(
+              color: selected ? green : Colors.grey.shade300,
+              width: selected ? 2 : 1),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -314,12 +344,14 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     children: [
                       Text(
                         customTitle ?? pkg.storeProduct.title,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 17),
                       ),
                       const SizedBox(width: 8),
                       if (badge.isNotEmpty)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
                             color: badgeColor.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(8),
