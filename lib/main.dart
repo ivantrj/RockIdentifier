@@ -29,17 +29,16 @@ Future<void> main() async {
 
 // RevenueCatService singleton
 class RevenueCatService {
-  static bool _isSubscribed = false;
-  static bool get isSubscribed => _isSubscribed;
+  static bool isSubscribed = false;
 
   static Future<void> init() async {
     await Purchases.setLogLevel(LogLevel.debug);
     await Purchases.configure(PurchasesConfiguration('appl_WIxVHTvDllVjgIKVbNZTWSuTQrU'));
     try {
       final purchaserInfo = await Purchases.getCustomerInfo();
-      _isSubscribed = purchaserInfo.entitlements.active.isNotEmpty;
+      isSubscribed = purchaserInfo.entitlements.active.isNotEmpty;
     } catch (e) {
-      _isSubscribed = false;
+      isSubscribed = false;
     }
   }
 }

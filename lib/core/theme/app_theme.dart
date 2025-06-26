@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AppTheme {
-  // Primary color palette
-  static const Color primaryColor = Color(0xFF5E56E7); // Primary purple
-  static const Color secondaryColor = Color(0xFF6C63FF); // Secondary purple
-  static const Color accentColor = Color(0xFF4CD964); // Green accent
+  // Modern, nature-inspired color palette
+  static const Color primaryColor = Color(0xFF4CAF50); // Fresh green
+  static const Color secondaryColor = Color(0xFF64B5F6); // Soft blue
+  static const Color accentColor = Color(0xFFFFF176); // Gentle yellow accent
 
   // Category colors
-  static const Color focusColor = Color(0xFFFFF9C4); // Focus category color
-  static const Color sleepColor = Color(0xFFBBDEFB); // Sleep category color
-  static const Color stressColor = Color(0xFFD7F9DB); // Stress category color
+  static const Color focusColor = Color(0xFFC8E6C9); // Light green
+  static const Color sleepColor = Color(0xFFB3E5FC); // Light blue
+  static const Color stressColor = Color(0xFFFFF9C4); // Light yellow
 
   // UI element colors - light mode
   static const Color lightSurfaceColor = Colors.white; // Light surface color

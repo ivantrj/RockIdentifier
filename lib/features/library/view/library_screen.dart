@@ -12,6 +12,10 @@ import 'package:path/path.dart' as p;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:math';
+import '../../../main.dart' as main;
+import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -36,6 +40,24 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   bool _fabMenuOpen = false;
   final ImagePicker _picker = ImagePicker();
 
+  // ValueNotifier for subscription state
+  final ValueNotifier<bool> isSubscribedNotifier = ValueNotifier(main.RevenueCatService.isSubscribed);
+
+  // Listen for subscription changes from RevenueCat
+  void listenForSubscriptionChanges() {
+    Purchases.addCustomerInfoUpdateListener((customerInfo) {
+      final isSubscribed = customerInfo.entitlements.active.isNotEmpty;
+      isSubscribedNotifier.value = isSubscribed;
+      main.RevenueCatService.isSubscribed = isSubscribed; // keep singleton in sync
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    listenForSubscriptionChanges();
+  }
+
   void _openFabMenu() => setState(() => _fabMenuOpen = true);
   void _closeFabMenu() => setState(() => _fabMenuOpen = false);
 
@@ -48,6 +70,12 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   }
 
   Future<void> _pickImage(ImageSource source) async {
+    final items = context.read<LibraryViewModel>().items;
+    final isSubscribed = main.RevenueCatService.isSubscribed;
+    if (!isSubscribed && items.isNotEmpty) {
+      await RevenueCatUI.presentPaywall();
+      return;
+    }
     final pickedFile = await _picker.pickImage(source: source, imageQuality: 85);
     if (pickedFile != null) {
       setState(() => _fabMenuOpen = false);
@@ -169,6 +197,43 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         centerTitle: false,
         elevation: 0,
         actions: [
+          // Subscription icon
+          ValueListenableBuilder<bool>(
+            valueListenable: isSubscribedNotifier,
+            builder: (context, isSubscribed, _) {
+              return Container(
+                margin: const EdgeInsets.only(right: 8),
+                child: IconButton(
+                  icon: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: isDarkMode ? const Color(0xFF2A2A36) : const Color(0xFFF5F5F8),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(
+                      isSubscribed ? Icons.emoji_events_rounded : Icons.star_border_rounded,
+                      size: 22,
+                      color: isSubscribed ? Theme.of(context).colorScheme.primary : Colors.amber,
+                    ),
+                  ),
+                  tooltip: isSubscribed ? 'Thank you for subscribing!' : 'Unlock Premium',
+                  onPressed: () async {
+                    if (isSubscribed) {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => _PremiumThankYouModal(),
+                      );
+                    } else {
+                      await RevenueCatUI.presentPaywall();
+                    }
+                  },
+                ),
+              );
+            },
+          ),
+          // Settings icon
           Container(
             margin: const EdgeInsets.only(right: 16),
             child: IconButton(
@@ -540,6 +605,101 @@ class _FunLoadingDialogState extends State<_FunLoadingDialog> with SingleTickerP
             const CircularProgressIndicator(color: Colors.green, strokeWidth: 3),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _PremiumThankYouModal extends StatefulWidget {
+  @override
+  State<_PremiumThankYouModal> createState() => _PremiumThankYouModalState();
+}
+
+class _PremiumThankYouModalState extends State<_PremiumThankYouModal> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 600));
+    _scaleAnim = CurvedAnimation(parent: _controller, curve: Curves.elasticOut);
+    SchedulerBinding.instance.addPostFrameCallback((_) => _controller.forward());
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            theme.colorScheme.primary.withOpacity(0.95),
+            theme.colorScheme.secondary.withOpacity(0.85),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.18),
+            blurRadius: 24,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.fromLTRB(32, 40, 32, 40),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ScaleTransition(
+            scale: _scaleAnim,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Icon(Icons.emoji_events_rounded, color: Colors.amber[400], size: 70),
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: Text('🎉',
+                      style: TextStyle(fontSize: 32, shadows: [Shadow(color: Colors.black26, blurRadius: 8)])),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'Thank you for subscribing to PlantMate Premium!',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: -0.5),
+          ),
+          const SizedBox(height: 14),
+          const Text(
+            "You're helping us grow and keep the app ad-free. Enjoy unlimited scans and library! 🌱",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 17, color: Colors.white70),
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Theme.of(context).colorScheme.primary,
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              elevation: 0,
+            ),
+            onPressed: () => Navigator.of(context).maybePop(),
+            child: const Text('Close', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          ),
+        ],
       ),
     );
   }
