@@ -232,8 +232,8 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                   tooltip: isSubscribed ? 'Thank you for subscribing!' : 'Unlock Premium',
                   onPressed: () async {
                     if (!isSubscribed) {
-                      if (!app.App.paywallOpen) {
-                        app.App.paywallOpen = true;
+                      if (!app.paywallOpen) {
+                        app.paywallOpen = true;
                         await showModalBottomSheet(
                           context: context,
                           isScrollControlled: true,
@@ -246,7 +246,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                             child: PaywallScreen(),
                           ),
                         );
-                        app.App.paywallOpen = false;
+                        app.paywallOpen = false;
                       }
                     } else {
                       await showModalBottomSheet(
