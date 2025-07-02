@@ -1,6 +1,6 @@
 // lib/widgets/containers/app_card.dart
 import 'package:flutter/material.dart';
-import 'package:PlantMate/core/theme/app_theme.dart';
+import 'package:JewelryID/core/theme/app_theme.dart';
 
 class AppCard extends StatelessWidget {
   final Widget child;

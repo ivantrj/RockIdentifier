@@ -1,6 +1,6 @@
 // lib/core/widgets/modal_sheet.dart
 import 'package:flutter/material.dart';
-import 'package:PlantMate/core/widgets/primary_button.dart';
+import 'package:JewelryID/core/widgets/primary_button.dart';
 
 /// Shows a modal bottom sheet that matches the design in the image
 Future<T?> showAppModalSheet<T>({

@@ -1,10 +1,10 @@
-import 'package:PlantMate/features/paywall/paywall_screen.dart';
+import 'package:JewelryID/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
-import 'package:PlantMate/features/library/view/detail_screen.dart';
+import 'package:JewelryID/features/library/view/detail_screen.dart';
 import '../viewmodel/library_viewmodel.dart';
-import 'package:PlantMate/data/models/identified_item.dart';
+import 'package:JewelryID/data/models/identified_item.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:ui';
@@ -17,8 +17,8 @@ import '../../../main.dart' as main;
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:PlantMate/app.dart' as app;
-import 'package:PlantMate/core/theme/app_theme.dart';
+import 'package:JewelryID/app.dart' as app;
+import 'package:JewelryID/core/theme/app_theme.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -750,7 +750,7 @@ class _PremiumThankYouModalState extends State<_PremiumThankYouModal> with Singl
           ),
           const SizedBox(height: 24),
           const Text(
-            'Thank you for subscribing to PlantMate Premium!',
+            'Thank you for subscribing to JewelryID Premium!',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: -0.5),
           ),

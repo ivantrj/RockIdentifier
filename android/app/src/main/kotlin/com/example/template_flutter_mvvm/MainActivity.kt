@@ -1,4 +1,4 @@
-package com.example.PlantMate
+package com.example.JewelryID
 
 import io.flutter.embedding.android.FlutterActivity
 

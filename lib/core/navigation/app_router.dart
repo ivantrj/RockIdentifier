@@ -1,7 +1,7 @@
 // lib/core/navigation/app_router.dart
 import 'package:flutter/material.dart';
-import 'package:PlantMate/features/library/view/library_screen.dart';
-import 'package:PlantMate/features/settings/view/settings_screen.dart';
+import 'package:JewelryID/features/library/view/library_screen.dart';
+import 'package:JewelryID/features/settings/view/settings_screen.dart';
 import '../constants/app_constants.dart';
 // Import other screens as needed
 

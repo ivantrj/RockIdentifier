@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:PlantMate/data/models/identified_item.dart';
-import 'package:PlantMate/core/theme/app_theme.dart';
+import 'package:JewelryID/data/models/identified_item.dart';
+import 'package:JewelryID/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 

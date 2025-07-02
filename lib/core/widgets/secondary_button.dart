@@ -1,6 +1,6 @@
 // lib/widgets/buttons/secondary_button.dart
 import 'package:flutter/material.dart';
-import 'package:PlantMate/core/theme/app_theme.dart';
+import 'package:JewelryID/core/theme/app_theme.dart';
 
 class SecondaryButton extends StatelessWidget {
   final VoidCallback? onPressed;

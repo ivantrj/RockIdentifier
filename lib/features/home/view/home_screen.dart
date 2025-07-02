@@ -5,13 +5,13 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:PlantMate/core/theme/app_theme.dart';
-import 'package:PlantMate/core/widgets/app_card.dart';
-import 'package:PlantMate/core/widgets/category_card.dart';
-import 'package:PlantMate/core/widgets/list_item_card.dart';
-import 'package:PlantMate/core/widgets/primary_button.dart';
-import 'package:PlantMate/core/widgets/secondary_button.dart';
-import 'package:PlantMate/core/widgets/section_header.dart';
+import 'package:JewelryID/core/theme/app_theme.dart';
+import 'package:JewelryID/core/widgets/app_card.dart';
+import 'package:JewelryID/core/widgets/category_card.dart';
+import 'package:JewelryID/core/widgets/list_item_card.dart';
+import 'package:JewelryID/core/widgets/primary_button.dart';
+import 'package:JewelryID/core/widgets/secondary_button.dart';
+import 'package:JewelryID/core/widgets/section_header.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
