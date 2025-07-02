@@ -204,49 +204,97 @@ class ItemDetailScreen extends StatelessWidget {
   }
 
   Widget _buildPriceSection(BuildContext context, dynamic price) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            AppTheme.primaryColor.withOpacity(0.1),
-            AppTheme.primaryColor.withOpacity(0.05),
-          ],
+          colors: isDarkMode
+              ? [
+                  const Color(0xFF1F1F2E),
+                  const Color(0xFF2A2A36),
+                ]
+              : [
+                  const Color(0xFFFAFBFF),
+                  const Color(0xFFF0F4FF),
+                ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppTheme.primaryColor.withOpacity(0.2),
-          width: 1,
+          color: AppTheme.primaryColor.withOpacity(0.15),
+          width: 1.5,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.primaryColor.withOpacity(0.1),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
-      child: Column(
+      child: Row(
         children: [
-          Icon(
-            HugeIcons.strokeRoundedDollarCircle,
-            color: AppTheme.primaryColor,
-            size: 32,
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Estimated Value',
-            style: TextStyle(
-              fontSize: 16,
-              color: AppTheme.primaryColor,
-              fontWeight: FontWeight.w600,
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  const Color(0xFFFFD700),
+                  const Color(0xFFFFA500),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFFFD700).withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: const Icon(
+              HugeIcons.strokeRoundedDollarCircle,
+              color: Colors.white,
+              size: 24,
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            price.toString(),
-            style: TextStyle(
-              fontSize: 32,
-              color: AppTheme.primaryColor,
-              fontWeight: FontWeight.bold,
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Estimated Value',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.7),
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text('💎', style: TextStyle(fontSize: 12)),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  price.toString(),
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: isDarkMode ? Colors.white : Colors.black,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+              ],
             ),
-            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -277,80 +325,123 @@ class ItemDetailScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Key Details',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: isDarkMode ? Colors.white : Colors.black,
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                HugeIcons.strokeRoundedDiamond01,
+                color: AppTheme.primaryColor,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'Key Details',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: isDarkMode ? Colors.white : Colors.black,
+                letterSpacing: -0.5,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Container(
+          decoration: BoxDecoration(
+            color: isDarkMode ? const Color(0xFF1A1A24) : Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.08),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(isDarkMode ? 0.15 : 0.04),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            children: validDetails.asMap().entries.map((entry) {
+              final index = entry.key;
+              final key = entry.value;
+              final isLast = index == validDetails.length - 1;
+              return _buildDetailRow(context, key, details[key], isLast);
+            }).toList(),
           ),
         ),
-        const SizedBox(height: 16),
-        ...validDetails.map((key) => _buildDetailRow(context, key, details[key])),
       ],
     );
   }
 
-  Widget _buildDetailRow(BuildContext context, String label, dynamic value) {
+  Widget _buildDetailRow(BuildContext context, String label, dynamic value, bool isLast) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final displayValue = value is List ? value.join(', ') : value.toString();
+    final attributeColor = _getColorForAttribute(label);
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: isDarkMode ? AppTheme.darkCardColor : AppTheme.lightCardColor,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.1 : 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: attributeColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  _getIconForAttribute(label),
+                  color: attributeColor,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 18),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: attributeColor,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      displayValue,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.w500,
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        ),
+        if (!isLast)
           Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppTheme.primaryColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              _getIconForAttribute(label),
-              color: AppTheme.primaryColor,
-              size: 20,
-            ),
+            margin: const EdgeInsets.symmetric(horizontal: 24),
+            height: 1,
+            color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.08),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.primaryColor,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  displayValue,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: isDarkMode ? Colors.white : Colors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      ],
     );
   }
 
@@ -369,94 +460,136 @@ class ItemDetailScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Additional Information',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: isDarkMode ? Colors.white : Colors.black,
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                HugeIcons.strokeRoundedInformationCircle,
+                color: AppTheme.primaryColor,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'Additional Information',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: isDarkMode ? Colors.white : Colors.black,
+                letterSpacing: -0.5,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Container(
+          decoration: BoxDecoration(
+            color: isDarkMode ? const Color(0xFF1A1A24) : Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.08),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(isDarkMode ? 0.15 : 0.04),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            children: validInfo.asMap().entries.map((entry) {
+              final index = entry.key;
+              final key = entry.value;
+              final isLast = index == validInfo.length - 1;
+              return _buildInfoCard(context, key, details[key], isLast);
+            }).toList(),
           ),
         ),
-        const SizedBox(height: 16),
-        ...validInfo.map((key) => _buildInfoCard(context, key, details[key])),
       ],
     );
   }
 
-  Widget _buildInfoCard(BuildContext context, String label, dynamic value) {
+  Widget _buildInfoCard(BuildContext context, String label, dynamic value, bool isLast) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final displayValue = value is List ? value.join(', ') : value.toString();
+    final attributeColor = _getColorForAttribute(label);
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: isDarkMode ? AppTheme.darkCardColor : AppTheme.lightCardColor,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.1 : 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: () => _showInfoModal(context, label, displayValue),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
+    return Column(
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () => _showInfoModal(context, label, displayValue),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: attributeColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      _getIconForAttribute(label),
+                      color: attributeColor,
+                      size: 20,
+                    ),
                   ),
-                  child: Icon(
-                    _getIconForAttribute(label),
-                    color: AppTheme.primaryColor,
-                    size: 20,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        label,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: isDarkMode ? Colors.white : Colors.black,
+                  const SizedBox(width: 18),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: isDarkMode ? Colors.white : Colors.black,
+                            letterSpacing: 0.3,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        displayValue.length > 100 ? '${displayValue.substring(0, 100)}...' : displayValue,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.7),
+                        const SizedBox(height: 6),
+                        Text(
+                          displayValue.length > 100 ? '${displayValue.substring(0, 100)}...' : displayValue,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.7),
+                            height: 1.4,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Icon(
-                  HugeIcons.strokeRoundedArrowRight01,
-                  color: AppTheme.primaryColor,
-                  size: 16,
-                ),
-              ],
+                  Icon(
+                    HugeIcons.strokeRoundedArrowRight01,
+                    color: attributeColor.withOpacity(0.6),
+                    size: 18,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
+        if (!isLast)
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 24),
+            height: 1,
+            color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.08),
+          ),
+      ],
     );
   }
 
@@ -536,20 +669,36 @@ class ItemDetailScreen extends StatelessWidget {
     );
   }
 
+  Color _getColorForAttribute(String label) {
+    final l = label.toLowerCase();
+    if (l.contains('type')) return const Color(0xFF7C3AED); // Purple - primary color
+    if (l.contains('material')) return const Color(0xFF059669); // Emerald green
+    if (l.contains('gemstone')) return const Color(0xFFDC2626); // Ruby red
+    if (l.contains('brand') || l.contains('maker')) return const Color(0xFF2563EB); // Sapphire blue
+    if (l.contains('era') || l.contains('style')) return const Color(0xFFEA580C); // Amber orange
+    if (l.contains('authenticity')) return const Color(0xFF7C2D12); // Bronze brown
+    if (l.contains('hallmark') || l.contains('stamp')) return const Color(0xFF4F46E5); // Indigo
+    if (l.contains('condition')) return const Color(0xFF16A34A); // Green
+    if (l.contains('description')) return const Color(0xFF0891B2); // Cyan
+    if (l.contains('care')) return const Color(0xFFDB2777); // Pink
+    if (l.contains('provenance')) return const Color(0xFF9333EA); // Violet
+    return const Color(0xFF6B7280); // Gray fallback
+  }
+
   IconData _getIconForAttribute(String label) {
     final l = label.toLowerCase();
-    if (l.contains('type')) return Icons.diamond;
-    if (l.contains('material')) return Icons.military_tech;
-    if (l.contains('gemstone')) return Icons.auto_awesome;
-    if (l.contains('brand')) return Icons.verified_user;
-    if (l.contains('era') || l.contains('style')) return Icons.event;
-    if (l.contains('authenticity')) return Icons.verified;
-    if (l.contains('hallmark')) return Icons.workspace_premium;
-    if (l.contains('condition')) return Icons.favorite;
+    if (l.contains('type')) return HugeIcons.strokeRoundedDiamond01;
+    if (l.contains('material')) return HugeIcons.strokeRoundedMedal01;
+    if (l.contains('gemstone')) return HugeIcons.strokeRoundedDiamond02;
+    if (l.contains('brand') || l.contains('maker')) return HugeIcons.strokeRoundedAward01;
+    if (l.contains('era') || l.contains('style')) return HugeIcons.strokeRoundedClock01;
+    if (l.contains('authenticity')) return HugeIcons.strokeRoundedMedal05;
+    if (l.contains('hallmark') || l.contains('stamp')) return HugeIcons.strokeRoundedStamp;
+    if (l.contains('condition')) return HugeIcons.strokeRoundedCheckmarkCircle02;
     if (l.contains('description')) return Icons.description;
-    if (l.contains('care')) return Icons.cleaning_services;
-    if (l.contains('provenance')) return Icons.history_edu;
-    return Icons.info_outline;
+    if (l.contains('care')) return HugeIcons.strokeRoundedSettings02;
+    if (l.contains('provenance')) return HugeIcons.strokeRoundedLibrary;
+    return HugeIcons.strokeRoundedInformationCircle;
   }
 
   void _showDeleteDialog(BuildContext context) {

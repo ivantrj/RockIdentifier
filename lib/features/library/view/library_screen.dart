@@ -14,7 +14,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:math';
 import '../../../main.dart' as main;
-import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:JewelryID/app.dart' as app;
