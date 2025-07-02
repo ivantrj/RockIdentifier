@@ -99,25 +99,28 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       );
       try {
         final savedPath = await _saveImageToAppDir(pickedFile.path);
-        final aiResult = await _identifyPlantWithAI(File(savedPath));
+        final aiResult = await _identifyJewelryWithAI(File(savedPath));
         if (aiResult != null) {
           final details = <String, dynamic>{
-            if (aiResult['characteristics'] != null) 'Characteristics': aiResult['characteristics'],
-            if (aiResult['careGuide'] != null) 'Care Guide': aiResult['careGuide'],
-            if (aiResult['toxicity'] != null) 'Toxicity': aiResult['toxicity'],
-            if (aiResult['uses'] != null) 'Uses': aiResult['uses'],
-            if (aiResult['difficultyLevel'] != null) 'Difficulty Level': aiResult['difficultyLevel'],
-            if (aiResult['propagation'] != null) 'Propagation': aiResult['propagation'],
-            if (aiResult['commonProblems'] != null) 'Common Problems': aiResult['commonProblems'],
-            if (aiResult['additionalInfo'] != null) 'Additional Info': aiResult['additionalInfo'],
-            if (aiResult['wikiLink'] != null) 'Wikipedia': aiResult['wikiLink'],
+            if (aiResult['type'] != null) 'Type': aiResult['type'],
+            if (aiResult['material'] != null) 'Material': aiResult['material'],
+            if (aiResult['gemstones'] != null) 'Gemstones': aiResult['gemstones'],
+            if (aiResult['brandOrMaker'] != null) 'Brand/Maker': aiResult['brandOrMaker'],
+            if (aiResult['eraOrStyle'] != null) 'Era/Style': aiResult['eraOrStyle'],
+            if (aiResult['authenticity'] != null) 'Authenticity': aiResult['authenticity'],
+            if (aiResult['hallmarkOrStamp'] != null) 'Hallmark/Stamp': aiResult['hallmarkOrStamp'],
+            if (aiResult['condition'] != null) 'Condition': aiResult['condition'],
             if (aiResult['estimatedPrice'] != null) 'Estimated Price': aiResult['estimatedPrice'],
+            if (aiResult['description'] != null) 'Description': aiResult['description'],
+            if (aiResult['careTips'] != null) 'Care Tips': aiResult['careTips'],
+            if (aiResult['provenance'] != null) 'Provenance': aiResult['provenance'],
+            if (aiResult['wikiLink'] != null) 'Wikipedia': aiResult['wikiLink'],
           };
           final item = IdentifiedItem(
             id: DateTime.now().millisecondsSinceEpoch.toString(),
             imagePath: savedPath,
-            result: aiResult['commonName'] ?? aiResult['name'] ?? 'Unknown',
-            subtitle: aiResult['name'] ?? '',
+            result: aiResult['type'] ?? aiResult['brandOrMaker'] ?? 'Unknown',
+            subtitle: aiResult['material'] ?? '',
             confidence: _parseConfidence(aiResult['confidence']),
             details: details,
             dateTime: DateTime.now(),
@@ -155,8 +158,8 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
     return 0.0;
   }
 
-  Future<Map<String, dynamic>?> _identifyPlantWithAI(File imageFile) async {
-    final uri = Uri.parse('https://own-ai-backend-dev.fly.dev/identify-plant');
+  Future<Map<String, dynamic>?> _identifyJewelryWithAI(File imageFile) async {
+    final uri = Uri.parse('https://own-ai-backend-dev.fly.dev/identify-jewelry');
     final request = http.MultipartRequest('POST', uri)
       ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
     final streamedResponse = await request.send();

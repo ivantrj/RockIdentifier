@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 class AppTheme {
   // Modern, jewelry-inspired color palette
-  static const Color primaryColor = Color(0xFFFFD700); // Gold
+  static const Color primaryColor = Color(0xFF7C3AED); // Amethyst purple
   static const Color secondaryColor = Color(0xFF1A237E); // Deep blue
   static const Color accentColor = Color(0xFFC0C0C0); // Silver accent
 
