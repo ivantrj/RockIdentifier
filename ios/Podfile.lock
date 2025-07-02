@@ -2,6 +2,8 @@ PODS:
   - Flutter (1.0.0)
   - image_picker_ios (0.0.1):
     - Flutter
+  - in_app_review (2.0.0):
+    - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -28,6 +30,7 @@ PODS:
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - purchases_flutter (from `.symlinks/plugins/purchases_flutter/ios`)
   - purchases_ui_flutter (from `.symlinks/plugins/purchases_ui_flutter/ios`)
@@ -46,6 +49,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  in_app_review:
+    :path: ".symlinks/plugins/in_app_review/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   purchases_flutter:
@@ -60,6 +65,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
+  in_app_review: a31b5257259646ea78e0e35fc914979b0031d011
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   purchases_flutter: 9aaa7456914f0de0812d14ffc03a56f58c56960f
   purchases_ui_flutter: 05096e4a43037aec4072259b2b933ca03ec1e9d7

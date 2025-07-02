@@ -3,6 +3,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:PlantMate/core/theme/app_theme.dart';
 import 'package:PlantMate/core/widgets/section_header.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
+import 'package:in_app_review/in_app_review.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -34,7 +35,7 @@ class SettingsScreen extends StatelessWidget {
             context: context,
             title: 'Rate App',
             icon: Icons.star_rate_rounded,
-            onTap: () => _launchUrl('https://www.google.com'),
+            onTap: () => _rateApp(context),
           ),
           // _buildSettingsItem(
           //   context: context,
@@ -139,6 +140,17 @@ class SettingsScreen extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Share functionality would open here')),
     );
+  }
+
+  Future<void> _rateApp(BuildContext context) async {
+    final InAppReview inAppReview = InAppReview.instance;
+    if (await inAppReview.isAvailable()) {
+      await inAppReview.requestReview();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Rating is not available yet.')),
+      );
+    }
   }
 
   Widget _buildSettingsItem({
