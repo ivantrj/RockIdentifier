@@ -19,7 +19,7 @@ dependencies:
   shared_preferences: ^2.5.3
   url_launcher: ^6.2.5
   image_picker: ^1.0.7
-  path_provider: ^2.1.2
+  path_provider: ^2.1.5
   http: ^1.4.0
   path: ^1.9.1
   rename_app: ^1.6.3
