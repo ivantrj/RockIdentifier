@@ -57,7 +57,7 @@ class _AppState extends State<App> {
     }
     return MaterialApp(
       navigatorKey: rootNavKey,
-      title: 'PlantMate',
+      title: 'JewelryID',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
