@@ -83,14 +83,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         Image.asset('assets/icon/icon.png', width: 120, height: 120),
         const SizedBox(height: 32),
         const Text(
-          'Welcome to PlantMate!',
+          'Welcome to JewelMate!',
           style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Your AI-powered plant companion. Identify, learn, and care for your plants with ease.',
+            'Your AI-powered jewelry companion. Identify, learn, and discover the value of your jewelry with ease.',
             style: TextStyle(fontSize: 18, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
@@ -113,7 +113,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Tap the + button to take or upload a photo of a plant. Get instant identification and care tips!',
+            'Tap the + button to take or upload a photo of a jewelry item. Get instant identification, details, and price estimates!',
             style: TextStyle(fontSize: 18, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
@@ -126,17 +126,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.eco_rounded, size: 90, color: Colors.green[700]),
+        Icon(Icons.diamond_rounded, size: 90, color: AppTheme.primaryColor),
         const SizedBox(height: 32),
         const Text(
-          'Let’s Get to Know You',
+          'Let\'s Get to Know You',
           style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Are you a plant beginner, enthusiast, or expert?',
+            'Are you a jewelry collector, enthusiast, or professional?',
             style: TextStyle(fontSize: 18, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
@@ -145,11 +145,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _chip('Beginner'),
+            _chip('Collector'),
             const SizedBox(width: 12),
             _chip('Enthusiast'),
             const SizedBox(width: 12),
-            _chip('Expert'),
+            _chip('Professional'),
           ],
         ),
       ],
@@ -162,10 +162,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       onTap: () => setState(() => _experience = label),
       child: Chip(
         label: Text(label),
-        backgroundColor: isSelected ? AppTheme.primaryColor : Colors.green[100],
+        backgroundColor: isSelected ? AppTheme.primaryColor : Colors.amber[100],
         labelStyle: TextStyle(
           fontWeight: FontWeight.w600,
-          color: isSelected ? Colors.white : Colors.green,
+          color: isSelected ? Colors.white : Colors.amber[900],
         ),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       ),

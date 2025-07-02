@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AppTheme {
-  // Modern, nature-inspired color palette
-  static const Color primaryColor = Color(0xFF4CAF50); // Fresh green
-  static const Color secondaryColor = Color(0xFF64B5F6); // Soft blue
-  static const Color accentColor = Color(0xFFFFF176); // Gentle yellow accent
+  // Modern, jewelry-inspired color palette
+  static const Color primaryColor = Color(0xFFFFD700); // Gold
+  static const Color secondaryColor = Color(0xFF1A237E); // Deep blue
+  static const Color accentColor = Color(0xFFC0C0C0); // Silver accent
 
   // Category colors
-  static const Color focusColor = Color(0xFFC8E6C9); // Light green
-  static const Color sleepColor = Color(0xFFB3E5FC); // Light blue
-  static const Color stressColor = Color(0xFFFFF9C4); // Light yellow
+  static const Color focusColor = Color(0xFFFFF8E1); // Light gold
+  static const Color sleepColor = Color(0xFFE3E6F3); // Light blue
+  static const Color stressColor = Color(0xFFF5F5F5); // Light silver
 
   // UI element colors - light mode
   static const Color lightSurfaceColor = Colors.white; // Light surface color
