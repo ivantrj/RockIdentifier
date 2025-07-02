@@ -18,6 +18,7 @@ import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:PlantMate/app.dart' as app;
+import 'package:PlantMate/core/theme/app_theme.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -562,17 +563,19 @@ class _FunLoadingDialog extends StatefulWidget {
 }
 
 class _FunLoadingDialogState extends State<_FunLoadingDialog> with SingleTickerProviderStateMixin {
-  static const List<String> funTexts = [
-    'Talking to the plants...',
-    'Analyzing leaves...',
-    'Looking for green clues...',
-    'Consulting the garden gnomes...',
-    'Photosynthesizing...',
-    'Sniffing the soil...',
-    'Counting petals...',
-    'Checking for root rot...',
-    'Asking the bees...',
-    'Comparing chlorophyll...',
+  static final List<String> funTexts = [
+    'Inspecting the sparkle...',
+    'Analyzing gemstones...',
+    'Checking for hallmarks...',
+    "Consulting the jeweler\'s loupe...",
+    'Estimating carat weight...',
+    'Comparing with famous pieces...',
+    'Looking for hidden treasures...',
+    'Examining the setting...',
+    'Verifying authenticity...',
+    'Polishing the gold...',
+    'Matching the style...',
+    'Evaluating craftsmanship...'
   ];
   late final AnimationController _controller;
   late final Animation<double> _animation;
@@ -619,8 +622,8 @@ class _FunLoadingDialogState extends State<_FunLoadingDialog> with SingleTickerP
             ScaleTransition(
               scale: _animation,
               child: Icon(
-                HugeIcons.strokeRoundedPlant02,
-                color: Colors.green[600],
+                Icons.diamond,
+                color: AppTheme.primaryColor,
                 size: 64,
               ),
             ),
@@ -639,7 +642,7 @@ class _FunLoadingDialogState extends State<_FunLoadingDialog> with SingleTickerP
               ),
             ),
             const SizedBox(height: 16),
-            const CircularProgressIndicator(color: Colors.green, strokeWidth: 3),
+            CircularProgressIndicator(color: AppTheme.primaryColor, strokeWidth: 3),
           ],
         ),
       ),
