@@ -104,7 +104,7 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '© ${DateTime.now().year} AI Plant Identifier',
+                  '© ${DateTime.now().year} AI Jewelry Identifier',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                         color: isDarkMode ? Colors.white70 : Colors.black87,
