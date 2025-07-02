@@ -204,7 +204,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'My Library',
+          'Recents',
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold,
@@ -365,6 +365,39 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                                     ),
                                   ),
                           ),
+                          // Price in top-right corner - minimal style
+                          if (item.details['Estimated Price'] != null &&
+                              item.details['Estimated Price'].toString().isNotEmpty &&
+                              item.details['Estimated Price'].toString().toLowerCase() != 'unknown')
+                            Positioned(
+                              top: 12,
+                              right: 12,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.7),
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Text(
+                                  item.details['Estimated Price'].toString(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          // Bottom overlay with item details
                           Positioned(
                             left: 0,
                             right: 0,
@@ -420,7 +453,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: 4),
+                                      const SizedBox(height: 8),
                                       Text(
                                         item.subtitle,
                                         style: const TextStyle(

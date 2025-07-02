@@ -90,7 +90,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Your AI-powered jewelry companion. Identify, learn, and discover the value of your jewelry with ease.',
+            'Your AI-powered jewelry expert. Instantly identify, value, and learn about any jewelry piece using just your phone. Discover hidden value, make smarter decisions, and become your own jewelry expert—powered by advanced artificial intelligence.',
             style: TextStyle(fontSize: 18, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
@@ -106,14 +106,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         Icon(Icons.camera_alt_rounded, size: 90, color: AppTheme.primaryColor),
         const SizedBox(height: 32),
         const Text(
-          'How to Use',
+          'How It Works',
           style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Tap the + button to take or upload a photo of a jewelry item. Get instant identification, details, and price estimates!',
+            'Snap or upload a photo of your jewelry. Our AI analyzes every detail—materials, gemstones, brand, and more—to give you instant identification, value, and expert insights. It\'s like having a personal jeweler in your pocket.',
             style: TextStyle(fontSize: 18, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
@@ -136,7 +136,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Are you a jewelry collector, enthusiast, or professional?',
+            'Are you a collector, enthusiast, or just curious? JewelMate adapts to your needs—whether you want to discover, sell, insure, or simply learn more about your jewelry.',
             style: TextStyle(fontSize: 18, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
@@ -149,7 +149,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             const SizedBox(width: 12),
             _chip('Enthusiast'),
             const SizedBox(width: 12),
-            _chip('Professional'),
+            _chip('Curious'),
           ],
         ),
       ],
