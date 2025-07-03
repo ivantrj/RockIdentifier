@@ -133,7 +133,7 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: lightBackgroundColor,
       cardColor: lightCardColor,
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: lightCardColor,
         elevation: cardElevation,
         shadowColor: lightShadowColor,
@@ -271,7 +271,7 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: darkBackgroundColor,
       cardColor: darkCardColor,
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: darkCardColor,
         elevation: 0, // Modern flat design
         shadowColor: _shadowColor,
