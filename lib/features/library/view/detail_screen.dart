@@ -84,19 +84,26 @@ class ItemDetailScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                   ),
-                  child: item.imagePath.isNotEmpty && File(item.imagePath).existsSync()
-                      ? Image.file(
-                          File(item.imagePath),
-                          fit: BoxFit.cover,
-                        )
-                      : Container(
-                          color: Colors.grey[200],
-                          child: Icon(
-                            HugeIcons.strokeRoundedAlbum02,
-                            size: 64,
-                            color: Colors.grey[400],
-                          ),
-                        ),
+                  child: Builder(
+                    builder: (_) {
+                      final exists = item.imagePath.isNotEmpty && File(item.imagePath).existsSync();
+                      print(
+                          '[DEBUG] Detail screen image for item id: \'${item.id}\' path: \'${item.imagePath}\' exists: $exists');
+                      return exists
+                          ? Image.file(
+                              File(item.imagePath),
+                              fit: BoxFit.cover,
+                            )
+                          : Container(
+                              color: Colors.grey[200],
+                              child: Icon(
+                                HugeIcons.strokeRoundedAlbum02,
+                                size: 64,
+                                color: Colors.grey[400],
+                              ),
+                            );
+                    },
+                  ),
                 ),
               ),
             ),

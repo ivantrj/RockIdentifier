@@ -63,17 +63,45 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   void initState() {
     super.initState();
     listenForSubscriptionChanges();
+
+    // Verify saved images after a short delay to allow the library to load
+    Future.delayed(const Duration(seconds: 2), () {
+      _verifySavedImages();
+      _fixIncorrectlyMigratedItems();
+    });
   }
 
   void _openFabMenu() => setState(() => _fabMenuOpen = true);
   void _closeFabMenu() => setState(() => _fabMenuOpen = false);
 
   Future<String> _saveImageToAppDir(String imagePath) async {
-    final appDir = await getApplicationDocumentsDirectory();
-    final fileName = p.basename(imagePath);
-    final savedImage =
-        await File(imagePath).copy(p.join(appDir.path, '${DateTime.now().millisecondsSinceEpoch}_$fileName'));
-    return savedImage.path;
+    try {
+      final appDir = await getApplicationDocumentsDirectory();
+      final originalFile = File(imagePath);
+
+      // Create a more reliable filename format
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final extension = p.extension(imagePath);
+      final safeFileName = 'jewelry_${timestamp}$extension';
+      final savedPath = p.join(appDir.path, safeFileName);
+
+      // Copy the file
+      final savedImage = await originalFile.copy(savedPath);
+
+      // Verify the file was actually saved
+      if (!await savedImage.exists()) {
+        throw Exception('Failed to save image file');
+      }
+
+      print('[DEBUG] Saved image to: \'${savedImage.path}\'');
+      print('[DEBUG] File size: ${await savedImage.length()} bytes');
+      print('[DEBUG] File exists after save: ${await savedImage.exists()}');
+
+      return savedImage.path;
+    } catch (e) {
+      print('[DEBUG] Error saving image: $e');
+      rethrow;
+    }
   }
 
   Future<void> _pickImage(ImageSource source) async {
@@ -215,6 +243,195 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
 
     // If no price range found, return first 20 characters
     return priceText.length > 20 ? '${priceText.substring(0, 20)}...' : priceText;
+  }
+
+  /// Verify that all saved images still exist and log any missing ones
+  Future<void> _verifySavedImages() async {
+    try {
+      final items = context.read<LibraryViewModel>().items;
+      final appDir = await getApplicationDocumentsDirectory();
+
+      print('[DEBUG] Verifying ${items.length} saved images...');
+
+      for (final item in items) {
+        if (item.imagePath.isNotEmpty) {
+          final file = File(item.imagePath);
+          final exists = await file.exists();
+
+          if (!exists) {
+            print('[DEBUG] MISSING IMAGE: Item ${item.id} - ${item.imagePath}');
+
+            // Check if the file might be in the documents directory with a different name
+            final fileName = p.basename(item.imagePath);
+            final possibleFiles = appDir
+                .listSync()
+                .where((entity) => entity is File && p.basename(entity.path).contains('jewelry_'))
+                .toList();
+
+            print('[DEBUG] Found ${possibleFiles.length} jewelry files in documents directory');
+            for (final file in possibleFiles) {
+              print('[DEBUG] - ${p.basename(file.path)}');
+            }
+
+            // Try to migrate old image format
+            await _migrateOldImage(item);
+          } else {
+            print('[DEBUG] Image exists: ${item.id} - ${p.basename(item.imagePath)}');
+          }
+        }
+      }
+    } catch (e) {
+      print('[DEBUG] Error verifying images: $e');
+    }
+  }
+
+  /// Migrate old image format to new format
+  Future<void> _migrateOldImage(IdentifiedItem item) async {
+    try {
+      print('[DEBUG] Attempting to migrate image for item ${item.id}');
+
+      // Check if the original image still exists in the documents directory
+      final appDir = await getApplicationDocumentsDirectory();
+      final oldFileName = p.basename(item.imagePath);
+
+      // Look for any file that might be the original image
+      final possibleFiles = appDir
+          .listSync()
+          .where((entity) =>
+              entity is File &&
+              (p.basename(entity.path).contains('image_picker') || p.basename(entity.path).contains('jewelry_')))
+          .toList();
+
+      print('[DEBUG] Found ${possibleFiles.length} possible image files for migration');
+
+      // Also check if the original file path still exists (might be in temp directory)
+      File? sourceFile;
+      if (File(item.imagePath).existsSync()) {
+        sourceFile = File(item.imagePath);
+        print('[DEBUG] Original file still exists: ${p.basename(sourceFile.path)}');
+      } else {
+        // Look for the exact jewelry file that should match this item
+        final expectedFileName = p.basename(item.imagePath);
+        final exactMatch =
+            possibleFiles.where((entity) => entity is File && p.basename(entity.path) == expectedFileName).toList();
+
+        if (exactMatch.isNotEmpty) {
+          sourceFile = exactMatch.first as File;
+          print('[DEBUG] Found exact match: ${p.basename(sourceFile.path)}');
+        } else if (possibleFiles.isNotEmpty) {
+          // If no exact match, look for jewelry files first (prefer new format)
+          final jewelryFiles =
+              possibleFiles.where((entity) => entity is File && p.basename(entity.path).contains('jewelry_')).toList();
+
+          if (jewelryFiles.isNotEmpty) {
+            sourceFile = jewelryFiles.first as File;
+            print('[DEBUG] Using jewelry file: ${p.basename(sourceFile.path)}');
+          } else {
+            // Fall back to any available file
+            sourceFile = possibleFiles.first as File;
+            print('[DEBUG] Using fallback file: ${p.basename(sourceFile.path)}');
+          }
+        } else {
+          // Check temp directory as last resort
+          try {
+            final tempDir = await getTemporaryDirectory();
+            final tempFiles = tempDir
+                .listSync()
+                .where((entity) => entity is File && p.basename(entity.path).contains('image_picker'))
+                .toList();
+
+            if (tempFiles.isNotEmpty) {
+              sourceFile = tempFiles.first as File;
+              print('[DEBUG] Found file in temp directory: ${p.basename(sourceFile.path)}');
+            }
+          } catch (e) {
+            print('[DEBUG] Could not check temp directory: $e');
+          }
+        }
+      }
+
+      if (sourceFile != null && await sourceFile.exists()) {
+        // Save with new format
+        final newPath = await _saveImageToAppDir(sourceFile.path);
+
+        // Update the item with the new path
+        final updatedItem = item.copyWith(imagePath: newPath);
+        await context.read<LibraryViewModel>().updateItem(updatedItem);
+
+        print('[DEBUG] Successfully migrated image for item ${item.id}');
+        print('[DEBUG] New path: $newPath');
+
+        // Delete the old file if it's different from the new one
+        if (sourceFile.path != newPath) {
+          try {
+            await sourceFile.delete();
+            print('[DEBUG] Deleted old file: ${p.basename(sourceFile.path)}');
+          } catch (e) {
+            print('[DEBUG] Could not delete old file: $e');
+          }
+        }
+      } else {
+        print('[DEBUG] No source files found for migration - image may be permanently lost');
+      }
+    } catch (e) {
+      print('[DEBUG] Error migrating image: $e');
+    }
+  }
+
+  /// Fix items that were incorrectly migrated with the wrong image
+  Future<void> _fixIncorrectlyMigratedItems() async {
+    try {
+      final items = context.read<LibraryViewModel>().items;
+      final appDir = await getApplicationDocumentsDirectory();
+
+      print('[DEBUG] Checking for incorrectly migrated items...');
+
+      for (final item in items) {
+        if (item.imagePath.isNotEmpty && item.imagePath.contains('jewelry_')) {
+          final currentFile = File(item.imagePath);
+          if (await currentFile.exists()) {
+            // Check if this is the correct image by looking for the original expected filename
+            final expectedFileName = p.basename(item.imagePath);
+
+            // Look for other jewelry files that might be the correct one
+            final allJewelryFiles = appDir
+                .listSync()
+                .where((entity) => entity is File && p.basename(entity.path).contains('jewelry_'))
+                .toList();
+
+            if (allJewelryFiles.length > 1) {
+              print('[DEBUG] Found multiple jewelry files for item ${item.id}');
+              print('[DEBUG] Current: ${p.basename(item.imagePath)}');
+
+              // Check if there's a jewelry file that matches the original timestamp
+              final itemTimestamp = item.id; // The item ID is the timestamp
+              final correctFile = allJewelryFiles
+                  .where((entity) => entity is File && p.basename(entity.path).contains('jewelry_$itemTimestamp'))
+                  .toList();
+
+              if (correctFile.isNotEmpty && p.basename(correctFile.first.path) != expectedFileName) {
+                final correctPath = correctFile.first.path;
+                print('[DEBUG] Found correct image: ${p.basename(correctPath)}');
+                print('[DEBUG] Updating item ${item.id} with correct path');
+
+                final updatedItem = item.copyWith(imagePath: correctPath);
+                await context.read<LibraryViewModel>().updateItem(updatedItem);
+
+                // Delete the incorrect file
+                try {
+                  await currentFile.delete();
+                  print('[DEBUG] Deleted incorrect file: ${p.basename(item.imagePath)}');
+                } catch (e) {
+                  print('[DEBUG] Could not delete incorrect file: $e');
+                }
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {
+      print('[DEBUG] Error fixing incorrectly migrated items: $e');
+    }
   }
 
   Future<Map<String, dynamic>?> _identifyJewelryWithAI(File imageFile) async {
@@ -423,25 +640,49 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                   itemCount: items.length,
                   itemBuilder: (context, index) {
                     final item = items[index];
+                    final exists = item.imagePath.isNotEmpty && File(item.imagePath).existsSync();
+                    print(
+                        '[DEBUG] Loading image for item id: \'${item.id}\' path: \'${item.imagePath}\' exists: $exists');
+
+                    if (!exists && item.imagePath.isNotEmpty) {
+                      print('[DEBUG] WARNING: Image file missing for item ${item.id}');
+                      print('[DEBUG] Expected path: ${item.imagePath}');
+                    }
+
                     return GestureDetector(
                       onTap: () => _onOpenDetail(item),
                       child: Stack(
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(18),
-                            child: item.imagePath.isNotEmpty && File(item.imagePath).existsSync()
+                            child: exists
                                 ? Image.file(
                                     File(item.imagePath),
                                     width: double.infinity,
                                     height: double.infinity,
                                     fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      print('[DEBUG] Image loading error for ${item.id}: $error');
+                                      return Container(
+                                        color: Colors.grey[200],
+                                        alignment: Alignment.center,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.broken_image, size: 48, color: Colors.grey),
+                                            SizedBox(height: 8),
+                                            Text('Image error', style: TextStyle(color: Colors.grey)),
+                                          ],
+                                        ),
+                                      );
+                                    },
                                   )
                                 : Container(
                                     color: Colors.grey[200],
                                     alignment: Alignment.center,
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
-                                      children: const [
+                                      children: [
                                         Icon(Icons.broken_image, size: 48, color: Colors.grey),
                                         SizedBox(height: 8),
                                         Text('Image not found', style: TextStyle(color: Colors.grey)),
