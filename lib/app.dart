@@ -1,5 +1,5 @@
 // lib/app.dart
-library app;
+library;
 
 import 'package:JewelryID/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';

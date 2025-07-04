@@ -8,6 +8,7 @@ import 'package:JewelryID/data/models/identified_item.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:ui';
+import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:http/http.dart' as http;
@@ -18,6 +19,9 @@ import 'package:flutter/scheduler.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:JewelryID/app.dart' as app;
 import 'package:JewelryID/core/theme/app_theme.dart';
+import 'package:JewelryID/services/cache_service.dart';
+import 'package:JewelryID/services/connectivity_service.dart';
+import 'package:JewelryID/locator.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -40,6 +44,7 @@ class _LibraryScreenBody extends StatefulWidget {
 
 class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   bool _fabMenuOpen = false;
+  bool _isProcessing = false;
   final ImagePicker _picker = ImagePicker();
 
   // ValueNotifier for subscription state
@@ -91,7 +96,10 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
     }
     final pickedFile = await _picker.pickImage(source: source, imageQuality: 85);
     if (pickedFile != null) {
-      setState(() => _fabMenuOpen = false);
+      setState(() {
+        _fabMenuOpen = false;
+        _isProcessing = true;
+      });
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -99,7 +107,28 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       );
       try {
         final savedPath = await _saveImageToAppDir(pickedFile.path);
-        final aiResult = await _identifyJewelryWithAI(File(savedPath));
+
+        // Check cache first
+        final cacheService = locator<CacheService>();
+        Map<String, dynamic>? aiResult = await cacheService.getCachedAnalysisResult(savedPath);
+
+        if (aiResult == null) {
+          // Check connectivity before making API call
+          final connectivityService = locator<ConnectivityService>();
+          final hasInternet = await connectivityService.hasInternetConnection();
+
+          if (!hasInternet) {
+            throw Exception('No internet connection. Please check your connection and try again.');
+          }
+
+          // If not in cache, call AI API
+          aiResult = await _identifyJewelryWithAI(File(savedPath));
+          if (aiResult != null) {
+            // Cache the result for future use
+            await cacheService.cacheAnalysisResult(savedPath, aiResult);
+          }
+        }
+
         if (aiResult != null) {
           final details = <String, dynamic>{
             if (aiResult['type'] != null) 'Type': aiResult['type'],
@@ -132,9 +161,20 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           _showError('AI did not return a valid result.');
         }
       } catch (e) {
-        _showError('Failed to identify image: $e');
+        String errorMessage = 'Failed to identify image';
+        if (e is Exception) {
+          errorMessage = e.toString().replaceAll('Exception: ', '');
+        } else {
+          errorMessage = 'An unexpected error occurred. Please try again.';
+        }
+        _showError(errorMessage);
       } finally {
-        if (mounted) Navigator.of(context, rootNavigator: true).pop();
+        if (mounted) {
+          Navigator.of(context, rootNavigator: true).pop();
+          setState(() {
+            _isProcessing = false;
+          });
+        }
       }
     }
   }
@@ -159,18 +199,44 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   }
 
   Future<Map<String, dynamic>?> _identifyJewelryWithAI(File imageFile) async {
-    final uri = Uri.parse('https://own-ai-backend-dev.fly.dev/identify-jewelry');
-    final request = http.MultipartRequest('POST', uri)
-      ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
-    final streamedResponse = await request.send();
-    final response = await http.Response.fromStream(streamedResponse);
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      if (data['success'] == true && data['result'] != null) {
-        return Map<String, dynamic>.from(data['result']);
+    try {
+      final uri = Uri.parse('https://own-ai-backend-dev.fly.dev/identify-jewelry');
+      final request = http.MultipartRequest('POST', uri)
+        ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+
+      // Add timeout to prevent hanging requests
+      final streamedResponse = await request.send().timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw TimeoutException('Request timed out. Please try again.');
+        },
+      );
+
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['result'] != null) {
+          return Map<String, dynamic>.from(data['result']);
+        } else {
+          throw Exception(data['error'] ?? 'AI analysis failed. Please try again.');
+        }
+      } else if (response.statusCode == 429) {
+        throw Exception('Too many requests. Please wait a moment and try again.');
+      } else if (response.statusCode >= 500) {
+        throw Exception('Server error. Please try again later.');
+      } else {
+        throw Exception('Failed to identify jewelry. Please try again.');
       }
+    } on FormatException {
+      throw Exception('Invalid response from server. Please try again.');
+    } on SocketException {
+      throw Exception('No internet connection. Please check your connection and try again.');
+    } on TimeoutException catch (e) {
+      throw Exception(e.message);
+    } catch (e) {
+      throw Exception('An unexpected error occurred: ${e.toString()}');
     }
-    return null;
   }
 
   void _showError(String message) {
@@ -517,8 +583,17 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       ),
       floatingActionButton: !_fabMenuOpen
           ? FloatingActionButton(
-              onPressed: _openFabMenu,
-              child: const Icon(HugeIcons.strokeRoundedCameraAi, size: 32),
+              onPressed: _isProcessing ? null : _openFabMenu,
+              child: _isProcessing
+                  ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : const Icon(HugeIcons.strokeRoundedCameraAi, size: 32),
             )
           : null,
     );
@@ -599,7 +674,7 @@ class _FunLoadingDialogState extends State<_FunLoadingDialog> with SingleTickerP
     'Inspecting the sparkle...',
     'Analyzing gemstones...',
     'Checking for hallmarks...',
-    "Consulting the jeweler\'s loupe...",
+    "Consulting the jeweler's loupe...",
     'Estimating carat weight...',
     'Comparing with famous pieces...',
     'Looking for hidden treasures...',

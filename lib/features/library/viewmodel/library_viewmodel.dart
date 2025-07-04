@@ -41,4 +41,43 @@ class LibraryViewModel extends ChangeNotifier {
     notifyListeners();
     await _saveItems();
   }
+
+  Future<void> updateItem(IdentifiedItem updatedItem) async {
+    final index = _items.indexWhere((item) => item.id == updatedItem.id);
+    if (index != -1) {
+      _items[index] = updatedItem;
+      notifyListeners();
+      await _saveItems();
+    }
+  }
+
+  Future<void> toggleFavorite(String id) async {
+    final index = _items.indexWhere((item) => item.id == id);
+    if (index != -1) {
+      final item = _items[index];
+      _items[index] = item.copyWith(isFavorite: !item.isFavorite);
+      notifyListeners();
+      await _saveItems();
+    }
+  }
+
+  List<IdentifiedItem> get favoriteItems => _items.where((item) => item.isFavorite).toList();
+
+  List<IdentifiedItem> getItemsByCategory(String category) {
+    return _items.where((item) => item.category == category).toList();
+  }
+
+  List<IdentifiedItem> getItemsByCollection(String collection) {
+    return _items.where((item) => item.collection == collection).toList();
+  }
+
+  List<String> get categories {
+    final categories = _items.map((item) => item.category).whereType<String>().toSet();
+    return categories.toList()..sort();
+  }
+
+  List<String> get collections {
+    final collections = _items.map((item) => item.collection).whereType<String>().toSet();
+    return collections.toList()..sort();
+  }
 }

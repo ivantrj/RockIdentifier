@@ -4,6 +4,8 @@ import 'package:JewelryID/core/theme/app_theme.dart';
 import 'package:JewelryID/core/widgets/section_header.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
 import 'package:in_app_review/in_app_review.dart';
+import 'package:JewelryID/services/cache_service.dart';
+import 'package:JewelryID/locator.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -49,6 +51,13 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.feedback_rounded,
             onTap: () => _launchUrl('mailto:hello.ivantrj@gmail.com?subject=App Feedback'),
           ),
+
+          // Storage Section
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
+            child: SectionHeader(title: 'Storage'),
+          ),
+          _buildCacheSettingsItem(context),
 
           // Support Section
           Padding(
@@ -150,6 +159,53 @@ class SettingsScreen extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Rating is not available yet.')),
       );
+    }
+  }
+
+  Widget _buildCacheSettingsItem(BuildContext context) {
+    return FutureBuilder<int>(
+      future: locator<CacheService>().getCacheSize(),
+      builder: (context, snapshot) {
+        final cacheSize = snapshot.data ?? 0;
+        final formattedSize = locator<CacheService>().formatCacheSize(cacheSize);
+
+        return _buildSettingsItem(
+          context: context,
+          title: 'Clear Cache',
+          subtitle: 'Cache size: $formattedSize',
+          icon: Icons.cleaning_services_rounded,
+          onTap: () => _showClearCacheDialog(context),
+        );
+      },
+    );
+  }
+
+  Future<void> _showClearCacheDialog(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear Cache'),
+        content: const Text('This will clear all cached AI analysis results. This action cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Clear'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      await locator<CacheService>().clearCache();
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Cache cleared successfully')),
+        );
+      }
     }
   }
 

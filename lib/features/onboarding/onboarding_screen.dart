@@ -4,7 +4,7 @@ import 'package:JewelryID/core/widgets/primary_button.dart';
 
 class OnboardingScreen extends StatefulWidget {
   final VoidCallback onFinish;
-  const OnboardingScreen({required this.onFinish, Key? key}) : super(key: key);
+  const OnboardingScreen({required this.onFinish, super.key});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();

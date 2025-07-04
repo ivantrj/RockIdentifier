@@ -1,4 +1,6 @@
 PODS:
+  - connectivity_plus (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - image_picker_ios (0.0.1):
     - Flutter
@@ -28,6 +30,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - Flutter (from `Flutter`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
@@ -45,6 +48,8 @@ SPEC REPOS:
     - RevenueCatUI
 
 EXTERNAL SOURCES:
+  connectivity_plus:
+    :path: ".symlinks/plugins/connectivity_plus/ios"
   Flutter:
     :path: Flutter
   image_picker_ios:
@@ -63,19 +68,20 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
+  connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
-  in_app_review: a31b5257259646ea78e0e35fc914979b0031d011
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  purchases_flutter: 9aaa7456914f0de0812d14ffc03a56f58c56960f
-  purchases_ui_flutter: 05096e4a43037aec4072259b2b933ca03ec1e9d7
+  image_picker_ios: 7fe1ff8e34c1790d6fff70a32484959f563a928a
+  in_app_review: 5596fe56fab799e8edb3561c03d053363ab13457
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  purchases_flutter: 4b19bac8c1337732b768d0aa6386db14ca8cfc1f
+  purchases_ui_flutter: 97872a86acc10d7e16b6e0a553eda0f405cb580b
   PurchasesHybridCommon: 5a46c67f78680dee9289783edbcebd983ff7bd9c
   PurchasesHybridCommonUI: 16e8f67451f43e55308a10651283ecd0953d8bf7
   RevenueCat: 5fa12c42c14b390dd2423897e925f407f474b8fa
   RevenueCatUI: fd24e43324c5e3711e5b5cba18eadd0fe2f023d0
-  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
-  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
+  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
 PODFILE CHECKSUM: 4305caec6b40dde0ae97be1573c53de1882a07e5
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

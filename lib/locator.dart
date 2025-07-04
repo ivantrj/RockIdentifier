@@ -3,6 +3,8 @@ import 'package:get_it/get_it.dart';
 import 'package:JewelryID/features/app_shell/viewmodel/app_shell_viewmodel.dart';
 import 'data/sources/local/preferences_service.dart';
 import 'services/theme_service.dart';
+import 'services/cache_service.dart';
+import 'services/connectivity_service.dart';
 // Import other services, repositories, and viewmodels as you create them
 
 // Create a global instance of GetIt
@@ -21,6 +23,14 @@ Future<void> setupLocator() async {
 
   // ThemeService: Register as a lazy singleton.
   locator.registerLazySingleton<ThemeService>(() => ThemeService());
+
+  // CacheService: Register as a singleton.
+  final cacheService = CacheService();
+  await cacheService.init();
+  locator.registerSingleton<CacheService>(cacheService);
+
+  // ConnectivityService: Register as a singleton.
+  locator.registerSingleton<ConnectivityService>(ConnectivityService());
 
   // --- Repositories ---
   // Example: locator.registerLazySingleton<SettingsRepository>(() => SettingsRepositoryImpl(locator<PreferencesService>()));
