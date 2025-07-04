@@ -198,6 +198,25 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
     return 0.0;
   }
 
+  String _extractPriceRange(String priceText) {
+    // Extract just the price range from text like "$50-$100 depending on the specific model"
+    final priceRegex = RegExp(r'\$[\d,]+(?:-\$[\d,]+)?');
+    final match = priceRegex.firstMatch(priceText);
+    if (match != null) {
+      return match.group(0)!;
+    }
+
+    // Try to find any price-like pattern
+    final anyPriceRegex = RegExp(r'[\d,]+(?:-[\d,]+)?\s*(?:USD|dollars?|bucks?)', caseSensitive: false);
+    final anyMatch = anyPriceRegex.firstMatch(priceText);
+    if (anyMatch != null) {
+      return anyMatch.group(0)!;
+    }
+
+    // If no price range found, return first 20 characters
+    return priceText.length > 20 ? '${priceText.substring(0, 20)}...' : priceText;
+  }
+
   Future<Map<String, dynamic>?> _identifyJewelryWithAI(File imageFile) async {
     try {
       final uri = Uri.parse('https://own-ai-backend-dev.fly.dev/identify-jewelry');
@@ -451,7 +470,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                                   ],
                                 ),
                                 child: Text(
-                                  item.details['Estimated Price'].toString(),
+                                  _extractPriceRange(item.details['Estimated Price'].toString()),
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,

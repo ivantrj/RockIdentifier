@@ -6,6 +6,7 @@ import 'package:JewelryID/data/models/identified_item.dart';
 import 'package:JewelryID/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:JewelryID/features/chat/view/chat_screen.dart';
 
 class ItemDetailScreen extends StatelessWidget {
   final IdentifiedItem item;
@@ -122,6 +123,10 @@ class ItemDetailScreen extends StatelessWidget {
                       _buildPriceSection(context, price),
                       const SizedBox(height: 32),
                     ],
+
+                    // Chat with AI section
+                    _buildChatSection(context),
+                    const SizedBox(height: 32),
 
                     // Key Details section
                     _buildKeyDetailsSection(context, details),
@@ -658,6 +663,83 @@ class ItemDetailScreen extends StatelessWidget {
                 ),
                 Icon(
                   HugeIcons.strokeRoundedSquareArrowUpRight,
+                  color: AppTheme.primaryColor,
+                  size: 18,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChatSection(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode ? AppTheme.darkCardColor : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppTheme.primaryColor.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChatScreen(item: item),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    Icons.chat_bubble_outline,
+                    color: AppTheme.primaryColor,
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Chat with AI Expert',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: isDarkMode ? Colors.white : Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Ask questions about care, value, authenticity & more',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.7),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  HugeIcons.strokeRoundedArrowRight01,
                   color: AppTheme.primaryColor,
                   size: 18,
                 ),
