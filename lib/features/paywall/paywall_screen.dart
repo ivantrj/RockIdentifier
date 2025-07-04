@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:JewelryID/core/theme/app_theme.dart';
+import 'package:JewelryID/main.dart';
 
 class PaywallScreen extends StatefulWidget {
   const PaywallScreen({super.key});
@@ -55,6 +56,15 @@ class _PaywallScreenState extends State<PaywallScreen> {
     setState(() => _purchasing = true);
     try {
       await Purchases.purchasePackage(_selectedPackage!);
+
+      // Update subscription status in singleton
+      try {
+        final purchaserInfo = await Purchases.getCustomerInfo();
+        RevenueCatService.isSubscribed = purchaserInfo.entitlements.active.isNotEmpty;
+      } catch (e) {
+        RevenueCatService.isSubscribed = false;
+      }
+
       if (mounted) Navigator.of(context).pop(true); // Close paywall on success
     } catch (e) {
       // Optionally show error
@@ -68,131 +78,221 @@ class _PaywallScreenState extends State<PaywallScreen> {
     final theme = Theme.of(context);
     final primaryColor = AppTheme.primaryColor; // Amethyst purple
     final lightPrimary = primaryColor.withValues(alpha: 0.1); // Light purple background
+
+    // Check real-time subscription status
+    final isSubscribed = RevenueCatService.isSubscribed;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
-        child: _loading
-            ? const Center(child: CircularProgressIndicator())
-            : _error != null
-                ? Center(child: Text(_error!, style: const TextStyle(color: Colors.red)))
-                : Stack(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 120),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 24),
-                              // Diamond image from assets
-                              Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  color: lightPrimary,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Image.asset(
-                                  'assets/images/diamond.png',
-                                  width: 88,
-                                  height: 88,
-                                  fit: BoxFit.contain,
-                                ),
+        child: isSubscribed
+            ? _buildThankYouScreen(primaryColor, lightPrimary)
+            : _loading
+                ? const Center(child: CircularProgressIndicator())
+                : _error != null
+                    ? Center(child: Text(_error!, style: TextStyle(color: theme.colorScheme.error)))
+                    : Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 120),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 24),
+                                  // Diamond image from assets
+                                  Container(
+                                    padding: const EdgeInsets.all(20),
+                                    decoration: BoxDecoration(
+                                      color: lightPrimary,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Image.asset(
+                                      'assets/images/diamond.png',
+                                      width: 88,
+                                      height: 88,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 18),
+                                  Text('Unlimited Access',
+                                      style: TextStyle(
+                                          fontSize: 26,
+                                          fontWeight: FontWeight.bold,
+                                          color: theme.textTheme.headlineMedium?.color)),
+                                  const SizedBox(height: 18),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                                    child: Column(
+                                      children: [
+                                        _featureRow(
+                                            Icons.camera_alt_rounded, 'Identify unlimited jewelry', primaryColor),
+                                        _featureRow(Icons.search_rounded, 'Get detailed analysis', primaryColor),
+                                        _featureRow(Icons.menu_book_rounded, 'Access market valuations', primaryColor),
+                                        _featureRow(Icons.lock_open_rounded, 'Remove usage limits', primaryColor),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 28),
+                                  _buildPackages(theme, primaryColor, lightPrimary),
+                                  _buildTrialToggle(primaryColor),
+                                  const SizedBox(height: 20),
+                                ],
                               ),
-                              const SizedBox(height: 18),
-                              const Text('Unlimited Access',
-                                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-                              const SizedBox(height: 18),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 32),
-                                child: Column(
+                            ),
+                          ),
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    height: 54,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: primaryColor,
+                                        foregroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                                        textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                      ),
+                                      onPressed: _purchasing ? null : _purchase,
+                                      child: _purchasing
+                                          ? const SizedBox(
+                                              width: 24,
+                                              height: 24,
+                                              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+                                            )
+                                          : Text(_selectedPackage != null &&
+                                                  _selectedPackage!.identifier.toLowerCase().contains('week')
+                                              ? 'Try for Free'
+                                              : 'Subscribe'),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 18),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    _featureRow(Icons.camera_alt_rounded, 'Identify unlimited jewelry', primaryColor),
-                                    _featureRow(Icons.search_rounded, 'Get detailed analysis', primaryColor),
-                                    _featureRow(Icons.menu_book_rounded, 'Access market valuations', primaryColor),
-                                    _featureRow(Icons.lock_open_rounded, 'Remove usage limits', primaryColor),
+                                    TextButton(
+                                      onPressed: () => Purchases.restorePurchases(),
+                                      child: Text('Restore', style: TextStyle(color: theme.colorScheme.primary)),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    TextButton(
+                                      onPressed: () {},
+                                      child: Text('Terms', style: TextStyle(color: theme.colorScheme.primary)),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    TextButton(
+                                      onPressed: () {},
+                                      child: Text('Privacy Policy', style: TextStyle(color: theme.colorScheme.primary)),
+                                    ),
                                   ],
                                 ),
-                              ),
-                              const SizedBox(height: 28),
-                              _buildPackages(theme, primaryColor, lightPrimary),
-                              _buildTrialToggle(primaryColor),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 24),
-                              child: SizedBox(
-                                width: double.infinity,
-                                height: 54,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: primaryColor,
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                                    textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                  ),
-                                  onPressed: _purchasing ? null : _purchase,
-                                  child: _purchasing
-                                      ? const SizedBox(
-                                          width: 24,
-                                          height: 24,
-                                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
-                                        )
-                                      : Text(_selectedPackage != null &&
-                                              _selectedPackage!.identifier.toLowerCase().contains('week')
-                                          ? 'Try for Free'
-                                          : 'Subscribe'),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 18),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TextButton(
-                                  onPressed: () => Purchases.restorePurchases(),
-                                  child: const Text('Restore'),
-                                ),
-                                const SizedBox(width: 8),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: const Text('Terms'),
-                                ),
-                                const SizedBox(width: 8),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: const Text('Privacy Policy'),
-                                ),
+                                const SizedBox(height: 10),
                               ],
                             ),
-                            const SizedBox(height: 10),
-                          ],
-                        ),
+                          ),
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: IconButton(
+                              icon: const Icon(Icons.close_rounded, size: 32),
+                              color: theme.iconTheme.color?.withValues(alpha: 0.6),
+                              onPressed: () => Navigator.of(context).maybePop(),
+                            ),
+                          ),
+                        ],
                       ),
-                      Positioned(
-                        top: 0,
-                        right: 0,
-                        child: IconButton(
-                          icon: const Icon(Icons.close_rounded, size: 32),
-                          color: Colors.black54,
-                          onPressed: () => Navigator.of(context).maybePop(),
-                        ),
-                      ),
-                    ],
-                  ),
       ),
     );
   }
 
+  Widget _buildThankYouScreen(Color primaryColor, Color lightPrimary) {
+    final theme = Theme.of(context);
+    return Stack(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 24),
+            // Diamond image from assets
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: lightPrimary,
+                shape: BoxShape.circle,
+              ),
+              child: Image.asset(
+                'assets/images/diamond.png',
+                width: 88,
+                height: 88,
+                fit: BoxFit.contain,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              'Thank You!',
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: theme.textTheme.headlineLarge?.color),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'You\'re now subscribed to JewelryID Pro',
+              style: TextStyle(fontSize: 18, color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7)),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Column(
+                children: [
+                  _featureRow(Icons.camera_alt_rounded, 'Unlimited jewelry identification', primaryColor),
+                  _featureRow(Icons.search_rounded, 'Detailed AI analysis', primaryColor),
+                  _featureRow(Icons.menu_book_rounded, 'Market valuations', primaryColor),
+                  _featureRow(Icons.lock_open_rounded, 'No usage limits', primaryColor),
+                ],
+              ),
+            ),
+            const SizedBox(height: 40),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryColor,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                    textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Start Using Pro'),
+                ),
+              ),
+            ),
+            const Spacer(),
+          ],
+        ),
+        Positioned(
+          top: 0,
+          right: 0,
+          child: IconButton(
+            icon: const Icon(Icons.close_rounded, size: 32),
+            color: theme.iconTheme.color?.withValues(alpha: 0.6),
+            onPressed: () => Navigator.of(context).maybePop(),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _featureRow(IconData icon, String text, Color color) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -202,7 +302,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: theme.textTheme.bodyLarge?.color),
             ),
           ),
         ],
@@ -211,6 +311,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
   }
 
   Widget _buildTrialToggle(Color primaryColor) {
+    final theme = Theme.of(context);
     final packages = _offerings!.current!.availablePackages;
     final yearlyList = packages.where(
       (p) => p.identifier.toLowerCase().contains('annual') || p.storeProduct.title.toLowerCase().contains('annual'),
@@ -227,7 +328,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        const Text('Free Trial Enabled', style: TextStyle(fontWeight: FontWeight.w600)),
+        Text('Free Trial Enabled',
+            style: TextStyle(fontWeight: FontWeight.w600, color: theme.textTheme.bodyLarge?.color)),
         CupertinoSwitch(
           value: isTrial,
           onChanged: (val) {
@@ -240,7 +342,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
             });
           },
           activeTrackColor: primaryColor,
-          inactiveTrackColor: Colors.grey,
+          inactiveTrackColor: theme.colorScheme.surfaceContainerHighest,
           thumbColor: Colors.white,
         ),
       ],
@@ -301,14 +403,17 @@ class _PaywallScreenState extends State<PaywallScreen> {
     String? customTitle,
     String? customSubtitle,
   }) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 7),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: selected ? lightPrimary : Colors.white,
-          border: Border.all(color: selected ? primaryColor : Colors.grey.shade300, width: selected ? 2 : 1),
+          color: selected ? lightPrimary : theme.cardColor,
+          border: Border.all(
+              color: selected ? primaryColor : theme.colorScheme.outline.withValues(alpha: 0.3),
+              width: selected ? 2 : 1),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -327,7 +432,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     children: [
                       Text(
                         customTitle ?? pkg.storeProduct.title,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 17, color: theme.textTheme.titleLarge?.color),
                       ),
                       const SizedBox(width: 8),
                       if (badge.isNotEmpty)
@@ -352,7 +458,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                   if ((customSubtitle ?? '').isNotEmpty)
                     Text(
                       customSubtitle!,
-                      style: const TextStyle(fontSize: 15, color: Colors.black),
+                      style: TextStyle(fontSize: 15, color: theme.textTheme.bodyMedium?.color),
                     ),
                 ],
               ),

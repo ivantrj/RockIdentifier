@@ -534,26 +534,10 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                       color: isSubscribed ? Theme.of(context).colorScheme.primary : Colors.amber,
                     ),
                   ),
-                  tooltip: isSubscribed ? 'Thank you for subscribing!' : 'Unlock Premium',
+                  tooltip: isSubscribed ? 'Thank you for subscribing!' : 'Unlock Pro',
                   onPressed: () async {
-                    if (!isSubscribed) {
-                      if (!app.paywallOpen) {
-                        app.paywallOpen = true;
-                        await showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.white,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                          ),
-                          builder: (context) => FractionallySizedBox(
-                            heightFactor: 0.95, // % of the screen height, adjust as needed
-                            child: PaywallScreen(),
-                          ),
-                        );
-                        app.paywallOpen = false;
-                      }
-                    } else {
+                    if (!app.paywallOpen) {
+                      app.paywallOpen = true;
                       await showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
@@ -566,6 +550,14 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                           child: PaywallScreen(),
                         ),
                       );
+                      app.paywallOpen = false;
+
+                      // Refresh subscription status after paywall is closed
+                      final updatedSubscriptionStatus = main.RevenueCatService.isSubscribed;
+                      if (updatedSubscriptionStatus != isSubscribedNotifier.value) {
+                        isSubscribedNotifier.value = updatedSubscriptionStatus;
+                        main.RevenueCatService.isSubscribed = updatedSubscriptionStatus;
+                      }
                     }
                   },
                 ),
@@ -1084,7 +1076,7 @@ class _PremiumThankYouModalState extends State<_PremiumThankYouModal> with Singl
           ),
           const SizedBox(height: 24),
           const Text(
-            'Thank you for subscribing to JewelryID Premium!',
+            'Thank you for subscribing to JewelryID Pro!',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: -0.5),
           ),
