@@ -553,10 +553,19 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                       app.paywallOpen = false;
 
                       // Refresh subscription status after paywall is closed
-                      final updatedSubscriptionStatus = main.RevenueCatService.isSubscribed;
-                      if (updatedSubscriptionStatus != isSubscribedNotifier.value) {
-                        isSubscribedNotifier.value = updatedSubscriptionStatus;
-                        main.RevenueCatService.isSubscribed = updatedSubscriptionStatus;
+                      try {
+                        final purchaserInfo = await Purchases.getCustomerInfo();
+                        final updatedSubscriptionStatus = purchaserInfo.entitlements.active.isNotEmpty;
+                        if (updatedSubscriptionStatus != isSubscribedNotifier.value) {
+                          isSubscribedNotifier.value = updatedSubscriptionStatus;
+                          main.RevenueCatService.isSubscribed = updatedSubscriptionStatus;
+                        }
+                      } catch (e) {
+                        // If we can't get the latest info, just use the cached value
+                        final updatedSubscriptionStatus = main.RevenueCatService.isSubscribed;
+                        if (updatedSubscriptionStatus != isSubscribedNotifier.value) {
+                          isSubscribedNotifier.value = updatedSubscriptionStatus;
+                        }
                       }
                     }
                   },

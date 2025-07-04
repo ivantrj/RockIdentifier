@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:JewelryID/core/theme/app_theme.dart';
 import 'package:JewelryID/main.dart';
+import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
 
 class PaywallScreen extends StatefulWidget {
   const PaywallScreen({super.key});
@@ -70,6 +71,40 @@ class _PaywallScreenState extends State<PaywallScreen> {
       // Optionally show error
     } finally {
       if (mounted) setState(() => _purchasing = false);
+    }
+  }
+
+  Future<void> _launchUrl(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      // Error is silently ignored as it's not critical
+      debugPrint('Could not launch $urlString');
+    }
+  }
+
+  Future<void> _restorePurchases() async {
+    try {
+      await Purchases.restorePurchases();
+
+      // Update subscription status after restore
+      try {
+        final purchaserInfo = await Purchases.getCustomerInfo();
+        RevenueCatService.isSubscribed = purchaserInfo.entitlements.active.isNotEmpty;
+      } catch (e) {
+        RevenueCatService.isSubscribed = false;
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Purchases restored successfully')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to restore purchases')),
+        );
+      }
     }
   }
 
@@ -178,17 +213,18 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     TextButton(
-                                      onPressed: () => Purchases.restorePurchases(),
+                                      onPressed: () => _restorePurchases(),
                                       child: Text('Restore', style: TextStyle(color: theme.colorScheme.primary)),
                                     ),
                                     const SizedBox(width: 8),
                                     TextButton(
-                                      onPressed: () {},
+                                      onPressed: () => _launchUrl(
+                                          'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/'),
                                       child: Text('Terms', style: TextStyle(color: theme.colorScheme.primary)),
                                     ),
                                     const SizedBox(width: 8),
                                     TextButton(
-                                      onPressed: () {},
+                                      onPressed: () => _launchUrl('https://www.ivantrj.com/app-privacy-policy'),
                                       child: Text('Privacy Policy', style: TextStyle(color: theme.colorScheme.primary)),
                                     ),
                                   ],
