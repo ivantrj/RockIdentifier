@@ -83,17 +83,18 @@ class _PaywallScreenState extends State<PaywallScreen> {
                           child: Column(
                             children: [
                               const SizedBox(height: 24),
-                              // Better jewelry-themed icon
+                              // Diamond image from assets
                               Container(
                                 padding: const EdgeInsets.all(20),
                                 decoration: BoxDecoration(
                                   color: lightPrimary,
                                   shape: BoxShape.circle,
                                 ),
-                                child: Icon(
-                                  Icons.auto_awesome, // Sparkle icon for premium jewelry
-                                  color: primaryColor,
-                                  size: 88,
+                                child: Image.asset(
+                                  'assets/images/diamond.png',
+                                  width: 88,
+                                  height: 88,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                               const SizedBox(height: 18),
