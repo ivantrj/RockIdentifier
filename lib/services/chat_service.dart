@@ -33,7 +33,7 @@ class ChatMessage {
 class ChatService {
   static const String _baseUrl = 'https://own-ai-backend-dev.fly.dev';
 
-  /// Send a message to the AI about a specific jewelry item
+  /// Send a message to the AI about a specific item (jewelry, plant, or any other type)
   Future<String> sendMessage({
     required String itemId,
     required String message,
@@ -41,7 +41,7 @@ class ChatService {
     List<ChatMessage>? chatHistory,
   }) async {
     try {
-      final uri = Uri.parse('$_baseUrl/chat-jewelry');
+      final uri = Uri.parse('$_baseUrl/chat');
 
       // Convert chat history to the format expected by the server
       List<Map<String, dynamic>>? history;
@@ -56,6 +56,44 @@ class ChatService {
             .toList();
       }
 
+      // Determine item type based on the result or category
+      String itemType = _determineItemType(item);
+
+      // Build item details for the new endpoint
+      Map<String, dynamic> itemDetails = {
+        'name': item.result,
+        'type': itemType,
+        'subtitle': item.subtitle,
+        'confidence': '${(item.confidence * 100).toStringAsFixed(1)}%',
+        'description': item.details['Description'] ?? 'No description available',
+        'estimatedPrice': item.estimatedPrice ?? 'Unknown',
+      };
+
+      // Add type-specific details
+      if (itemType.toLowerCase() == 'jewelry') {
+        itemDetails.addAll({
+          'careGuide': item.details['Care Tips'] ?? 'No care guide available',
+          'material': item.material ?? 'Unknown',
+          'gemstoneDetails': item.gemstones ?? 'No gemstone details available',
+          'brandOrMaker': item.brandOrMaker ?? 'Unknown',
+          'eraOrStyle': item.eraOrStyle ?? 'Unknown',
+          'authenticity': item.authenticity ?? 'Unknown',
+          'condition': item.condition ?? 'Unknown',
+        });
+      } else if (itemType.toLowerCase() == 'plant') {
+        itemDetails.addAll({
+          'careGuide': item.details['Care Guide'] ?? 'No care guide available',
+          'toxicity': item.details['Toxicity'] ?? 'No toxicity information available',
+          'watering': item.details['Watering'] ?? 'No watering information available',
+          'lighting': item.details['Lighting'] ?? 'No lighting information available',
+        });
+      }
+
+      // Add Wikipedia link if available
+      if (item.details['Wikipedia'] != null) {
+        itemDetails['wikipedia'] = item.details['Wikipedia'];
+      }
+
       final response = await http.post(
         uri,
         headers: {
@@ -65,18 +103,7 @@ class ChatService {
           'itemId': itemId,
           'message': message,
           'chatHistory': history,
-          'itemDetails': {
-            'type': item.result,
-            'material': item.material,
-            'brandOrMaker': item.brandOrMaker,
-            'eraOrStyle': item.eraOrStyle,
-            'authenticity': item.authenticity,
-            'condition': item.condition,
-            'estimatedPrice': item.estimatedPrice,
-            'description': item.details['Description'],
-            'gemstoneDetails': item.details['Gemstones'],
-            'careTips': item.details['Care Tips'],
-          },
+          'itemDetails': itemDetails,
         }),
       );
 
@@ -93,6 +120,45 @@ class ChatService {
     } catch (e) {
       throw Exception('Failed to send message: ${e.toString()}');
     }
+  }
+
+  /// Determine the item type based on the item's properties
+  String _determineItemType(IdentifiedItem item) {
+    // Check if it's explicitly categorized
+    if (item.category != null) {
+      return item.category!;
+    }
+
+    // Check the result text for common keywords
+    String result = item.result.toLowerCase();
+
+    // Jewelry keywords
+    if (result.contains('ring') ||
+        result.contains('necklace') ||
+        result.contains('bracelet') ||
+        result.contains('earring') ||
+        result.contains('pendant') ||
+        result.contains('diamond') ||
+        result.contains('gold') ||
+        result.contains('silver') ||
+        result.contains('jewelry') ||
+        result.contains('gemstone')) {
+      return 'jewelry';
+    }
+
+    // Plant keywords
+    if (result.contains('plant') ||
+        result.contains('flower') ||
+        result.contains('tree') ||
+        result.contains('cactus') ||
+        result.contains('succulent') ||
+        result.contains('herb') ||
+        result.contains('leaf')) {
+      return 'plant';
+    }
+
+    // Default to the result as the type
+    return item.result;
   }
 
   /// Get chat history for an item (for future use)
