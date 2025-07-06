@@ -190,6 +190,9 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           // Show the not jewelry dialog
           if (mounted) {
             Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
+            setState(() {
+              _isProcessing = false;
+            });
             showDialog(
               context: context,
               builder: (context) => const _NotJewelryDialog(),
