@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:JewelryID/core/theme/app_theme.dart';
-import 'package:JewelryID/core/widgets/primary_button.dart';
+import 'package:jewelry_id/core/theme/app_theme.dart';
+import 'package:jewelry_id/core/widgets/primary_button.dart';
 
 class OnboardingScreen extends StatefulWidget {
   final VoidCallback onFinish;

@@ -1,4 +1,4 @@
-package com.example.JewelryID
+package com.example.jewelry_id
 
 import io.flutter.embedding.android.FlutterActivity
 

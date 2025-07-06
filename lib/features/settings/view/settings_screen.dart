@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:JewelryID/core/theme/app_theme.dart';
-import 'package:JewelryID/core/widgets/section_header.dart';
+import 'package:jewelry_id/core/theme/app_theme.dart';
+import 'package:jewelry_id/core/widgets/section_header.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
 import 'package:in_app_review/in_app_review.dart';
-import 'package:JewelryID/services/cache_service.dart';
-import 'package:JewelryID/locator.dart';
+import 'package:jewelry_id/services/cache_service.dart';
+import 'package:jewelry_id/locator.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});

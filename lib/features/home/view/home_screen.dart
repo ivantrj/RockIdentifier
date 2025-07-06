@@ -5,13 +5,13 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:JewelryID/core/theme/app_theme.dart';
-import 'package:JewelryID/core/widgets/app_card.dart';
-import 'package:JewelryID/core/widgets/category_card.dart';
-import 'package:JewelryID/core/widgets/list_item_card.dart';
-import 'package:JewelryID/core/widgets/primary_button.dart';
-import 'package:JewelryID/core/widgets/secondary_button.dart';
-import 'package:JewelryID/core/widgets/section_header.dart';
+import 'package:jewelry_id/core/theme/app_theme.dart';
+import 'package:jewelry_id/core/widgets/app_card.dart';
+import 'package:jewelry_id/core/widgets/category_card.dart';
+import 'package:jewelry_id/core/widgets/list_item_card.dart';
+import 'package:jewelry_id/core/widgets/primary_button.dart';
+import 'package:jewelry_id/core/widgets/secondary_button.dart';
+import 'package:jewelry_id/core/widgets/section_header.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

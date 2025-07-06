@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:JewelryID/data/models/identified_item.dart';
-import 'package:JewelryID/services/chat_service.dart';
-import 'package:JewelryID/core/theme/app_theme.dart';
+import 'package:jewelry_id/data/models/identified_item.dart';
+import 'package:jewelry_id/services/chat_service.dart';
+import 'package:jewelry_id/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -18,7 +18,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final ScrollController _scrollController = ScrollController();
   final ChatService _chatService = ChatService();
 
-  List<ChatMessage> _messages = [];
+  final List<ChatMessage> _messages = [];
   bool _isLoading = false;
 
   @override

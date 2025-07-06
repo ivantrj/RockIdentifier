@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:JewelryID/data/models/identified_item.dart';
+import 'package:jewelry_id/data/models/identified_item.dart';
 
 class ChatMessage {
   final String id;

@@ -1,10 +1,10 @@
 // lib/app.dart
 library;
 
-import 'package:JewelryID/features/paywall/paywall_screen.dart';
+import 'package:jewelry_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:JewelryID/features/library/view/library_screen.dart';
+import 'package:jewelry_id/features/library/view/library_screen.dart';
 import 'core/navigation/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'services/theme_service.dart';
@@ -57,7 +57,7 @@ class _AppState extends State<App> {
     }
     return MaterialApp(
       navigatorKey: rootNavKey,
-      title: 'JewelryID',
+      title: 'jewelry_id',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

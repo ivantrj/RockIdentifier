@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:JewelryID/core/theme/app_theme.dart';
-import 'package:JewelryID/main.dart';
+import 'package:jewelry_id/core/theme/app_theme.dart';
+import 'package:jewelry_id/main.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
 
 class PaywallScreen extends StatefulWidget {
@@ -277,7 +277,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'You\'re now subscribed to JewelryID Pro',
+              'You\'re now subscribed to jewelry_id Pro',
               style: TextStyle(fontSize: 18, color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7)),
               textAlign: TextAlign.center,
             ),

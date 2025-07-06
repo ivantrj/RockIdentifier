@@ -1,10 +1,10 @@
-import 'package:JewelryID/features/paywall/paywall_screen.dart';
+import 'package:jewelry_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
-import 'package:JewelryID/features/library/view/detail_screen.dart';
+import 'package:jewelry_id/features/library/view/detail_screen.dart';
 import '../viewmodel/library_viewmodel.dart';
-import 'package:JewelryID/data/models/identified_item.dart';
+import 'package:jewelry_id/data/models/identified_item.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:ui';
@@ -17,11 +17,11 @@ import 'dart:math';
 import '../../../main.dart' as main;
 import 'package:flutter/scheduler.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:JewelryID/app.dart' as app;
-import 'package:JewelryID/core/theme/app_theme.dart';
-import 'package:JewelryID/services/cache_service.dart';
-import 'package:JewelryID/services/connectivity_service.dart';
-import 'package:JewelryID/locator.dart';
+import 'package:jewelry_id/app.dart' as app;
+import 'package:jewelry_id/core/theme/app_theme.dart';
+import 'package:jewelry_id/services/cache_service.dart';
+import 'package:jewelry_id/services/connectivity_service.dart';
+import 'package:jewelry_id/locator.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -82,7 +82,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       // Create a more reliable filename format
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final extension = p.extension(imagePath);
-      final safeFileName = 'jewelry_${timestamp}$extension';
+      final safeFileName = 'jewelry_$timestamp$extension';
       final savedPath = p.join(appDir.path, safeFileName);
 
       // Copy the file
@@ -1085,7 +1085,7 @@ class _PremiumThankYouModalState extends State<_PremiumThankYouModal> with Singl
           ),
           const SizedBox(height: 24),
           const Text(
-            'Thank you for subscribing to JewelryID Pro!',
+            'Thank you for subscribing to jewelry_id Pro!',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: -0.5),
           ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:JewelryID/data/models/identified_item.dart';
+import 'package:jewelry_id/data/models/identified_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
