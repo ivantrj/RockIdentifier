@@ -179,24 +179,31 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           );
           if (mounted) {
             context.read<LibraryViewModel>().addItem(item);
+            Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
           }
         } else {
           _showError('AI did not return a valid result.');
+          if (mounted) Navigator.of(context, rootNavigator: true).pop();
         }
       } catch (e) {
-        String errorMessage = 'Failed to identify image';
-        if (e is Exception) {
-          errorMessage = e.toString().replaceAll('Exception: ', '');
+        if (e.toString().contains('NOT_JEWELRY')) {
+          // Show the not jewelry dialog
+          if (mounted) {
+            Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
+            showDialog(
+              context: context,
+              builder: (context) => const _NotJewelryDialog(),
+            );
+          }
         } else {
-          errorMessage = 'An unexpected error occurred. Please try again.';
-        }
-        _showError(errorMessage);
-      } finally {
-        if (mounted) {
-          Navigator.of(context, rootNavigator: true).pop();
-          setState(() {
-            _isProcessing = false;
-          });
+          String errorMessage = 'Failed to identify image';
+          if (e is Exception) {
+            errorMessage = e.toString().replaceAll('Exception: ', '');
+          } else {
+            errorMessage = 'An unexpected error occurred. Please try again.';
+          }
+          _showError(errorMessage);
+          if (mounted) Navigator.of(context, rootNavigator: true).pop();
         }
       }
     }
@@ -405,8 +412,16 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         final data = json.decode(response.body);
         if (data['success'] == true && data['result'] != null) {
           return Map<String, dynamic>.from(data['result']);
-        } else {
-          throw Exception(data['error'] ?? 'AI analysis failed. Please try again.');
+        } else if (data['success'] == false && data['error'] != null) {
+          // Check if the error indicates it's not jewelry
+          final error = data['error'].toString().toLowerCase();
+          if (error.contains('does not contain jewelry') ||
+              error.contains('not jewelry') ||
+              error.contains('no jewelry')) {
+            throw Exception('NOT_JEWELRY');
+          }
+          // For other errors, throw the actual error message
+          throw Exception(data['error'].toString());
         }
       } else if (response.statusCode == 429) {
         throw Exception('Too many requests. Please wait a moment and try again.');
@@ -1054,6 +1069,32 @@ class _PremiumThankYouModalState extends State<_PremiumThankYouModal> with Singl
           ),
         ],
       ),
+    );
+  }
+}
+
+class _NotJewelryDialog extends StatelessWidget {
+  const _NotJewelryDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return AlertDialog(
+      backgroundColor: isDarkMode ? const Color(0xFF2A2A36) : Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      title: const Text(
+        'No Jewelry Found',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      content: const Text(
+        'This image doesn\'t appear to contain jewelry. Please try taking a photo of a ring, necklace, bracelet, or other jewelry item.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('OK'),
+        ),
+      ],
     );
   }
 }
