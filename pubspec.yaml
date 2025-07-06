@@ -29,6 +29,7 @@ dependencies:
   in_app_review: ^2.0.8
   crypto: ^3.0.3
   connectivity_plus: ^6.0.5
+  flutter_svg: ^2.2.0
 
 dev_dependencies:
   flutter_test:
@@ -40,6 +41,9 @@ flutter:
   assets:
     - assets/icon/icon.png
     - assets/images/
+    - assets/onboarding/onboarding_1.svg
+    - assets/onboarding/onboarding_2.svg
+    - assets/onboarding/onboarding_3.svg
 
 flutter_launcher_icons:
   android: true

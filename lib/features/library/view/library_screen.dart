@@ -93,13 +93,8 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         throw Exception('Failed to save image file');
       }
 
-      print('[DEBUG] Saved image to: \'${savedImage.path}\'');
-      print('[DEBUG] File size: ${await savedImage.length()} bytes');
-      print('[DEBUG] File exists after save: ${await savedImage.exists()}');
-
       return savedImage.path;
     } catch (e) {
-      print('[DEBUG] Error saving image: $e');
       rethrow;
     }
   }
@@ -251,16 +246,12 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       final items = context.read<LibraryViewModel>().items;
       final appDir = await getApplicationDocumentsDirectory();
 
-      print('[DEBUG] Verifying ${items.length} saved images...');
-
       for (final item in items) {
         if (item.imagePath.isNotEmpty) {
           final file = File(item.imagePath);
           final exists = await file.exists();
 
           if (!exists) {
-            print('[DEBUG] MISSING IMAGE: Item ${item.id} - ${item.imagePath}');
-
             // Check if the file might be in the documents directory with a different name
             final fileName = p.basename(item.imagePath);
             final possibleFiles = appDir
@@ -268,28 +259,19 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                 .where((entity) => entity is File && p.basename(entity.path).contains('jewelry_'))
                 .toList();
 
-            print('[DEBUG] Found ${possibleFiles.length} jewelry files in documents directory');
-            for (final file in possibleFiles) {
-              print('[DEBUG] - ${p.basename(file.path)}');
-            }
+            for (final file in possibleFiles) {}
 
             // Try to migrate old image format
             await _migrateOldImage(item);
-          } else {
-            print('[DEBUG] Image exists: ${item.id} - ${p.basename(item.imagePath)}');
-          }
+          } else {}
         }
       }
-    } catch (e) {
-      print('[DEBUG] Error verifying images: $e');
-    }
+    } catch (e) {}
   }
 
   /// Migrate old image format to new format
   Future<void> _migrateOldImage(IdentifiedItem item) async {
     try {
-      print('[DEBUG] Attempting to migrate image for item ${item.id}');
-
       // Check if the original image still exists in the documents directory
       final appDir = await getApplicationDocumentsDirectory();
       final oldFileName = p.basename(item.imagePath);
@@ -302,13 +284,10 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
               (p.basename(entity.path).contains('image_picker') || p.basename(entity.path).contains('jewelry_')))
           .toList();
 
-      print('[DEBUG] Found ${possibleFiles.length} possible image files for migration');
-
       // Also check if the original file path still exists (might be in temp directory)
       File? sourceFile;
       if (File(item.imagePath).existsSync()) {
         sourceFile = File(item.imagePath);
-        print('[DEBUG] Original file still exists: ${p.basename(sourceFile.path)}');
       } else {
         // Look for the exact jewelry file that should match this item
         final expectedFileName = p.basename(item.imagePath);
@@ -317,7 +296,6 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
 
         if (exactMatch.isNotEmpty) {
           sourceFile = exactMatch.first as File;
-          print('[DEBUG] Found exact match: ${p.basename(sourceFile.path)}');
         } else if (possibleFiles.isNotEmpty) {
           // If no exact match, look for jewelry files first (prefer new format)
           final jewelryFiles =
@@ -325,11 +303,9 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
 
           if (jewelryFiles.isNotEmpty) {
             sourceFile = jewelryFiles.first as File;
-            print('[DEBUG] Using jewelry file: ${p.basename(sourceFile.path)}');
           } else {
             // Fall back to any available file
             sourceFile = possibleFiles.first as File;
-            print('[DEBUG] Using fallback file: ${p.basename(sourceFile.path)}');
           }
         } else {
           // Check temp directory as last resort
@@ -342,11 +318,8 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
 
             if (tempFiles.isNotEmpty) {
               sourceFile = tempFiles.first as File;
-              print('[DEBUG] Found file in temp directory: ${p.basename(sourceFile.path)}');
             }
-          } catch (e) {
-            print('[DEBUG] Could not check temp directory: $e');
-          }
+          } catch (e) {}
         }
       }
 
@@ -358,24 +331,14 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         final updatedItem = item.copyWith(imagePath: newPath);
         await context.read<LibraryViewModel>().updateItem(updatedItem);
 
-        print('[DEBUG] Successfully migrated image for item ${item.id}');
-        print('[DEBUG] New path: $newPath');
-
         // Delete the old file if it's different from the new one
         if (sourceFile.path != newPath) {
           try {
             await sourceFile.delete();
-            print('[DEBUG] Deleted old file: ${p.basename(sourceFile.path)}');
-          } catch (e) {
-            print('[DEBUG] Could not delete old file: $e');
-          }
+          } catch (e) {}
         }
-      } else {
-        print('[DEBUG] No source files found for migration - image may be permanently lost');
-      }
-    } catch (e) {
-      print('[DEBUG] Error migrating image: $e');
-    }
+      } else {}
+    } catch (e) {}
   }
 
   /// Fix items that were incorrectly migrated with the wrong image
@@ -383,8 +346,6 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
     try {
       final items = context.read<LibraryViewModel>().items;
       final appDir = await getApplicationDocumentsDirectory();
-
-      print('[DEBUG] Checking for incorrectly migrated items...');
 
       for (final item in items) {
         if (item.imagePath.isNotEmpty && item.imagePath.contains('jewelry_')) {
@@ -400,9 +361,6 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                 .toList();
 
             if (allJewelryFiles.length > 1) {
-              print('[DEBUG] Found multiple jewelry files for item ${item.id}');
-              print('[DEBUG] Current: ${p.basename(item.imagePath)}');
-
               // Check if there's a jewelry file that matches the original timestamp
               final itemTimestamp = item.id; // The item ID is the timestamp
               final correctFile = allJewelryFiles
@@ -411,8 +369,6 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
 
               if (correctFile.isNotEmpty && p.basename(correctFile.first.path) != expectedFileName) {
                 final correctPath = correctFile.first.path;
-                print('[DEBUG] Found correct image: ${p.basename(correctPath)}');
-                print('[DEBUG] Updating item ${item.id} with correct path');
 
                 final updatedItem = item.copyWith(imagePath: correctPath);
                 await context.read<LibraryViewModel>().updateItem(updatedItem);
@@ -420,18 +376,13 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                 // Delete the incorrect file
                 try {
                   await currentFile.delete();
-                  print('[DEBUG] Deleted incorrect file: ${p.basename(item.imagePath)}');
-                } catch (e) {
-                  print('[DEBUG] Could not delete incorrect file: $e');
-                }
+                } catch (e) {}
               }
             }
           }
         }
       }
-    } catch (e) {
-      print('[DEBUG] Error fixing incorrectly migrated items: $e');
-    }
+    } catch (e) {}
   }
 
   Future<Map<String, dynamic>?> _identifyJewelryWithAI(File imageFile) async {
@@ -642,13 +593,8 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                   itemBuilder: (context, index) {
                     final item = items[index];
                     final exists = item.imagePath.isNotEmpty && File(item.imagePath).existsSync();
-                    print(
-                        '[DEBUG] Loading image for item id: \'${item.id}\' path: \'${item.imagePath}\' exists: $exists');
 
-                    if (!exists && item.imagePath.isNotEmpty) {
-                      print('[DEBUG] WARNING: Image file missing for item ${item.id}');
-                      print('[DEBUG] Expected path: ${item.imagePath}');
-                    }
+                    if (!exists && item.imagePath.isNotEmpty) {}
 
                     return GestureDetector(
                       onTap: () => _onOpenDetail(item),
@@ -663,7 +609,6 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                                     height: double.infinity,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) {
-                                      print('[DEBUG] Image loading error for ${item.id}: $error');
                                       return Container(
                                         color: Colors.grey[200],
                                         alignment: Alignment.center,

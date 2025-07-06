@@ -142,15 +142,6 @@ class SettingsScreen extends StatelessWidget {
     }
   }
 
-  void _shareApp(BuildContext context) {
-    // You can implement share functionality here
-    // For example, using the share_plus package
-    // Share.share('Check out this amazing app! https://example.com/app');
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Share functionality would open here')),
-    );
-  }
-
   Future<void> _rateApp(BuildContext context) async {
     final InAppReview inAppReview = InAppReview.instance;
     if (await inAppReview.isAvailable()) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jewelry_id/core/theme/app_theme.dart';
 import 'package:jewelry_id/core/widgets/primary_button.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class OnboardingScreen extends StatefulWidget {
   final VoidCallback onFinish;
@@ -13,7 +14,6 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
   int _page = 0;
-  String? _experience;
 
   void _next() {
     if (_page < 2) {
@@ -26,9 +26,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      _buildWelcomePage(context),
-      _buildHowToPage(context),
-      _buildQuestionPage(context),
+      _buildIdentificationPage(context),
+      _buildExpertChatPage(context),
+      _buildCareTipsPage(context),
     ];
     return Scaffold(
       backgroundColor: AppTheme.lightBackgroundColor,
@@ -44,10 +44,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       3,
                       (i) => Container(
@@ -61,11 +61,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 24),
                   PrimaryButton(
-                    text: _page < 2 ? 'Next' : 'Get Started',
-                    onPressed: _page == 2 && _experience == null ? null : _next,
-                    isFullWidth: false,
-                    // Use a visible color for onboarding
+                    text: _page < 2 ? 'Continue' : 'Get Started',
+                    onPressed: _next,
+                    isFullWidth: true,
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Trusted by 1000+ users',
+                    style: TextStyle(fontSize: 14, color: Colors.black45),
                   ),
                 ],
               ),
@@ -76,21 +81,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget _buildWelcomePage(BuildContext context) {
+  Widget _buildIdentificationPage(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset('assets/icon/icon.png', width: 120, height: 120),
+        SvgPicture.asset('assets/onboarding/onboarding_1.svg', height: 200),
         const SizedBox(height: 32),
         const Text(
-          'Welcome to JewelMate!',
+          'Instant Plant Identification',
           style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
         ),
         const SizedBox(height: 16),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Your AI-powered jewelry expert. Instantly identify, value, and learn about any jewelry piece using just your phone. Discover hidden value, make smarter decisions, and become your own jewelry expert—powered by advanced artificial intelligence.',
+            'Snap a photo and discover any plant in seconds.',
             style: TextStyle(fontSize: 18, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
@@ -99,21 +105,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget _buildHowToPage(BuildContext context) {
+  Widget _buildExpertChatPage(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.camera_alt_rounded, size: 90, color: AppTheme.primaryColor),
+        SvgPicture.asset('assets/onboarding/onboarding_2.svg', height: 200),
         const SizedBox(height: 32),
         const Text(
-          'How It Works',
-          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+          'AI Plant Expert Chat',
+          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
         ),
         const SizedBox(height: 16),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Snap or upload a photo of your jewelry. Our AI analyzes every detail—materials, gemstones, brand, and more—to give you instant identification, value, and expert insights. It\'s like having a personal jeweler in your pocket.',
+            'Ask anything about plants and get instant, accurate answers.',
             style: TextStyle(fontSize: 18, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
@@ -122,53 +129,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget _buildQuestionPage(BuildContext context) {
+  Widget _buildCareTipsPage(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.diamond_rounded, size: 90, color: AppTheme.primaryColor),
+        SvgPicture.asset('assets/onboarding/onboarding_3.svg', height: 200),
         const SizedBox(height: 32),
         const Text(
-          'Let\'s Get to Know You',
-          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+          'Personalized Care Tips',
+          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
         ),
         const SizedBox(height: 16),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Are you a collector, enthusiast, or just curious? JewelMate adapts to your needs—whether you want to discover, sell, insure, or simply learn more about your jewelry.',
+            'Get expert advice to help your plants thrive.',
             style: TextStyle(fontSize: 18, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
         ),
-        const SizedBox(height: 24),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _chip('Collector'),
-            const SizedBox(width: 12),
-            _chip('Enthusiast'),
-            const SizedBox(width: 12),
-            _chip('Curious'),
-          ],
-        ),
       ],
-    );
-  }
-
-  Widget _chip(String label) {
-    final isSelected = _experience == label;
-    return GestureDetector(
-      onTap: () => setState(() => _experience = label),
-      child: Chip(
-        label: Text(label),
-        backgroundColor: isSelected ? AppTheme.primaryColor : Colors.amber[100],
-        labelStyle: TextStyle(
-          fontWeight: FontWeight.w600,
-          color: isSelected ? Colors.white : Colors.amber[900],
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      ),
     );
   }
 }

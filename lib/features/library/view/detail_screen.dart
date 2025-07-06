@@ -286,7 +286,7 @@ class ItemDetailScreen extends StatelessWidget {
                       'Estimated Value',
                       style: TextStyle(
                         fontSize: 14,
-                        color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.7),
+                        color: (isDarkMode ? Colors.white : Colors.black).withValues(alpha: 0.7),
                         fontWeight: FontWeight.w500,
                         letterSpacing: 0.5,
                       ),
@@ -342,7 +342,7 @@ class ItemDetailScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppTheme.primaryColor.withOpacity(0.1),
+                color: AppTheme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -369,12 +369,12 @@ class ItemDetailScreen extends StatelessWidget {
             color: isDarkMode ? const Color(0xFF1A1A24) : Colors.white,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.08),
+              color: (isDarkMode ? Colors.white : Colors.black).withValues(alpha: 0.08),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(isDarkMode ? 0.15 : 0.04),
+                color: Colors.black.withValues(alpha: isDarkMode ? 0.15 : 0.04),
                 blurRadius: 16,
                 offset: const Offset(0, 4),
               ),
@@ -408,7 +408,7 @@ class ItemDetailScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: attributeColor.withOpacity(0.1),
+                  color: attributeColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -451,7 +451,7 @@ class ItemDetailScreen extends StatelessWidget {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 24),
             height: 1,
-            color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.08),
+            color: (isDarkMode ? Colors.white : Colors.black).withValues(alpha: 0.08),
           ),
       ],
     );
@@ -477,7 +477,7 @@ class ItemDetailScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppTheme.primaryColor.withOpacity(0.1),
+                color: AppTheme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -504,12 +504,12 @@ class ItemDetailScreen extends StatelessWidget {
             color: isDarkMode ? const Color(0xFF1A1A24) : Colors.white,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.08),
+              color: (isDarkMode ? Colors.white : Colors.black).withValues(alpha: 0.08),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(isDarkMode ? 0.15 : 0.04),
+                color: Colors.black.withValues(alpha: isDarkMode ? 0.15 : 0.04),
                 blurRadius: 16,
                 offset: const Offset(0, 4),
               ),
@@ -548,7 +548,7 @@ class ItemDetailScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: attributeColor.withOpacity(0.1),
+                      color: attributeColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -576,7 +576,7 @@ class ItemDetailScreen extends StatelessWidget {
                           displayValue.length > 100 ? '${displayValue.substring(0, 100)}...' : displayValue,
                           style: TextStyle(
                             fontSize: 14,
-                            color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.7),
+                            color: (isDarkMode ? Colors.white : Colors.black).withValues(alpha: 0.7),
                             height: 1.4,
                           ),
                           maxLines: 2,
@@ -587,7 +587,7 @@ class ItemDetailScreen extends StatelessWidget {
                   ),
                   Icon(
                     HugeIcons.strokeRoundedArrowRight01,
-                    color: attributeColor.withOpacity(0.6),
+                    color: attributeColor.withValues(alpha: 0.6),
                     size: 18,
                   ),
                 ],
@@ -599,7 +599,7 @@ class ItemDetailScreen extends StatelessWidget {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 24),
             height: 1,
-            color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.08),
+            color: (isDarkMode ? Colors.white : Colors.black).withValues(alpha: 0.08),
           ),
       ],
     );
@@ -613,7 +613,7 @@ class ItemDetailScreen extends StatelessWidget {
         color: isDarkMode ? AppTheme.darkCardColor : AppTheme.lightCardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppTheme.primaryColor.withOpacity(0.2),
+          color: AppTheme.primaryColor.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -633,7 +633,7 @@ class ItemDetailScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),
@@ -662,7 +662,7 @@ class ItemDetailScreen extends StatelessWidget {
                         'Read more on Wikipedia',
                         style: TextStyle(
                           fontSize: 14,
-                          color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.7),
+                          color: (isDarkMode ? Colors.white : Colors.black).withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -689,7 +689,7 @@ class ItemDetailScreen extends StatelessWidget {
         color: isDarkMode ? AppTheme.darkCardColor : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppTheme.primaryColor.withOpacity(0.2),
+          color: AppTheme.primaryColor.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -712,7 +712,7 @@ class ItemDetailScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryColor.withOpacity(0.1),
+                    color: AppTheme.primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -739,7 +739,7 @@ class ItemDetailScreen extends StatelessWidget {
                         'Ask questions about care, value, authenticity & more',
                         style: TextStyle(
                           fontSize: 14,
-                          color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.7),
+                          color: (isDarkMode ? Colors.white : Colors.black).withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -841,7 +841,7 @@ class ItemDetailScreen extends StatelessWidget {
               borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.12),
+                  color: Colors.black.withValues(alpha: 0.12),
                   blurRadius: 16,
                   offset: const Offset(0, -2),
                 ),
@@ -875,7 +875,7 @@ class ItemDetailScreen extends StatelessWidget {
                   value,
                   style: TextStyle(
                     fontSize: 16,
-                    color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.9),
+                    color: (isDarkMode ? Colors.white : Colors.black).withValues(alpha: 0.9),
                     height: 1.5,
                   ),
                 ),
