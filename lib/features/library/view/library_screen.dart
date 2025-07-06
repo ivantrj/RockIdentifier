@@ -239,6 +239,14 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       return match.group(0)!;
     }
 
+    // Try to find USD pattern like "USD 500-1000" and convert to "$500-$1000"
+    final usdRegex = RegExp(r'USD\s+([\d,]+(?:-[\d,]+)?)', caseSensitive: false);
+    final usdMatch = usdRegex.firstMatch(priceText);
+    if (usdMatch != null) {
+      final numbers = usdMatch.group(1)!;
+      return '\$$numbers';
+    }
+
     // Try to find any price-like pattern
     final anyPriceRegex = RegExp(r'[\d,]+(?:-[\d,]+)?\s*(?:USD|dollars?|bucks?)', caseSensitive: false);
     final anyMatch = anyPriceRegex.firstMatch(priceText);
