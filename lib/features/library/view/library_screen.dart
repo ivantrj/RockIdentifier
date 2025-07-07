@@ -436,7 +436,21 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['success'] == true && data['result'] != null) {
-          return Map<String, dynamic>.from(data['result']);
+          final result = data['result'];
+
+          // Handle different response types
+          if (result is Map<String, dynamic>) {
+            return result;
+          } else if (result is List) {
+            // If result is a list, take the first item if it's a map
+            if (result.isNotEmpty && result.first is Map<String, dynamic>) {
+              return Map<String, dynamic>.from(result.first);
+            } else {
+              throw Exception('Invalid response format: expected object but got list');
+            }
+          } else {
+            throw Exception('Invalid response format: unexpected data type');
+          }
         } else if (data['success'] == false && data['error'] != null) {
           // Check if the error indicates it's not a bug
           final error = data['error'].toString().toLowerCase();
@@ -449,6 +463,8 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           }
           // For other errors, throw the actual error message
           throw Exception(data['error'].toString());
+        } else {
+          throw Exception('Invalid response from server');
         }
       } else if (response.statusCode == 429) {
         throw Exception('Too many requests. Please wait a moment and try again.');
@@ -464,7 +480,14 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
     } on TimeoutException catch (e) {
       throw Exception(e.message);
     } catch (e) {
-      throw Exception('An unexpected error occurred: ${e.toString()}');
+      // Provide more specific error messages based on the error type
+      if (e.toString().contains('List<Map')) {
+        throw Exception('Server returned unexpected data format. Please try again.');
+      } else if (e.toString().contains('type')) {
+        throw Exception('Invalid data format received. Please try again.');
+      } else {
+        throw Exception('An unexpected error occurred. Please try again.');
+      }
     }
     return null;
   }
