@@ -111,8 +111,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final primaryColor = AppTheme.primaryColor; // Amethyst purple
-    final lightPrimary = primaryColor.withValues(alpha: 0.1); // Light purple background
+    final primaryColor = AppTheme.primaryColor;
+    final lightPrimary = primaryColor.withValues(alpha: 0.1);
 
     // Check real-time subscription status
     final isSubscribed = RevenueCatService.isSubscribed;
@@ -134,15 +134,15 @@ class _PaywallScreenState extends State<PaywallScreen> {
                               child: Column(
                                 children: [
                                   const SizedBox(height: 24),
-                                  // Diamond image from assets
+                                  // Pro image from assets
                                   Container(
                                     padding: const EdgeInsets.all(20),
-                                    decoration: BoxDecoration(
-                                      color: lightPrimary,
-                                      shape: BoxShape.circle,
-                                    ),
+                                    // decoration: BoxDecoration(
+                                    //   color: lightPrimary,
+                                    //   shape: BoxShape.circle,
+                                    // ),
                                     child: Image.asset(
-                                      'assets/images/diamond.png',
+                                      'assets/images/pro.png',
                                       width: 88,
                                       height: 88,
                                       fit: BoxFit.contain,
@@ -256,7 +256,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 24),
-            // Diamond image from assets
+            // Pro image from assets
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -264,7 +264,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 shape: BoxShape.circle,
               ),
               child: Image.asset(
-                'assets/images/diamond.png',
+                'assets/images/pro.png',
                 width: 88,
                 height: 88,
                 fit: BoxFit.contain,
@@ -378,7 +378,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
             });
           },
           activeTrackColor: primaryColor,
-          inactiveTrackColor: theme.colorScheme.surfaceContainerHighest,
+          inactiveTrackColor: theme.colorScheme.outline.withValues(alpha: 0.5),
           thumbColor: Colors.white,
         ),
       ],
