@@ -5,19 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "jewelry_id",
+      "name": "bug_id",
       "request": "launch",
       "type": "dart",
       "flutterMode": "debug"
     },
     {
-      "name": "jewelry_id (profile mode)",
+      "name": "bug_id (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
-      "name": "jewelry_id (release mode)",
+      "name": "bug_id (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"
