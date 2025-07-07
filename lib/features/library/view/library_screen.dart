@@ -22,6 +22,7 @@ import 'package:bug_id/core/theme/app_theme.dart';
 import 'package:bug_id/services/cache_service.dart';
 import 'package:bug_id/services/connectivity_service.dart';
 import 'package:bug_id/locator.dart';
+import 'package:bug_id/services/logging_service.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -100,9 +101,12 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   }
 
   Future<void> _pickImage(ImageSource source) async {
+    LoggingService.userAction('Image picker opened', details: 'source: ${source.name}', tag: 'LibraryScreen');
+
     final items = context.read<LibraryViewModel>().items;
     final isSubscribed = main.RevenueCatService.isSubscribed;
     if (!isSubscribed && items.isNotEmpty) {
+      LoggingService.userAction('Paywall shown', details: 'reason: subscription required', tag: 'LibraryScreen');
       await showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -119,6 +123,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
     }
     final pickedFile = await _picker.pickImage(source: source, imageQuality: 85);
     if (pickedFile != null) {
+      LoggingService.userAction('Image selected', details: 'path: ${pickedFile.path}', tag: 'LibraryScreen');
       setState(() {
         _fabMenuOpen = false;
         _isProcessing = true;
@@ -129,30 +134,39 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         builder: (context) => const _FunLoadingDialog(),
       );
       try {
+        LoggingService.debug('Processing selected image', tag: 'LibraryScreen');
         final savedPath = await _saveImageToAppDir(pickedFile.path);
+        LoggingService.debug('Image saved to app directory - path: $savedPath', tag: 'LibraryScreen');
 
         // Check cache first
         final cacheService = locator<CacheService>();
         Map<String, dynamic>? aiResult = await cacheService.getCachedAnalysisResult(savedPath);
 
         if (aiResult == null) {
+          LoggingService.debug('Cache miss, calling AI API', tag: 'LibraryScreen');
           // Check connectivity before making API call
           final connectivityService = locator<ConnectivityService>();
           final hasInternet = await connectivityService.hasInternetConnection();
 
           if (!hasInternet) {
+            LoggingService.warning('No internet connection detected', tag: 'LibraryScreen');
             throw Exception('No internet connection. Please check your connection and try again.');
           }
 
           // If not in cache, call AI API
+          LoggingService.apiOperation('Calling AI identification API', tag: 'LibraryScreen');
           aiResult = await _identifyBugWithAI(File(savedPath));
           if (aiResult != null) {
+            LoggingService.apiOperation('AI identification successful', tag: 'LibraryScreen');
             // Cache the result for future use
             await cacheService.cacheAnalysisResult(savedPath, aiResult);
           }
+        } else {
+          LoggingService.debug('Cache hit, using cached result', tag: 'LibraryScreen');
         }
 
         if (aiResult != null) {
+          LoggingService.debug('Creating identified item from AI result', tag: 'LibraryScreen');
           final details = <String, dynamic>{
             if (aiResult['scientificName'] != null) 'scientificName': aiResult['scientificName'],
             if (aiResult['commonName'] != null) 'commonName': aiResult['commonName'],
@@ -179,6 +193,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
             dateTime: DateTime.now(),
           );
           if (mounted) {
+            LoggingService.userAction('Item added to library', details: 'result: ${item.result}', tag: 'LibraryScreen');
             context.read<LibraryViewModel>().addItem(item);
             Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
             setState(() {
@@ -186,6 +201,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
             });
           }
         } else {
+          LoggingService.warning('AI did not return a valid result', tag: 'LibraryScreen');
           _showError('AI did not return a valid result.');
           if (mounted) {
             Navigator.of(context, rootNavigator: true).pop();
@@ -196,6 +212,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         }
       } catch (e) {
         if (e.toString().contains('NOT_BUG')) {
+          LoggingService.info('Image identified as not a bug', tag: 'LibraryScreen');
           // Show the not bug dialog
           if (mounted) {
             Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
@@ -208,6 +225,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
             );
           }
         } else {
+          LoggingService.error('Error processing image', error: e, tag: 'LibraryScreen');
           String errorMessage = 'Failed to identify image';
           if (e is Exception) {
             errorMessage = e.toString().replaceAll('Exception: ', '');
@@ -419,6 +437,8 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
 
   Future<Map<String, dynamic>?> _identifyBugWithAI(File imageFile) async {
     try {
+      LoggingService.apiOperation('Starting AI identification',
+          details: 'image: ${imageFile.path}', tag: 'LibraryScreen');
       final uri = Uri.parse('https://own-ai-backend-dev.fly.dev/identify-bug');
       final request = http.MultipartRequest('POST', uri)
         ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
@@ -437,6 +457,8 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         final data = json.decode(response.body);
         if (data['success'] == true && data['result'] != null) {
           final result = data['result'];
+          LoggingService.apiOperation('AI identification successful',
+              details: 'response type: ${result.runtimeType}', tag: 'LibraryScreen');
 
           // Handle different response types
           if (result is Map<String, dynamic>) {
@@ -459,27 +481,39 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
               error.contains('no bug') ||
               error.contains('insect') ||
               error.contains('not insect')) {
+            LoggingService.info('AI determined image is not a bug', tag: 'LibraryScreen');
             throw Exception('NOT_BUG');
           }
           // For other errors, throw the actual error message
+          LoggingService.error('AI identification failed',
+              error: Exception(data['error'].toString()), tag: 'LibraryScreen');
           throw Exception(data['error'].toString());
         } else {
+          LoggingService.error('Invalid response from AI server', tag: 'LibraryScreen');
           throw Exception('Invalid response from server');
         }
       } else if (response.statusCode == 429) {
+        LoggingService.warning('Rate limit exceeded', tag: 'LibraryScreen');
         throw Exception('Too many requests. Please wait a moment and try again.');
       } else if (response.statusCode >= 500) {
+        LoggingService.error('Server error', error: Exception('Status: ${response.statusCode}'), tag: 'LibraryScreen');
         throw Exception('Server error. Please try again later.');
       } else {
+        LoggingService.error('Unexpected response status',
+            error: Exception('Status: ${response.statusCode}'), tag: 'LibraryScreen');
         throw Exception('Failed to identify bug. Please try again.');
       }
     } on FormatException {
+      LoggingService.error('Format exception in AI response', tag: 'LibraryScreen');
       throw Exception('Invalid response from server. Please try again.');
     } on SocketException {
+      LoggingService.error('Socket exception - no internet connection', tag: 'LibraryScreen');
       throw Exception('No internet connection. Please check your connection and try again.');
     } on TimeoutException catch (e) {
+      LoggingService.error('Request timeout', error: e, tag: 'LibraryScreen');
       throw Exception(e.message);
     } catch (e) {
+      LoggingService.error('Unexpected error in AI identification', error: e, tag: 'LibraryScreen');
       // Provide more specific error messages based on the error type
       if (e.toString().contains('List<Map')) {
         throw Exception('Server returned unexpected data format. Please try again.');
