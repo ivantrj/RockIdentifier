@@ -316,14 +316,18 @@ class ItemDetailScreen extends StatelessWidget {
   Widget _buildKeyDetailsSection(BuildContext context, Map<String, dynamic> details) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final keyDetails = [
-      'Type',
-      'Material',
-      'Gemstones',
-      'Brand/Maker',
-      'Era/Style',
-      'Authenticity',
-      'Hallmark/Stamp',
-      'Condition',
+      'Species',
+      'Family',
+      'Order',
+      'Habitat',
+      'Danger Level',
+      'Common Name',
+      'Distribution',
+      'Size',
+      'Color',
+      'Life Cycle',
+      'Feeding Habits',
+      'Conservation Status',
     ];
 
     final validDetails = keyDetails.where((key) {
@@ -459,7 +463,7 @@ class ItemDetailScreen extends StatelessWidget {
 
   Widget _buildAdditionalInfoSection(BuildContext context, Map<String, dynamic> details) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final infoKeys = ['Description', 'Care Tips', 'Provenance'];
+    final infoKeys = ['Description', 'Wikipedia'];
 
     final validInfo = infoKeys.where((key) {
       final value = details[key];
@@ -736,7 +740,7 @@ class ItemDetailScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Ask questions about care, value, authenticity & more',
+                        'Ask questions about identification, behavior, habitat & more',
                         style: TextStyle(
                           fontSize: 14,
                           color: (isDarkMode ? Colors.white : Colors.black).withValues(alpha: 0.7),
@@ -760,34 +764,40 @@ class ItemDetailScreen extends StatelessWidget {
 
   Color _getColorForAttribute(String label) {
     final l = label.toLowerCase();
-    if (l.contains('type')) return const Color(0xFF7C3AED); // Purple - primary color
-    if (l.contains('material')) return const Color(0xFF059669); // Emerald green
-    if (l.contains('gemstone')) return const Color(0xFFDC2626); // Ruby red
-    if (l.contains('brand') || l.contains('maker')) return const Color(0xFF2563EB); // Sapphire blue
-    if (l.contains('era') || l.contains('style')) return const Color(0xFFEA580C); // Amber orange
-    if (l.contains('authenticity')) return const Color(0xFF7C2D12); // Bronze brown
-    if (l.contains('hallmark') || l.contains('stamp')) return const Color(0xFF4F46E5); // Indigo
-    if (l.contains('condition')) return const Color(0xFF16A34A); // Green
+    if (l.contains('species')) return const Color(0xFF7C3AED); // Purple - primary color
+    if (l.contains('family')) return const Color(0xFF059669); // Emerald green
+    if (l.contains('order')) return const Color(0xFFDC2626); // Red
+    if (l.contains('habitat')) return const Color(0xFF2563EB); // Blue
+    if (l.contains('danger')) return const Color(0xFFEA580C); // Orange
+    if (l.contains('common')) return const Color(0xFF7C2D12); // Brown
+    if (l.contains('distribution')) return const Color(0xFF4F46E5); // Indigo
+    if (l.contains('size')) return const Color(0xFF16A34A); // Green
+    if (l.contains('color')) return const Color(0xFF0891B2); // Cyan
+    if (l.contains('life')) return const Color(0xFFDB2777); // Pink
+    if (l.contains('feeding')) return const Color(0xFF9333EA); // Violet
+    if (l.contains('conservation')) return const Color(0xFF059669); // Green
     if (l.contains('description')) return const Color(0xFF0891B2); // Cyan
-    if (l.contains('care')) return const Color(0xFFDB2777); // Pink
-    if (l.contains('provenance')) return const Color(0xFF9333EA); // Violet
+    if (l.contains('wikipedia')) return const Color(0xFF2563EB); // Blue
     return const Color(0xFF6B7280); // Gray fallback
   }
 
   IconData _getIconForAttribute(String label) {
     final l = label.toLowerCase();
-    if (l.contains('type')) return HugeIcons.strokeRoundedDiamond01;
-    if (l.contains('material')) return HugeIcons.strokeRoundedMedal01;
-    if (l.contains('gemstone')) return HugeIcons.strokeRoundedDiamond02;
-    if (l.contains('brand') || l.contains('maker')) return HugeIcons.strokeRoundedAward01;
-    if (l.contains('era') || l.contains('style')) return HugeIcons.strokeRoundedClock01;
-    if (l.contains('authenticity')) return HugeIcons.strokeRoundedMedal05;
-    if (l.contains('hallmark') || l.contains('stamp')) return HugeIcons.strokeRoundedStamp;
-    if (l.contains('condition')) return HugeIcons.strokeRoundedCheckmarkCircle02;
+    if (l.contains('species')) return Icons.bug_report;
+    if (l.contains('family')) return Icons.family_restroom;
+    if (l.contains('order')) return Icons.format_list_numbered;
+    if (l.contains('habitat')) return Icons.landscape;
+    if (l.contains('danger')) return Icons.warning;
+    if (l.contains('common')) return Icons.label;
+    if (l.contains('distribution')) return Icons.public;
+    if (l.contains('size')) return Icons.straighten;
+    if (l.contains('color')) return Icons.palette;
+    if (l.contains('life')) return Icons.repeat;
+    if (l.contains('feeding')) return Icons.restaurant;
+    if (l.contains('conservation')) return Icons.eco;
     if (l.contains('description')) return Icons.description;
-    if (l.contains('care')) return HugeIcons.strokeRoundedSettings02;
-    if (l.contains('provenance')) return HugeIcons.strokeRoundedLibrary;
-    return HugeIcons.strokeRoundedInformationCircle;
+    if (l.contains('wikipedia')) return Icons.language;
+    return Icons.info;
   }
 
   void _showDeleteDialog(BuildContext context) {

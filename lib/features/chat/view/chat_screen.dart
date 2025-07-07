@@ -234,8 +234,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 color: AppTheme.primaryColor,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.diamond,
+              child: Icon(
+                HugeIcons.strokeRoundedBug01,
                 color: Colors.white,
                 size: 16,
               ),

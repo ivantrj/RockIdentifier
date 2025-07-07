@@ -4,14 +4,14 @@ import 'package:flutter/services.dart';
 
 class AppTheme {
   // Modern, nature-inspired color palette for bug identification
-  static const Color primaryColor = Color(0xFF7C3AED); // Amethyst purple
-  static const Color secondaryColor = Color(0xFF1A237E); // Deep blue
-  static const Color accentColor = Color(0xFFC0C0C0); // Silver accent
+  static const Color primaryColor = Color(0xFFFF6B35); // Vibrant Orange
+  static const Color secondaryColor = Color(0xFF8D6E63); // Brown
+  static const Color accentColor = Color(0xFFFFCC02); // Golden Yellow
 
   // Category colors
-  static const Color focusColor = Color(0xFFFFF8E1); // Light gold
-  static const Color sleepColor = Color(0xFFE3E6F3); // Light blue
-  static const Color stressColor = Color(0xFFF5F5F5); // Light silver
+  static const Color focusColor = Color(0xFFFFF3E0); // Light Orange
+  static const Color sleepColor = Color(0xFFFBE9E7); // Very Light Orange
+  static const Color stressColor = Color(0xFFFFF8E1); // Light Amber
 
   // UI element colors - light mode
   static const Color lightSurfaceColor = Colors.white; // Light surface color

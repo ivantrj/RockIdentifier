@@ -181,10 +181,18 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           if (mounted) {
             context.read<LibraryViewModel>().addItem(item);
             Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
+            setState(() {
+              _isProcessing = false;
+            });
           }
         } else {
           _showError('AI did not return a valid result.');
-          if (mounted) Navigator.of(context, rootNavigator: true).pop();
+          if (mounted) {
+            Navigator.of(context, rootNavigator: true).pop();
+            setState(() {
+              _isProcessing = false;
+            });
+          }
         }
       } catch (e) {
         if (e.toString().contains('NOT_BUG')) {
@@ -207,7 +215,12 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
             errorMessage = 'An unexpected error occurred. Please try again.';
           }
           _showError(errorMessage);
-          if (mounted) Navigator.of(context, rootNavigator: true).pop();
+          if (mounted) {
+            Navigator.of(context, rootNavigator: true).pop();
+            setState(() {
+              _isProcessing = false;
+            });
+          }
         }
       }
     }
@@ -907,18 +920,18 @@ class _FunLoadingDialog extends StatefulWidget {
 
 class _FunLoadingDialogState extends State<_FunLoadingDialog> with SingleTickerProviderStateMixin {
   static final List<String> funTexts = [
-    'Inspecting the sparkle...',
-    'Analyzing gemstones...',
-    'Checking for hallmarks...',
-    "Consulting the jeweler's loupe...",
-    'Estimating carat weight...',
-    'Comparing with famous pieces...',
-    'Looking for hidden treasures...',
-    'Examining the setting...',
-    'Verifying authenticity...',
-    'Polishing the gold...',
-    'Matching the style...',
-    'Evaluating craftsmanship...'
+    'Examining the specimen...',
+    'Analyzing features...',
+    'Checking identification markers...',
+    'Consulting the field guide...',
+    'Measuring dimensions...',
+    'Comparing with known species...',
+    'Looking for distinctive patterns...',
+    'Examining the anatomy...',
+    'Verifying classification...',
+    'Studying the habitat...',
+    'Matching characteristics...',
+    'Evaluating taxonomy...'
   ];
   late final AnimationController _controller;
   late final Animation<double> _animation;
@@ -965,7 +978,7 @@ class _FunLoadingDialogState extends State<_FunLoadingDialog> with SingleTickerP
             ScaleTransition(
               scale: _animation,
               child: Icon(
-                Icons.diamond,
+                Icons.bug_report,
                 color: AppTheme.primaryColor,
                 size: 64,
               ),
