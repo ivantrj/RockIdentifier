@@ -621,7 +621,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                         width: 120,
                         height: 120,
                         decoration: BoxDecoration(
-                          color: isDarkMode ? const Color(0xFF2A2A36).withOpacity(0.7) : const Color(0xFFF5F5F8),
+                          color: isDarkMode ? const Color(0xFF2A2A36).withValues(alpha: 0.7) : const Color(0xFFF5F5F8),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
@@ -712,11 +712,11 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                                 decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.7),
+                                  color: Colors.black.withValues(alpha: 0.7),
                                   borderRadius: BorderRadius.circular(16),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
+                                      color: Colors.black.withValues(alpha: 0.2),
                                       blurRadius: 4,
                                       offset: const Offset(0, 2),
                                     ),
@@ -750,8 +750,8 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter,
                                       colors: [
-                                        Colors.black.withOpacity(0.1),
-                                        Colors.black.withOpacity(0.6),
+                                        Colors.black.withValues(alpha: 0.1),
+                                        Colors.black.withValues(alpha: 0.6),
                                       ],
                                     ),
                                   ),
@@ -776,7 +776,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                                           Container(
                                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                             decoration: BoxDecoration(
-                                              color: Colors.white.withOpacity(0.25),
+                                              color: Colors.white.withValues(alpha: 0.25),
                                               borderRadius: BorderRadius.circular(12),
                                             ),
                                             child: Text(
@@ -817,7 +817,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
               child: GestureDetector(
                 onTap: _closeFabMenu,
                 child: Container(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withValues(alpha: 0.3),
                 ),
               ),
             ),
@@ -1060,8 +1060,8 @@ class _PremiumThankYouModalState extends State<_PremiumThankYouModal> with Singl
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            theme.colorScheme.primary.withOpacity(0.95),
-            theme.colorScheme.secondary.withOpacity(0.85),
+            theme.colorScheme.primary.withValues(alpha: 0.95),
+            theme.colorScheme.secondary.withValues(alpha: 0.85),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -1069,7 +1069,7 @@ class _PremiumThankYouModalState extends State<_PremiumThankYouModal> with Singl
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.18),
+            color: Colors.black.withValues(alpha: 0.18),
             blurRadius: 24,
             offset: const Offset(0, -4),
           ),
