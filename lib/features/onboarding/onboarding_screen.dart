@@ -88,7 +88,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         SvgPicture.asset('assets/onboarding/onboarding_1.svg', height: 200),
         const SizedBox(height: 32),
         const Text(
-          'Instant Plant Identification',
+          'Instant Bug Identification',
           style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
@@ -96,7 +96,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Snap a photo and discover any plant in seconds.',
+            'Snap a photo and discover any bug in seconds.',
             style: TextStyle(fontSize: 18, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
@@ -112,7 +112,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         SvgPicture.asset('assets/onboarding/onboarding_2.svg', height: 200),
         const SizedBox(height: 32),
         const Text(
-          'AI Plant Expert Chat',
+          'AI Bug Expert Chat',
           style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
@@ -120,7 +120,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Ask anything about plants and get instant, accurate answers.',
+            'Ask anything about bugs and get instant, accurate answers.',
             style: TextStyle(fontSize: 18, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
@@ -136,7 +136,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         SvgPicture.asset('assets/onboarding/onboarding_3.svg', height: 200),
         const SizedBox(height: 32),
         const Text(
-          'Personalized Care Tips',
+          'Detailed Bug Information',
           style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
@@ -144,7 +144,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Get expert advice to help your plants thrive.',
+            'Learn about behavior, habitat, and scientific details.',
             style: TextStyle(fontSize: 18, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
