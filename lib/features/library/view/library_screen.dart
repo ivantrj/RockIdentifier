@@ -145,6 +145,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       }
     } catch (e) {
       LoggingService.error('Error in _processImage', error: e, tag: 'LibraryScreen');
+      LoggingService.debug('Error message: ${e.toString()}', tag: 'LibraryScreen');
 
       if (mounted) {
         // Close loading dialog first
@@ -154,10 +155,17 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           LoggingService.warning('Error closing loading dialog in catch block', tag: 'LibraryScreen');
         }
 
-        if (e.toString().contains('NOT_BUG')) {
-          LoggingService.info('Image identified as not a bug', tag: 'LibraryScreen');
+        // Check for NOT_BUG error with more robust detection
+        final errorMessage = e.toString().toLowerCase();
+        if (errorMessage.contains('not_bug') ||
+            errorMessage.contains('does not contain bug') ||
+            errorMessage.contains('not bug') ||
+            errorMessage.contains('no bug') ||
+            errorMessage.contains('not insect')) {
+          LoggingService.info('Image identified as not a bug - showing dialog', tag: 'LibraryScreen');
           showDialog(
             context: context,
+            barrierDismissible: true,
             builder: (context) => const NotBugDialog(),
           );
         } else {

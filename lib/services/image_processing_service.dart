@@ -190,12 +190,15 @@ class ImageProcessingService {
         } else if (data['success'] == false && data['error'] != null) {
           // Check if the error indicates it's not a bug
           final error = data['error'].toString().toLowerCase();
+          LoggingService.debug('AI error message: $error', tag: 'ImageProcessingService');
+
           if (error.contains('does not contain bug') ||
               error.contains('not bug') ||
               error.contains('no bug') ||
               error.contains('insect') ||
               error.contains('not insect')) {
-            LoggingService.info('AI determined image is not a bug', tag: 'ImageProcessingService');
+            LoggingService.info('AI determined image is not a bug - throwing NOT_BUG exception',
+                tag: 'ImageProcessingService');
             throw Exception('NOT_BUG');
           }
           // For other errors, throw the actual error message
@@ -228,6 +231,12 @@ class ImageProcessingService {
       LoggingService.error('Request timeout', error: e, tag: 'ImageProcessingService');
       throw Exception(e.message);
     } catch (e) {
+      // Check if this is a NOT_BUG exception and rethrow it directly
+      if (e is Exception && e.toString().contains('NOT_BUG')) {
+        LoggingService.debug('Re-throwing NOT_BUG exception', tag: 'ImageProcessingService');
+        rethrow;
+      }
+
       LoggingService.error('Unexpected error in AI identification', error: e, tag: 'ImageProcessingService');
       // Provide more specific error messages based on the error type
       if (e.toString().contains('List<Map')) {
