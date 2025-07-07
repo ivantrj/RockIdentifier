@@ -5,6 +5,7 @@ import 'data/sources/local/preferences_service.dart';
 import 'services/theme_service.dart';
 import 'services/cache_service.dart';
 import 'services/connectivity_service.dart';
+import 'services/image_processing_service.dart';
 // Import other services, repositories, and viewmodels as you create them
 
 // Create a global instance of GetIt
@@ -31,6 +32,9 @@ Future<void> setupLocator() async {
 
   // ConnectivityService: Register as a singleton.
   locator.registerSingleton<ConnectivityService>(ConnectivityService());
+
+  // ImageProcessingService: Register as a singleton.
+  locator.registerSingleton<ImageProcessingService>(ImageProcessingService());
 
   // --- Repositories ---
   // Example: locator.registerLazySingleton<SettingsRepository>(() => SettingsRepositoryImpl(locator<PreferencesService>()));

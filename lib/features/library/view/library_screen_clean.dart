@@ -11,7 +11,6 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:bug_id/app.dart' as app;
 import 'package:bug_id/services/image_processing_service.dart';
 import 'package:bug_id/services/logging_service.dart';
-import 'package:bug_id/locator.dart';
 import 'widgets/fab_menu.dart';
 import 'widgets/library_item_card.dart';
 import 'widgets/loading_dialog.dart';
@@ -40,6 +39,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   bool _fabMenuOpen = false;
   bool _isProcessing = false;
   final ImagePicker _picker = ImagePicker();
+  final ImageProcessingService _imageProcessingService = ImageProcessingService();
 
   // ValueNotifier for subscription state
   final ValueNotifier<bool> isSubscribedNotifier = ValueNotifier(main.RevenueCatService.isSubscribed);
@@ -96,66 +96,35 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   }
 
   Future<void> _processImage(String imagePath) async {
-    LoggingService.debug('Starting image processing - path: $imagePath', tag: 'LibraryScreen');
-
     setState(() {
       _fabMenuOpen = false;
       _isProcessing = true;
     });
 
-    // Show loading dialog
-    if (mounted) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const LoadingDialog(),
-      );
-    }
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const LoadingDialog(),
+    );
 
     try {
-      LoggingService.debug('Calling ImageProcessingService', tag: 'LibraryScreen');
-      final item = await locator<ImageProcessingService>().processImage(imagePath);
+      final item = await _imageProcessingService.processImage(imagePath);
 
       if (mounted) {
-        // Close loading dialog first
-        try {
-          Navigator.of(context, rootNavigator: true).pop();
-        } catch (e) {
-          LoggingService.warning('Error closing loading dialog', tag: 'LibraryScreen');
-        }
-
         if (item != null) {
           LoggingService.userAction('Item added to library', details: 'result: ${item.result}', tag: 'LibraryScreen');
-          try {
-            await context.read<LibraryViewModel>().addItem(item);
-            LoggingService.debug('Item successfully added to viewmodel', tag: 'LibraryScreen');
-
-            // Force a rebuild to ensure UI updates
-            if (mounted) {
-              setState(() {});
-            }
-          } catch (e) {
-            LoggingService.error('Error adding item to viewmodel', error: e, tag: 'LibraryScreen');
-            _showError('Error saving item to library.');
-          }
+          context.read<LibraryViewModel>().addItem(item);
+          Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
         } else {
           LoggingService.warning('AI did not return a valid result', tag: 'LibraryScreen');
           _showError('AI did not return a valid result.');
         }
       }
     } catch (e) {
-      LoggingService.error('Error in _processImage', error: e, tag: 'LibraryScreen');
-
       if (mounted) {
-        // Close loading dialog first
-        try {
-          Navigator.of(context, rootNavigator: true).pop();
-        } catch (e) {
-          LoggingService.warning('Error closing loading dialog in catch block', tag: 'LibraryScreen');
-        }
-
         if (e.toString().contains('NOT_BUG')) {
           LoggingService.info('Image identified as not a bug', tag: 'LibraryScreen');
+          Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
           showDialog(
             context: context,
             builder: (context) => const NotBugDialog(),
@@ -173,10 +142,10 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       }
     } finally {
       if (mounted) {
+        Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
         setState(() {
           _isProcessing = false;
         });
-        LoggingService.debug('Image processing completed', tag: 'LibraryScreen');
       }
     }
   }

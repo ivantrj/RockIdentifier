@@ -232,7 +232,6 @@ class ItemDetailScreen extends StatelessWidget {
   }
 
   Widget _buildSafetyStatus(BuildContext context, Map<String, dynamic> details) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final dangerInfo = details['dangerToHumans'];
 
     if (dangerInfo == null) return const SizedBox.shrink();
