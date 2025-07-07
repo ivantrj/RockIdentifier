@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:bug_id/data/models/identified_item.dart';
+import 'package:bug_id/services/logging_service.dart';
 
 class ChatMessage {
   final String id;
@@ -41,6 +42,8 @@ class ChatService {
     List<ChatMessage>? chatHistory,
   }) async {
     try {
+      LoggingService.apiOperation('Sending chat message',
+          details: 'itemId: $itemId, message length: ${message.length}');
       final uri = Uri.parse('$_baseUrl/chat');
 
       // Convert chat history to the format expected by the server
@@ -101,14 +104,20 @@ class ChatService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['success'] == true) {
+          LoggingService.apiOperation('Chat message sent successfully', details: 'itemId: $itemId');
           return data['response'] as String;
         } else {
-          throw Exception(data['error'] ?? 'Failed to get response from AI');
+          final error = data['error'] ?? 'Failed to get response from AI';
+          LoggingService.error('Chat API error', error: Exception(error), tag: 'ChatService');
+          throw Exception(error);
         }
       } else {
+        LoggingService.error('Chat API server error',
+            error: Exception('Status: ${response.statusCode}'), tag: 'ChatService');
         throw Exception('Server error: ${response.statusCode}');
       }
     } catch (e) {
+      LoggingService.error('Chat message failed', error: e, tag: 'ChatService');
       throw Exception('Failed to send message: ${e.toString()}');
     }
   }
@@ -165,6 +174,7 @@ class ChatService {
   /// Get chat history for an item (for future use)
   Future<List<ChatMessage>> getChatHistory(String itemId) async {
     try {
+      LoggingService.apiOperation('Getting chat history', details: 'itemId: $itemId');
       final uri = Uri.parse('$_baseUrl/chat-history/$itemId');
       final response = await http.get(uri);
 
@@ -172,12 +182,16 @@ class ChatService {
         final data = json.decode(response.body);
         if (data['success'] == true) {
           final List<dynamic> history = data['history'] ?? [];
+          LoggingService.apiOperation('Chat history retrieved',
+              details: 'itemId: $itemId, messages: ${history.length}');
           return history.map((msg) => ChatMessage.fromJson(msg)).toList();
         }
       }
+      LoggingService.warning('No chat history found', tag: 'ChatService');
       return [];
     } catch (e) {
       // Return empty list if there's an error
+      LoggingService.error('Failed to get chat history', error: e, tag: 'ChatService');
       return [];
     }
   }

@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
 import 'package:in_app_review/in_app_review.dart';
 import 'package:bug_id/services/cache_service.dart';
 import 'package:bug_id/locator.dart';
+import 'package:bug_id/services/logging_service.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -138,7 +139,7 @@ class SettingsScreen extends StatelessWidget {
     final Uri url = Uri.parse(urlString);
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       // Error is silently ignored as it's not critical
-      debugPrint('Could not launch $urlString');
+      LoggingService.urlLaunchError(urlString, tag: 'SettingsScreen');
     }
   }
 

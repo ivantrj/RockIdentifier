@@ -1,7 +1,7 @@
 // lib/data/sources/local/preferences_service.dart
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart'; // Import material for ThemeMode
-import 'package:fimber/fimber.dart';
+import 'package:bug_id/services/logging_service.dart';
 
 class PreferencesService {
   late SharedPreferences _prefs;
@@ -14,8 +14,7 @@ class PreferencesService {
 
   // Theme Mode Persistence
   Future<void> setThemeMode(ThemeMode mode) async {
-    await _prefs.setString(
-        _themeModeKey, mode.name); // Store the enum name as string
+    await _prefs.setString(_themeModeKey, mode.name); // Store the enum name as string
   }
 
   ThemeMode getThemeMode() {
@@ -28,7 +27,7 @@ class PreferencesService {
       return ThemeMode.values.firstWhere((e) => e.name == themeString);
     } catch (e) {
       // Handle error or fallback if stored value is invalid
-      Fimber.d('Error reading theme mode preference: $e');
+      LoggingService.error('Error reading theme mode preference', error: e);
       return ThemeMode.system;
     }
   }

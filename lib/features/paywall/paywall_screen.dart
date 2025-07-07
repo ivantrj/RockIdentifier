@@ -4,6 +4,7 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:bug_id/core/theme/app_theme.dart';
 import 'package:bug_id/main.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
+import 'package:bug_id/services/logging_service.dart';
 
 class PaywallScreen extends StatefulWidget {
   const PaywallScreen({super.key});
@@ -78,7 +79,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
     final Uri url = Uri.parse(urlString);
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       // Error is silently ignored as it's not critical
-      debugPrint('Could not launch $urlString');
+      LoggingService.urlLaunchError(urlString, tag: 'PaywallScreen');
     }
   }
 

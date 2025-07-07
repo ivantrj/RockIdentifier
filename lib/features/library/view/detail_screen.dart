@@ -7,6 +7,7 @@ import 'package:bug_id/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:bug_id/features/chat/view/chat_screen.dart';
+import 'package:bug_id/services/logging_service.dart';
 
 class ItemDetailScreen extends StatelessWidget {
   final IdentifiedItem item;
@@ -73,7 +74,11 @@ class ItemDetailScreen extends StatelessWidget {
                     size: 20,
                     color: Colors.white,
                   ),
-                  onPressed: () => _showDeleteDialog(context),
+                  onPressed: () {
+                    LoggingService.userAction('Delete item button pressed',
+                        details: 'itemId: ${item.id}', tag: 'DetailScreen');
+                    _showDeleteDialog(context);
+                  },
                 ),
               ),
             ],
@@ -87,8 +92,7 @@ class ItemDetailScreen extends StatelessWidget {
                   child: Builder(
                     builder: (_) {
                       final exists = item.imagePath.isNotEmpty && File(item.imagePath).existsSync();
-                      print(
-                          '[DEBUG] Detail screen image for item id: \'${item.id}\' path: \'${item.imagePath}\' exists: $exists');
+                      LoggingService.imageLoad(item.imagePath, exists, tag: 'DetailScreen');
                       return exists
                           ? Image.file(
                               File(item.imagePath),
@@ -761,7 +765,10 @@ class ItemDetailScreen extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: () => _launchUrl(wikipediaUrl),
+          onTap: () {
+            LoggingService.userAction('Wikipedia link pressed', details: 'itemId: ${item.id}', tag: 'DetailScreen');
+            _launchUrl(wikipediaUrl);
+          },
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Row(
@@ -838,6 +845,8 @@ class ItemDetailScreen extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: () {
+            LoggingService.userAction('Chat with AI button pressed',
+                details: 'itemId: ${item.id}', tag: 'DetailScreen');
             Navigator.push(
               context,
               MaterialPageRoute(
