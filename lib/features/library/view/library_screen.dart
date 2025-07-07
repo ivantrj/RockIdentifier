@@ -1,10 +1,10 @@
-import 'package:jewelry_id/features/paywall/paywall_screen.dart';
+import 'package:bug_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
-import 'package:jewelry_id/features/library/view/detail_screen.dart';
+import 'package:bug_id/features/library/view/detail_screen.dart';
 import '../viewmodel/library_viewmodel.dart';
-import 'package:jewelry_id/data/models/identified_item.dart';
+import 'package:bug_id/data/models/identified_item.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:ui';
@@ -17,11 +17,11 @@ import 'dart:math';
 import '../../../main.dart' as main;
 import 'package:flutter/scheduler.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:jewelry_id/app.dart' as app;
-import 'package:jewelry_id/core/theme/app_theme.dart';
-import 'package:jewelry_id/services/cache_service.dart';
-import 'package:jewelry_id/services/connectivity_service.dart';
-import 'package:jewelry_id/locator.dart';
+import 'package:bug_id/app.dart' as app;
+import 'package:bug_id/core/theme/app_theme.dart';
+import 'package:bug_id/services/cache_service.dart';
+import 'package:bug_id/services/connectivity_service.dart';
+import 'package:bug_id/locator.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -82,7 +82,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       // Create a more reliable filename format
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final extension = p.extension(imagePath);
-      final safeFileName = 'jewelry_$timestamp$extension';
+      final safeFileName = 'bug_$timestamp$extension';
       final savedPath = p.join(appDir.path, safeFileName);
 
       // Copy the file
@@ -145,7 +145,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           }
 
           // If not in cache, call AI API
-          aiResult = await _identifyJewelryWithAI(File(savedPath));
+          aiResult = await _identifyBugWithAI(File(savedPath));
           if (aiResult != null) {
             // Cache the result for future use
             await cacheService.cacheAnalysisResult(savedPath, aiResult);
@@ -154,25 +154,26 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
 
         if (aiResult != null) {
           final details = <String, dynamic>{
-            if (aiResult['type'] != null) 'Type': aiResult['type'],
-            if (aiResult['material'] != null) 'Material': aiResult['material'],
-            if (aiResult['gemstones'] != null) 'Gemstones': aiResult['gemstones'],
-            if (aiResult['brandOrMaker'] != null) 'Brand/Maker': aiResult['brandOrMaker'],
-            if (aiResult['eraOrStyle'] != null) 'Era/Style': aiResult['eraOrStyle'],
-            if (aiResult['authenticity'] != null) 'Authenticity': aiResult['authenticity'],
-            if (aiResult['hallmarkOrStamp'] != null) 'Hallmark/Stamp': aiResult['hallmarkOrStamp'],
-            if (aiResult['condition'] != null) 'Condition': aiResult['condition'],
-            if (aiResult['estimatedPrice'] != null) 'Estimated Price': aiResult['estimatedPrice'],
+            if (aiResult['species'] != null) 'Species': aiResult['species'],
+            if (aiResult['family'] != null) 'Family': aiResult['family'],
+            if (aiResult['order'] != null) 'Order': aiResult['order'],
+            if (aiResult['habitat'] != null) 'Habitat': aiResult['habitat'],
             if (aiResult['description'] != null) 'Description': aiResult['description'],
-            if (aiResult['careTips'] != null) 'Care Tips': aiResult['careTips'],
-            if (aiResult['provenance'] != null) 'Provenance': aiResult['provenance'],
             if (aiResult['wikiLink'] != null) 'Wikipedia': aiResult['wikiLink'],
+            if (aiResult['dangerLevel'] != null) 'Danger Level': aiResult['dangerLevel'],
+            if (aiResult['commonName'] != null) 'Common Name': aiResult['commonName'],
+            if (aiResult['distribution'] != null) 'Distribution': aiResult['distribution'],
+            if (aiResult['size'] != null) 'Size': aiResult['size'],
+            if (aiResult['color'] != null) 'Color': aiResult['color'],
+            if (aiResult['lifeCycle'] != null) 'Life Cycle': aiResult['lifeCycle'],
+            if (aiResult['feedingHabits'] != null) 'Feeding Habits': aiResult['feedingHabits'],
+            if (aiResult['conservationStatus'] != null) 'Conservation Status': aiResult['conservationStatus'],
           };
           final item = IdentifiedItem(
             id: DateTime.now().millisecondsSinceEpoch.toString(),
             imagePath: savedPath,
-            result: aiResult['type'] ?? aiResult['brandOrMaker'] ?? 'Unknown',
-            subtitle: aiResult['material'] ?? '',
+            result: aiResult['species'] ?? aiResult['commonName'] ?? 'Unknown',
+            subtitle: aiResult['family'] ?? aiResult['order'] ?? '',
             confidence: _parseConfidence(aiResult['confidence']),
             details: details,
             dateTime: DateTime.now(),
@@ -186,8 +187,8 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           if (mounted) Navigator.of(context, rootNavigator: true).pop();
         }
       } catch (e) {
-        if (e.toString().contains('NOT_JEWELRY')) {
-          // Show the not jewelry dialog
+        if (e.toString().contains('NOT_BUG')) {
+          // Show the not bug dialog
           if (mounted) {
             Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
             setState(() {
@@ -195,7 +196,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
             });
             showDialog(
               context: context,
-              builder: (context) => const _NotJewelryDialog(),
+              builder: (context) => const _NotBugDialog(),
             );
           }
         } else {
@@ -274,7 +275,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
             final fileName = p.basename(item.imagePath);
             final possibleFiles = appDir
                 .listSync()
-                .where((entity) => entity is File && p.basename(entity.path).contains('jewelry_'))
+                .where((entity) => entity is File && p.basename(entity.path).contains('bug_'))
                 .toList();
 
             for (final file in possibleFiles) {}
@@ -299,7 +300,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           .listSync()
           .where((entity) =>
               entity is File &&
-              (p.basename(entity.path).contains('image_picker') || p.basename(entity.path).contains('jewelry_')))
+              (p.basename(entity.path).contains('image_picker') || p.basename(entity.path).contains('bug_')))
           .toList();
 
       // Also check if the original file path still exists (might be in temp directory)
@@ -307,7 +308,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       if (File(item.imagePath).existsSync()) {
         sourceFile = File(item.imagePath);
       } else {
-        // Look for the exact jewelry file that should match this item
+        // Look for the exact bug file that should match this item
         final expectedFileName = p.basename(item.imagePath);
         final exactMatch =
             possibleFiles.where((entity) => entity is File && p.basename(entity.path) == expectedFileName).toList();
@@ -315,12 +316,12 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         if (exactMatch.isNotEmpty) {
           sourceFile = exactMatch.first as File;
         } else if (possibleFiles.isNotEmpty) {
-          // If no exact match, look for jewelry files first (prefer new format)
-          final jewelryFiles =
-              possibleFiles.where((entity) => entity is File && p.basename(entity.path).contains('jewelry_')).toList();
+          // If no exact match, look for bug files first (prefer new format)
+          final bugFiles =
+              possibleFiles.where((entity) => entity is File && p.basename(entity.path).contains('bug_')).toList();
 
-          if (jewelryFiles.isNotEmpty) {
-            sourceFile = jewelryFiles.first as File;
+          if (bugFiles.isNotEmpty) {
+            sourceFile = bugFiles.first as File;
           } else {
             // Fall back to any available file
             sourceFile = possibleFiles.first as File;
@@ -366,23 +367,23 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       final appDir = await getApplicationDocumentsDirectory();
 
       for (final item in items) {
-        if (item.imagePath.isNotEmpty && item.imagePath.contains('jewelry_')) {
+        if (item.imagePath.isNotEmpty && item.imagePath.contains('bug_')) {
           final currentFile = File(item.imagePath);
           if (await currentFile.exists()) {
             // Check if this is the correct image by looking for the original expected filename
             final expectedFileName = p.basename(item.imagePath);
 
-            // Look for other jewelry files that might be the correct one
-            final allJewelryFiles = appDir
+            // Look for other bug files that might be the correct one
+            final allBugFiles = appDir
                 .listSync()
-                .where((entity) => entity is File && p.basename(entity.path).contains('jewelry_'))
+                .where((entity) => entity is File && p.basename(entity.path).contains('bug_'))
                 .toList();
 
-            if (allJewelryFiles.length > 1) {
-              // Check if there's a jewelry file that matches the original timestamp
+            if (allBugFiles.length > 1) {
+              // Check if there's a bug file that matches the original timestamp
               final itemTimestamp = item.id; // The item ID is the timestamp
-              final correctFile = allJewelryFiles
-                  .where((entity) => entity is File && p.basename(entity.path).contains('jewelry_$itemTimestamp'))
+              final correctFile = allBugFiles
+                  .where((entity) => entity is File && p.basename(entity.path).contains('bug_$itemTimestamp'))
                   .toList();
 
               if (correctFile.isNotEmpty && p.basename(correctFile.first.path) != expectedFileName) {
@@ -403,9 +404,9 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
     } catch (e) {}
   }
 
-  Future<Map<String, dynamic>?> _identifyJewelryWithAI(File imageFile) async {
+  Future<Map<String, dynamic>?> _identifyBugWithAI(File imageFile) async {
     try {
-      final uri = Uri.parse('https://own-ai-backend-dev.fly.dev/identify-jewelry');
+      final uri = Uri.parse('https://own-ai-backend-dev.fly.dev/identify-bug');
       final request = http.MultipartRequest('POST', uri)
         ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
 
@@ -424,12 +425,14 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         if (data['success'] == true && data['result'] != null) {
           return Map<String, dynamic>.from(data['result']);
         } else if (data['success'] == false && data['error'] != null) {
-          // Check if the error indicates it's not jewelry
+          // Check if the error indicates it's not a bug
           final error = data['error'].toString().toLowerCase();
-          if (error.contains('does not contain jewelry') ||
-              error.contains('not jewelry') ||
-              error.contains('no jewelry')) {
-            throw Exception('NOT_JEWELRY');
+          if (error.contains('does not contain bug') ||
+              error.contains('not bug') ||
+              error.contains('no bug') ||
+              error.contains('insect') ||
+              error.contains('not insect')) {
+            throw Exception('NOT_BUG');
           }
           // For other errors, throw the actual error message
           throw Exception(data['error'].toString());
@@ -439,7 +442,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       } else if (response.statusCode >= 500) {
         throw Exception('Server error. Please try again later.');
       } else {
-        throw Exception('Failed to identify jewelry. Please try again.');
+        throw Exception('Failed to identify bug. Please try again.');
       }
     } on FormatException {
       throw Exception('Invalid response from server. Please try again.');
@@ -450,6 +453,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
     } catch (e) {
       throw Exception('An unexpected error occurred: ${e.toString()}');
     }
+    return null;
   }
 
   void _showError(String message) {
@@ -1056,7 +1060,7 @@ class _PremiumThankYouModalState extends State<_PremiumThankYouModal> with Singl
           ),
           const SizedBox(height: 24),
           const Text(
-            'Thank you for subscribing to jewelry_id Pro!',
+            'Thank you for subscribing to bug_id Pro!',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: -0.5),
           ),
@@ -1084,8 +1088,8 @@ class _PremiumThankYouModalState extends State<_PremiumThankYouModal> with Singl
   }
 }
 
-class _NotJewelryDialog extends StatelessWidget {
-  const _NotJewelryDialog();
+class _NotBugDialog extends StatelessWidget {
+  const _NotBugDialog();
 
   @override
   Widget build(BuildContext context) {
@@ -1094,11 +1098,11 @@ class _NotJewelryDialog extends StatelessWidget {
       backgroundColor: isDarkMode ? const Color(0xFF2A2A36) : Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: const Text(
-        'No Jewelry Found',
+        'No Bug Found',
         style: TextStyle(fontWeight: FontWeight.bold),
       ),
       content: const Text(
-        'This image doesn\'t appear to contain jewelry. Please try taking a photo of a ring, necklace, bracelet, or other jewelry item.',
+        'This image doesn\'t appear to contain a bug. Please try taking a photo of a bug.',
       ),
       actions: [
         TextButton(

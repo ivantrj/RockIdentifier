@@ -1,6 +1,6 @@
 // lib/locator.dart
 import 'package:get_it/get_it.dart';
-import 'package:jewelry_id/features/app_shell/viewmodel/app_shell_viewmodel.dart';
+import 'package:bug_id/features/app_shell/viewmodel/app_shell_viewmodel.dart';
 import 'data/sources/local/preferences_service.dart';
 import 'services/theme_service.dart';
 import 'services/cache_service.dart';

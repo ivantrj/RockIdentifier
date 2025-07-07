@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:jewelry_id/features/home/view/home_screen.dart';
+import 'package:bug_id/features/home/view/home_screen.dart';
 
 class AppShellScreen extends StatefulWidget {
   const AppShellScreen({super.key});

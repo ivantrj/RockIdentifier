@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:jewelry_id/core/theme/app_theme.dart';
-import 'package:jewelry_id/main.dart';
+import 'package:bug_id/core/theme/app_theme.dart';
+import 'package:bug_id/main.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
 
 class PaywallScreen extends StatefulWidget {
@@ -159,10 +159,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                     padding: const EdgeInsets.symmetric(horizontal: 32),
                                     child: Column(
                                       children: [
-                                        _featureRow(
-                                            Icons.camera_alt_rounded, 'Identify unlimited jewelry', primaryColor),
+                                        _featureRow(Icons.camera_alt_rounded, 'Identify unlimited bugs', primaryColor),
                                         _featureRow(Icons.search_rounded, 'Get detailed analysis', primaryColor),
-                                        _featureRow(Icons.menu_book_rounded, 'Access market valuations', primaryColor),
+                                        _featureRow(
+                                            Icons.menu_book_rounded, 'Access scientific information', primaryColor),
                                         _featureRow(Icons.lock_open_rounded, 'Remove usage limits', primaryColor),
                                       ],
                                     ),
@@ -277,7 +277,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'You\'re now subscribed to jewelry_id Pro',
+              'You\'re now subscribed to bug_id Pro',
               style: TextStyle(fontSize: 18, color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7)),
               textAlign: TextAlign.center,
             ),
@@ -286,9 +286,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Column(
                 children: [
-                  _featureRow(Icons.camera_alt_rounded, 'Unlimited jewelry identification', primaryColor),
+                  _featureRow(Icons.camera_alt_rounded, 'Unlimited bug identification', primaryColor),
                   _featureRow(Icons.search_rounded, 'Detailed AI analysis', primaryColor),
-                  _featureRow(Icons.menu_book_rounded, 'Market valuations', primaryColor),
+                  _featureRow(Icons.menu_book_rounded, 'Scientific information', primaryColor),
                   _featureRow(Icons.lock_open_rounded, 'No usage limits', primaryColor),
                 ],
               ),

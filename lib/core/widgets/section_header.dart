@@ -1,6 +1,6 @@
 // lib/core/widgets/section_header.dart
 import 'package:flutter/material.dart';
-import 'package:jewelry_id/core/theme/app_theme.dart';
+import 'package:bug_id/core/theme/app_theme.dart';
 
 class SectionHeader extends StatelessWidget {
   final String title;

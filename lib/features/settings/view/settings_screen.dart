@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:jewelry_id/core/theme/app_theme.dart';
-import 'package:jewelry_id/core/widgets/section_header.dart';
+import 'package:bug_id/core/theme/app_theme.dart';
+import 'package:bug_id/core/widgets/section_header.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
 import 'package:in_app_review/in_app_review.dart';
-import 'package:jewelry_id/services/cache_service.dart';
-import 'package:jewelry_id/locator.dart';
+import 'package:bug_id/services/cache_service.dart';
+import 'package:bug_id/locator.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -113,7 +113,7 @@ class SettingsScreen extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '© ${DateTime.now().year} AI Jewelry Identifier',
+                  '© ${DateTime.now().year} AI Bug Identifier',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                         color: isDarkMode ? Colors.white70 : Colors.black87,

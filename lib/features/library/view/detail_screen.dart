@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:jewelry_id/data/models/identified_item.dart';
-import 'package:jewelry_id/core/theme/app_theme.dart';
+import 'package:bug_id/data/models/identified_item.dart';
+import 'package:bug_id/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:jewelry_id/features/chat/view/chat_screen.dart';
+import 'package:bug_id/features/chat/view/chat_screen.dart';
 
 class ItemDetailScreen extends StatelessWidget {
   final IdentifiedItem item;

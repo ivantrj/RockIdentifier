@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jewelry_id/core/theme/app_theme.dart';
-import 'package:jewelry_id/core/widgets/primary_button.dart';
+import 'package:bug_id/core/theme/app_theme.dart';
+import 'package:bug_id/core/widgets/primary_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class OnboardingScreen extends StatefulWidget {

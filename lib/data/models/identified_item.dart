@@ -91,17 +91,41 @@ class IdentifiedItem {
   /// Get estimated price from details
   String? get estimatedPrice => details['Estimated Price'] as String?;
 
-  /// Get material from details
-  String? get material => details['Material'] as String?;
+  /// Get species from details
+  String? get species => details['Species'] as String?;
 
-  /// Get gemstones from details
-  String? get gemstones => details['Gemstones'] as String?;
+  /// Get family from details
+  String? get family => details['Family'] as String?;
 
-  /// Get brand/maker from details
-  String? get brandOrMaker => details['Brand/Maker'] as String?;
+  /// Get order from details
+  String? get order => details['Order'] as String?;
 
-  /// Get era/style from details
-  String? get eraOrStyle => details['Era/Style'] as String?;
+  /// Get habitat from details
+  String? get habitat => details['Habitat'] as String?;
+
+  /// Get danger level from details
+  String? get dangerLevel => details['Danger Level'] as String?;
+
+  /// Get common name from details
+  String? get commonName => details['Common Name'] as String?;
+
+  /// Get distribution from details
+  String? get distribution => details['Distribution'] as String?;
+
+  /// Get size from details
+  String? get size => details['Size'] as String?;
+
+  /// Get color from details
+  String? get color => details['Color'] as String?;
+
+  /// Get life cycle from details
+  String? get lifeCycle => details['Life Cycle'] as String?;
+
+  /// Get feeding habits from details
+  String? get feedingHabits => details['Feeding Habits'] as String?;
+
+  /// Get conservation status from details
+  String? get conservationStatus => details['Conservation Status'] as String?;
 
   /// Get authenticity from details
   String? get authenticity => details['Authenticity'] as String?;

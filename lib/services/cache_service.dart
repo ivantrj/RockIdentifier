@@ -5,7 +5,7 @@ import 'package:path/path.dart' as p;
 import 'package:crypto/crypto.dart';
 
 class CacheService {
-  static const String _cacheDirName = 'jewelry_cache';
+  static const String _cacheDirName = 'bug_cache';
   static const String _resultsDirName = 'ai_results';
   static const Duration _cacheExpiry = Duration(days: 7);
 
