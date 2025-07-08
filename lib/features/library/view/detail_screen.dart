@@ -1219,6 +1219,22 @@ class ItemDetailScreen extends StatelessWidget {
       isScrollControlled: true,
       builder: (context) {
         final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+        // If label is 'Interesting Facts', show as bullet points
+        final isInterestingFacts = label.trim().toLowerCase() == 'interesting facts';
+        // Try to split value into bullet points if it looks like a list
+        List<String>? facts;
+        if (isInterestingFacts) {
+          // Try splitting on newlines or semicolons or numbered list
+          if (value.contains('\n')) {
+            facts = value.split(RegExp(r'\n+')).map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+          } else if (value.contains(';')) {
+            facts = value.split(';').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+          } else if (value.contains('•')) {
+            facts = value.split('•').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+          } else if (RegExp(r'\d+\.').hasMatch(value)) {
+            facts = value.split(RegExp(r'\d+\.')).map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+          }
+        }
         return DraggableScrollableSheet(
           expand: false,
           initialChildSize: 0.4,
@@ -1260,14 +1276,35 @@ class ItemDetailScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 18),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: (isDarkMode ? Colors.white : Colors.black).withValues(alpha: 0.9),
-                    height: 1.5,
+                if (isInterestingFacts && facts != null && facts.length > 1)
+                  ...facts.map((fact) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('• ', style: TextStyle(fontSize: 18)),
+                            Expanded(
+                              child: Text(
+                                fact,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: (isDarkMode ? Colors.white : Colors.black).withValues(alpha: 0.9),
+                                  height: 1.5,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
+                if (!(isInterestingFacts && facts != null && facts.length > 1))
+                  Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: (isDarkMode ? Colors.white : Colors.black).withValues(alpha: 0.9),
+                      height: 1.5,
+                    ),
                   ),
-                ),
               ],
             ),
           ),
