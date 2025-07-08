@@ -235,23 +235,33 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         ],
       ),
       floatingActionButton: !_fabMenuOpen
-          ? FloatingActionButton(
-              onPressed: _isProcessing
-                  ? null
-                  : () async {
-                      await HapticService.instance.vibrate();
-                      _openFabMenu();
-                    },
-              child: _isProcessing
-                  ? const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : const Icon(HugeIcons.strokeRoundedCameraAi, size: 32),
+          ? AnimatedScale(
+              scale: _fabMenuOpen ? 0.8 : 1.0,
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOutBack,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                child: FloatingActionButton(
+                  key: ValueKey(_isProcessing),
+                  onPressed: _isProcessing
+                      ? null
+                      : () async {
+                          await HapticService.instance.vibrate();
+                          setState(() {}); // trigger animation
+                          _openFabMenu();
+                        },
+                  child: _isProcessing
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Icon(HugeIcons.strokeRoundedCameraAi, size: 32),
+                ),
+              ),
             )
           : null,
     );

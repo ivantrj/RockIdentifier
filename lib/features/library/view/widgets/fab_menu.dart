@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:bug_id/services/haptic_service.dart';
+import 'dart:ui';
 
 class FabMenu extends StatelessWidget {
   final bool isOpen;
@@ -24,12 +25,15 @@ class FabMenu extends StatelessWidget {
     if (isOpen) {
       return Stack(
         children: [
-          // Backdrop
+          // Backdrop with blur
           Positioned.fill(
             child: GestureDetector(
               onTap: onClose,
-              child: Container(
-                color: Colors.black.withValues(alpha: 0.3),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  color: Colors.black.withOpacity(0.18),
+                ),
               ),
             ),
           ),
@@ -37,34 +41,9 @@ class FabMenu extends StatelessWidget {
           Positioned(
             right: 24,
             bottom: 100,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                _ActionButton(
-                  icon: HugeIcons.strokeRoundedCamera01,
-                  label: 'Take Photo',
-                  onTap: () async {
-                    await HapticService.instance.vibrate();
-                    onClose();
-                    onImagePicked(ImageSource.camera);
-                  },
-                ),
-                const SizedBox(height: 16),
-                _ActionButton(
-                  icon: HugeIcons.strokeRoundedImage02,
-                  label: 'Upload Photo',
-                  onTap: () async {
-                    await HapticService.instance.vibrate();
-                    onClose();
-                    onImagePicked(ImageSource.gallery);
-                  },
-                ),
-                const SizedBox(height: 16),
-                _CloseFabButton(onTap: () async {
-                  await HapticService.instance.vibrate();
-                  onClose();
-                }),
-              ],
+            child: _AnimatedFabMenuItems(
+              onImagePicked: onImagePicked,
+              onClose: onClose,
             ),
           ),
         ],
@@ -142,6 +121,97 @@ class _CloseFabButton extends StatelessWidget {
           child: Icon(Icons.close, color: Colors.white, size: 28),
         ),
       ),
+    );
+  }
+}
+
+class _AnimatedFabMenuItems extends StatefulWidget {
+  final Function(ImageSource) onImagePicked;
+  final VoidCallback onClose;
+  const _AnimatedFabMenuItems({required this.onImagePicked, required this.onClose});
+
+  @override
+  State<_AnimatedFabMenuItems> createState() => _AnimatedFabMenuItemsState();
+}
+
+class _AnimatedFabMenuItemsState extends State<_AnimatedFabMenuItems> with TickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        _buildAnimatedMenuItem(
+          delay: 0,
+          child: _ActionButton(
+            icon: HugeIcons.strokeRoundedCamera01,
+            label: 'Take Photo',
+            onTap: () async {
+              await HapticService.instance.vibrate();
+              widget.onClose();
+              widget.onImagePicked(ImageSource.camera);
+            },
+          ),
+        ),
+        const SizedBox(height: 16),
+        _buildAnimatedMenuItem(
+          delay: 80,
+          child: _ActionButton(
+            icon: HugeIcons.strokeRoundedImage02,
+            label: 'Upload Photo',
+            onTap: () async {
+              await HapticService.instance.vibrate();
+              widget.onClose();
+              widget.onImagePicked(ImageSource.gallery);
+            },
+          ),
+        ),
+        const SizedBox(height: 16),
+        _buildAnimatedMenuItem(
+          delay: 160,
+          child: _CloseFabButton(onTap: () async {
+            await HapticService.instance.vibrate();
+            widget.onClose();
+          }),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAnimatedMenuItem({required int delay, required Widget child}) {
+    final animation = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(delay / 400, 1, curve: Curves.easeOutBack),
+    );
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, childWidget) {
+        return Opacity(
+          opacity: animation.value.clamp(0.0, 1.0),
+          child: Transform.translate(
+            offset: Offset(0, 40 * (1 - animation.value)),
+            child: childWidget,
+          ),
+        );
+      },
+      child: child,
     );
   }
 }
