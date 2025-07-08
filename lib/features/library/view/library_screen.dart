@@ -42,6 +42,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   bool _fabMenuOpen = false;
   bool _isProcessing = false;
   final ImagePicker _picker = ImagePicker();
+  String? _justAddedId; // Track the most recently added item
 
   // ValueNotifier for subscription state
   final ValueNotifier<bool> isSubscribedNotifier = ValueNotifier(main.RevenueCatService.isSubscribed);
@@ -127,14 +128,16 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         }
 
         if (item != null) {
-          LoggingService.userAction('Item added to library', details: 'result: ${item.result}', tag: 'LibraryScreen');
+          LoggingService.userAction('Item added to library', details: 'result:  [${item.result}', tag: 'LibraryScreen');
           try {
             await context.read<LibraryViewModel>().addItem(item);
             LoggingService.debug('Item successfully added to viewmodel', tag: 'LibraryScreen');
 
-            // Force a rebuild to ensure UI updates
+            // Set just added ID for animation
             if (mounted) {
-              setState(() {});
+              setState(() {
+                _justAddedId = item.id;
+              });
             }
           } catch (e) {
             LoggingService.error('Error adding item to viewmodel', error: e, tag: 'LibraryScreen');
@@ -389,6 +392,8 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         return LibraryItemCard(
           item: item,
           onTap: () => _onOpenDetail(item),
+          isJustAdded: item.id == _justAddedId,
+          onJustAddedAnimationEnd: item.id == _justAddedId ? () => setState(() => _justAddedId = null) : null,
         );
       },
     );
