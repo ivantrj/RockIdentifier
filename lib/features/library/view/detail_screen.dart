@@ -844,14 +844,9 @@ class ItemDetailScreen extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: () {
-            LoggingService.userAction('Chat with AI button pressed',
-                details: 'itemId: ${item.id}', tag: 'DetailScreen');
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChatScreen(item: item),
-              ),
-            );
+            Navigator.of(context).push(_fadeSlideRoute(
+              ChatScreen(item: item),
+            ));
           },
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -903,6 +898,27 @@ class ItemDetailScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Route _fadeSlideRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final offsetAnimation = Tween<Offset>(
+          begin: const Offset(0, 0.08),
+          end: Offset.zero,
+        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
+        final fadeAnimation = CurvedAnimation(parent: animation, curve: Curves.easeInOut);
+        return SlideTransition(
+          position: offsetAnimation,
+          child: FadeTransition(
+            opacity: fadeAnimation,
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 350),
     );
   }
 

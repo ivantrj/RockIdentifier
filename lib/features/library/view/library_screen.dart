@@ -203,14 +203,32 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   }
 
   void _onOpenDetail(IdentifiedItem item) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => ItemDetailScreen(
-          item: item,
-          onDelete: () => _onDeleteItem(item.id),
-        ),
+    Navigator.of(context).push(_fadeSlideRoute(
+      ItemDetailScreen(
+        item: item,
+        onDelete: () => _onDeleteItem(item.id),
       ),
+    ));
+  }
+
+  Route _fadeSlideRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final offsetAnimation = Tween<Offset>(
+          begin: const Offset(0, 0.08),
+          end: Offset.zero,
+        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
+        final fadeAnimation = CurvedAnimation(parent: animation, curve: Curves.easeInOut);
+        return SlideTransition(
+          position: offsetAnimation,
+          child: FadeTransition(
+            opacity: fadeAnimation,
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 350),
     );
   }
 
