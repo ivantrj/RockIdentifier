@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bug_id/core/theme/app_theme.dart';
 import 'package:bug_id/core/widgets/primary_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:bug_id/services/haptic_service.dart';
 
 class OnboardingScreen extends StatefulWidget {
   final VoidCallback onFinish;
@@ -64,7 +65,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   const SizedBox(height: 24),
                   PrimaryButton(
                     text: _page < 2 ? 'Continue' : 'Get Started',
-                    onPressed: _next,
+                    onPressed: () async {
+                      await HapticService.instance.vibrate();
+                      _next();
+                    },
                     isFullWidth: true,
                   ),
                   const SizedBox(height: 12),

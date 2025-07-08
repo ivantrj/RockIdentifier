@@ -16,6 +16,7 @@ import 'widgets/fab_menu.dart';
 import 'widgets/library_item_card.dart';
 import 'widgets/loading_dialog.dart';
 import 'widgets/not_bug_dialog.dart';
+import 'package:bug_id/services/haptic_service.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -235,7 +236,12 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       ),
       floatingActionButton: !_fabMenuOpen
           ? FloatingActionButton(
-              onPressed: _isProcessing ? null : _openFabMenu,
+              onPressed: _isProcessing
+                  ? null
+                  : () async {
+                      await HapticService.instance.vibrate();
+                      _openFabMenu();
+                    },
               child: _isProcessing
                   ? const SizedBox(
                       width: 24,
@@ -301,7 +307,8 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
               ),
               child: const Icon(HugeIcons.strokeRoundedSettings01, size: 22),
             ),
-            onPressed: () {
+            onPressed: () async {
+              await HapticService.instance.vibrate();
               Navigator.pushNamed(context, '/settings');
             },
           ),

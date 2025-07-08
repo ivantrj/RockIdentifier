@@ -7,6 +7,8 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:bug_id/services/cache_service.dart';
 import 'package:bug_id/locator.dart';
 import 'package:bug_id/services/logging_service.dart';
+import 'package:bug_id/services/haptic_service.dart';
+import 'package:flutter/cupertino.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -29,6 +31,8 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         children: [
+          // Haptic Feedback Toggle (at the very top)
+          const _HapticFeedbackToggle(),
           // App Settings Section
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
@@ -40,6 +44,7 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.star_rate_rounded,
             onTap: () => _rateApp(context),
           ),
+          // Haptic Feedback Toggle
           // _buildSettingsItem(
           //   context: context,
           //   title: 'Share App',
@@ -276,6 +281,82 @@ class SettingsScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _HapticFeedbackToggle extends StatefulWidget {
+  const _HapticFeedbackToggle();
+  @override
+  State<_HapticFeedbackToggle> createState() => _HapticFeedbackToggleState();
+}
+
+class _HapticFeedbackToggleState extends State<_HapticFeedbackToggle> {
+  bool _enabled = true;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    await HapticService.instance.loadSetting();
+    setState(() {
+      _enabled = HapticService.instance.enabled;
+      _loading = false;
+    });
+  }
+
+  Future<void> _toggle(bool value) async {
+    await HapticService.instance.setEnabled(value);
+    setState(() {
+      _enabled = value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: isDarkMode ? const Color(0xFF23232B) : Colors.white,
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: isDarkMode ? Colors.black.withOpacity(0.10) : Colors.grey.withOpacity(0.08),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: ListTile(
+            leading: Icon(Icons.vibration, size: 28, color: Theme.of(context).colorScheme.primary),
+            title: const Text(
+              'Haptic Feedback',
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
+            ),
+            subtitle: const Text(
+              'Vibrate on button taps',
+              style: TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+            trailing: _loading
+                ? const SizedBox(width: 40, height: 40, child: CircularProgressIndicator(strokeWidth: 2))
+                : CupertinoSwitch(
+                    value: _enabled,
+                    onChanged: _toggle,
+                    activeColor: Theme.of(context).colorScheme.primary,
+                  ),
+            onTap: _loading ? null : () => _toggle(!_enabled),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          ),
+        ),
+      ],
     );
   }
 }

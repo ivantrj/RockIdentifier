@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:bug_id/services/haptic_service.dart';
 
 class FabMenu extends StatelessWidget {
   final bool isOpen;
@@ -42,7 +43,8 @@ class FabMenu extends StatelessWidget {
                 _ActionButton(
                   icon: HugeIcons.strokeRoundedCamera01,
                   label: 'Take Photo',
-                  onTap: () {
+                  onTap: () async {
+                    await HapticService.instance.vibrate();
                     onClose();
                     onImagePicked(ImageSource.camera);
                   },
@@ -51,13 +53,17 @@ class FabMenu extends StatelessWidget {
                 _ActionButton(
                   icon: HugeIcons.strokeRoundedImage02,
                   label: 'Upload Photo',
-                  onTap: () {
+                  onTap: () async {
+                    await HapticService.instance.vibrate();
                     onClose();
                     onImagePicked(ImageSource.gallery);
                   },
                 ),
                 const SizedBox(height: 16),
-                _CloseFabButton(onTap: onClose),
+                _CloseFabButton(onTap: () async {
+                  await HapticService.instance.vibrate();
+                  onClose();
+                }),
               ],
             ),
           ),

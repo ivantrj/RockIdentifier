@@ -1,6 +1,7 @@
 // lib/widgets/containers/app_card.dart
 import 'package:flutter/material.dart';
 import 'package:bug_id/core/theme/app_theme.dart';
+import 'package:bug_id/services/haptic_service.dart';
 
 class AppCard extends StatelessWidget {
   final Widget child;
@@ -78,7 +79,12 @@ class AppCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24.0),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: onTap,
+          onTap: onTap == null
+              ? null
+              : () async {
+                  await HapticService.instance.vibrate();
+                  onTap!();
+                },
           splashColor: AppTheme.primaryColor.withValues(alpha: 0.1),
           highlightColor: AppTheme.primaryColor.withValues(alpha: 0.05),
           child: Column(

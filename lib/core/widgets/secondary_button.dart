@@ -1,6 +1,7 @@
 // lib/widgets/buttons/secondary_button.dart
 import 'package:flutter/material.dart';
 import 'package:bug_id/core/theme/app_theme.dart';
+import 'package:bug_id/services/haptic_service.dart';
 
 class SecondaryButton extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -44,7 +45,12 @@ class SecondaryButton extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: isLoading ? null : onPressed,
+            onTap: isLoading
+                ? null
+                : () async {
+                    await HapticService.instance.vibrate();
+                    if (onPressed != null) onPressed!();
+                  },
             borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
             splashColor: AppTheme.primaryColor.withValues(alpha: 0.1),
             highlightColor: AppTheme.primaryColor.withValues(alpha: 0.05),
