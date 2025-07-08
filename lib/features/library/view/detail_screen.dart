@@ -631,7 +631,69 @@ class ItemDetailScreen extends StatelessWidget {
               final index = entry.key;
               final key = entry.value;
               final isLast = index == validInfo.length - 1;
-              return _buildInfoCard(context, key, details[key], isLast);
+              // If this is the wikiLink, make it a direct, beautiful Wikipedia link
+              if (key == 'wikiLink') {
+                final url = details[key]?.toString() ?? '';
+                if (url.isEmpty) return const SizedBox.shrink();
+                return Column(
+                  children: [
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () => _launchUrl(url),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: 0.08),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(
+                                  HugeIcons.strokeRoundedWikipedia,
+                                  color: Color(0xFF000000),
+                                  size: 24,
+                                ),
+                              ),
+                              const SizedBox(width: 18),
+                              Expanded(
+                                child: Text(
+                                  'Open in Wikipedia',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: isDarkMode ? Colors.white : Colors.black,
+                                  ),
+                                ),
+                              ),
+                              Icon(
+                                HugeIcons.strokeRoundedSquareArrowUpRight,
+                                color: AppTheme.primaryColor,
+                                size: 20,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (!isLast) const Divider(height: 1, thickness: 1, indent: 24, endIndent: 24),
+                  ],
+                );
+              } else {
+                // Default info card for other info
+                return _buildInfoCard(context, key, details[key], isLast);
+              }
             }).toList(),
           ),
         ),
