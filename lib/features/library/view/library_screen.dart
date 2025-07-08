@@ -17,6 +17,7 @@ import 'widgets/library_item_card.dart';
 import 'widgets/loading_dialog.dart';
 import 'widgets/not_bug_dialog.dart';
 import 'package:bug_id/services/haptic_service.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -376,35 +377,45 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   }
 
   Widget _buildEmptyState(BuildContext context, bool isDarkMode) {
+    return _BouncyEmptyState(isDarkMode: isDarkMode);
+  }
+}
+
+class _BouncyEmptyState extends StatefulWidget {
+  final bool isDarkMode;
+  const _BouncyEmptyState({required this.isDarkMode});
+
+  @override
+  State<_BouncyEmptyState> createState() => _BouncyEmptyStateState();
+}
+
+class _BouncyEmptyStateState extends State<_BouncyEmptyState> {
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              color: isDarkMode ? const Color(0xFF2A2A36).withValues(alpha: 0.7) : const Color(0xFFF5F5F8),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              HugeIcons.strokeRoundedImage01,
-              size: 48,
-              color: Theme.of(context).primaryColor,
-            ),
+          SvgPicture.asset(
+            'assets/onboarding/onboarding_1.svg',
+            height: 140,
           ),
-          const SizedBox(height: 24),
-          const Text(
-            'Your library is empty',
+          const SizedBox(height: 32),
+          Text(
+            'No bugs here yet! 🐞',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
+              color: widget.isDarkMode ? Colors.white : Colors.black,
             ),
           ),
           const SizedBox(height: 12),
-          const Text(
-            'Tap the + button to identify something!',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
+          Text(
+            'Start identifying by tapping the button below.',
+            style: TextStyle(
+              fontSize: 16,
+              color: widget.isDarkMode ? Colors.white70 : Colors.black54,
+            ),
             textAlign: TextAlign.center,
           ),
         ],
