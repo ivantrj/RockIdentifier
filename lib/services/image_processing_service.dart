@@ -4,11 +4,11 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'package:bug_id/data/models/identified_item.dart';
-import 'package:bug_id/services/cache_service.dart';
-import 'package:bug_id/services/connectivity_service.dart';
-import 'package:bug_id/services/logging_service.dart';
-import 'package:bug_id/locator.dart';
+import 'package:antique_id/data/models/identified_item.dart';
+import 'package:antique_id/services/cache_service.dart';
+import 'package:antique_id/services/connectivity_service.dart';
+import 'package:antique_id/services/logging_service.dart';
+import 'package:antique_id/locator.dart';
 
 class ImageProcessingService {
   static const String _baseUrl = 'https://own-ai-backend-dev.fly.dev';
@@ -23,7 +23,7 @@ class ImageProcessingService {
       // Create a more reliable filename format
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final extension = p.extension(imagePath);
-      final safeFileName = 'bug_$timestamp$extension';
+      final safeFileName = 'antique_$timestamp$extension';
       final savedPath = p.join(appDir.path, safeFileName);
 
       // Copy the file
@@ -42,10 +42,10 @@ class ImageProcessingService {
     }
   }
 
-  /// Process image and identify bug using AI
+  /// Process image and identify antique using AI
   Future<IdentifiedItem?> processImage(String imagePath) async {
     try {
-      LoggingService.debug('Processing image for identification', tag: 'ImageProcessingService');
+      LoggingService.debug('Processing image for antique identification', tag: 'ImageProcessingService');
 
       // Save image to app directory
       final savedPath = await saveImageToAppDir(imagePath);
@@ -67,11 +67,11 @@ class ImageProcessingService {
         }
 
         // Call AI API
-        LoggingService.apiOperation('Calling AI identification API', tag: 'ImageProcessingService');
-        aiResult = await _identifyBugWithAI(File(savedPath));
+        LoggingService.apiOperation('Calling AI antique identification API', tag: 'ImageProcessingService');
+        aiResult = await _identifyAntiqueWithAI(File(savedPath));
 
         if (aiResult != null) {
-          LoggingService.apiOperation('AI identification successful', tag: 'ImageProcessingService');
+          LoggingService.apiOperation('AI antique identification successful', tag: 'ImageProcessingService');
           // Cache the result for future use
           await cacheService.cacheAnalysisResult(savedPath, aiResult);
         }
@@ -100,27 +100,38 @@ class ImageProcessingService {
     LoggingService.debug('Creating identified item from AI result', tag: 'ImageProcessingService');
 
     final details = <String, dynamic>{
-      if (aiResult['scientificName'] != null) 'scientificName': aiResult['scientificName'],
-      if (aiResult['commonName'] != null) 'commonName': aiResult['commonName'],
-      if (aiResult['order'] != null) 'order': aiResult['order'],
-      if (aiResult['family'] != null) 'family': aiResult['family'],
-      if (aiResult['characteristics'] != null) 'characteristics': aiResult['characteristics'],
-      if (aiResult['habitat'] != null) 'habitat': aiResult['habitat'],
-      if (aiResult['behavior'] != null) 'behavior': aiResult['behavior'],
-      if (aiResult['diet'] != null) 'diet': aiResult['diet'],
-      if (aiResult['lifeCycle'] != null) 'lifeCycle': aiResult['lifeCycle'],
-      if (aiResult['ecologicalRole'] != null) 'ecologicalRole': aiResult['ecologicalRole'],
-      if (aiResult['estimatedPrevalence'] != null) 'estimatedPrevalence': aiResult['estimatedPrevalence'],
-      if (aiResult['interestingFacts'] != null) 'interestingFacts': aiResult['interestingFacts'],
+      if (aiResult['itemType'] != null) 'itemType': aiResult['itemType'],
+      if (aiResult['specificCategory'] != null) 'specificCategory': aiResult['specificCategory'],
+      if (aiResult['confidence'] != null) 'confidence': aiResult['confidence'],
+      if (aiResult['estimatedAge'] != null) 'estimatedAge': aiResult['estimatedAge'],
+      if (aiResult['origin'] != null) 'origin': aiResult['origin'],
+      if (aiResult['makerOrManufacturer'] != null) 'makerOrManufacturer': aiResult['makerOrManufacturer'],
+      if (aiResult['materials'] != null) 'materials': aiResult['materials'],
+      if (aiResult['constructionTechniques'] != null) 'constructionTechniques': aiResult['constructionTechniques'],
+      if (aiResult['style'] != null) 'style': aiResult['style'],
+      if (aiResult['condition'] != null) 'condition': aiResult['condition'],
+      if (aiResult['authenticity'] != null) 'authenticity': aiResult['authenticity'],
+      if (aiResult['rarity'] != null) 'rarity': aiResult['rarity'],
+      if (aiResult['estimatedValue'] != null) 'estimatedValue': aiResult['estimatedValue'],
+      if (aiResult['provenance'] != null) 'provenance': aiResult['provenance'],
+      if (aiResult['markingsOrSignatures'] != null) 'markingsOrSignatures': aiResult['markingsOrSignatures'],
+      if (aiResult['historicalContext'] != null) 'historicalContext': aiResult['historicalContext'],
+      if (aiResult['careInstructions'] != null) 'careInstructions': aiResult['careInstructions'],
+      if (aiResult['restorationNotes'] != null) 'restorationNotes': aiResult['restorationNotes'],
+      if (aiResult['similarExamples'] != null) 'similarExamples': aiResult['similarExamples'],
+      if (aiResult['marketDemand'] != null) 'marketDemand': aiResult['marketDemand'],
+      if (aiResult['investmentPotential'] != null) 'investmentPotential': aiResult['investmentPotential'],
+      if (aiResult['conservationStatus'] != null) 'conservationStatus': aiResult['conservationStatus'],
+      if (aiResult['displayRecommendations'] != null) 'displayRecommendations': aiResult['displayRecommendations'],
+      if (aiResult['insuranceValue'] != null) 'insuranceValue': aiResult['insuranceValue'],
       if (aiResult['wikiLink'] != null) 'wikiLink': aiResult['wikiLink'],
-      if (aiResult['dangerToHumans'] != null) 'dangerToHumans': aiResult['dangerToHumans'],
     };
 
     return IdentifiedItem(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       imagePath: imagePath,
-      result: aiResult['commonName'] ?? aiResult['scientificName'] ?? 'Unknown',
-      subtitle: aiResult['order'] ?? aiResult['family'] ?? '',
+      result: aiResult['specificCategory'] ?? aiResult['itemType'] ?? 'Unknown Antique',
+      subtitle: aiResult['estimatedAge'] ?? aiResult['style'] ?? '',
       confidence: _parseConfidence(aiResult['confidence']),
       details: details,
       dateTime: DateTime.now(),
@@ -147,13 +158,13 @@ class ImageProcessingService {
     return 0.0;
   }
 
-  /// Identify bug using AI API
-  Future<Map<String, dynamic>?> _identifyBugWithAI(File imageFile) async {
+  /// Identify antique using AI API
+  Future<Map<String, dynamic>?> _identifyAntiqueWithAI(File imageFile) async {
     try {
-      LoggingService.apiOperation('Starting AI identification',
+      LoggingService.apiOperation('Starting AI antique identification',
           details: 'image: ${imageFile.path}', tag: 'ImageProcessingService');
 
-      final uri = Uri.parse('$_baseUrl/identify-bug');
+      final uri = Uri.parse('$_baseUrl/identify-antique');
       final request = http.MultipartRequest('POST', uri)
         ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
 
@@ -171,7 +182,7 @@ class ImageProcessingService {
         final data = json.decode(response.body);
         if (data['success'] == true && data['result'] != null) {
           final result = data['result'];
-          LoggingService.apiOperation('AI identification successful',
+          LoggingService.apiOperation('AI antique identification successful',
               details: 'response type: ${result.runtimeType}', tag: 'ImageProcessingService');
 
           // Handle different response types
@@ -188,21 +199,21 @@ class ImageProcessingService {
             throw Exception('Invalid response format: unexpected data type');
           }
         } else if (data['success'] == false && data['error'] != null) {
-          // Check if the error indicates it's not a bug
+          // Check if the error indicates it's not an antique
           final error = data['error'].toString().toLowerCase();
           LoggingService.debug('AI error message: $error', tag: 'ImageProcessingService');
 
-          if (error.contains('does not contain bug') ||
-              error.contains('not bug') ||
-              error.contains('no bug') ||
-              error.contains('insect') ||
-              error.contains('not insect')) {
-            LoggingService.info('AI determined image is not a bug - throwing NOT_BUG exception',
+          if (error.contains('does not contain antique') ||
+              error.contains('not antique') ||
+              error.contains('no antique') ||
+              error.contains('modern item') ||
+              error.contains('not artifact')) {
+            LoggingService.info('AI determined image is not an antique - throwing NOT_ANTIQUE exception',
                 tag: 'ImageProcessingService');
-            throw Exception('NOT_BUG');
+            throw Exception('NOT_ANTIQUE');
           }
           // For other errors, throw the actual error message
-          LoggingService.error('AI identification failed',
+          LoggingService.error('AI antique identification failed',
               error: Exception(data['error'].toString()), tag: 'ImageProcessingService');
           throw Exception(data['error'].toString());
         } else {
@@ -219,7 +230,7 @@ class ImageProcessingService {
       } else {
         LoggingService.error('Unexpected response status',
             error: Exception('Status: ${response.statusCode}'), tag: 'ImageProcessingService');
-        throw Exception('Failed to identify bug. Please try again.');
+        throw Exception('Failed to identify antique. Please try again.');
       }
     } on FormatException {
       LoggingService.error('Format exception in AI response', tag: 'ImageProcessingService');
@@ -231,13 +242,13 @@ class ImageProcessingService {
       LoggingService.error('Request timeout', error: e, tag: 'ImageProcessingService');
       throw Exception(e.message);
     } catch (e) {
-      // Check if this is a NOT_BUG exception and rethrow it directly
-      if (e is Exception && e.toString().contains('NOT_BUG')) {
-        LoggingService.debug('Re-throwing NOT_BUG exception', tag: 'ImageProcessingService');
+      // Check if this is a NOT_ANTIQUE exception and rethrow it directly
+      if (e is Exception && e.toString().contains('NOT_ANTIQUE')) {
+        LoggingService.debug('Re-throwing NOT_ANTIQUE exception', tag: 'ImageProcessingService');
         rethrow;
       }
 
-      LoggingService.error('Unexpected error in AI identification', error: e, tag: 'ImageProcessingService');
+      LoggingService.error('Unexpected error in AI antique identification', error: e, tag: 'ImageProcessingService');
       // Provide more specific error messages based on the error type
       if (e.toString().contains('List<Map')) {
         throw Exception('Server returned unexpected data format. Please try again.');

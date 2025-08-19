@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:bug_id/data/models/identified_item.dart';
-import 'package:bug_id/core/theme/app_theme.dart';
+import 'package:antique_id/data/models/identified_item.dart';
+import 'package:antique_id/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:bug_id/features/chat/view/chat_screen.dart';
-import 'package:bug_id/services/logging_service.dart';
+import 'package:antique_id/features/chat/view/chat_screen.dart';
+import 'package:antique_id/services/logging_service.dart';
 
 class ItemDetailScreen extends StatelessWidget {
   final IdentifiedItem item;
@@ -130,7 +130,7 @@ class ItemDetailScreen extends StatelessWidget {
                     const SizedBox(height: 32),
 
                     // Safety Status - Prominent display
-                    _buildSafetyStatus(context, details),
+                    _buildConditionStatus(context, details),
                     const SizedBox(height: 32),
 
                     // Chat with AI section
@@ -231,39 +231,69 @@ class ItemDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSafetyStatus(BuildContext context, Map<String, dynamic> details) {
-    final dangerInfo = details['dangerToHumans'];
+  Widget _buildConditionStatus(BuildContext context, Map<String, dynamic> details) {
+    final condition = details['condition'];
 
-    if (dangerInfo == null) return const SizedBox.shrink();
+    if (condition == null) return const SizedBox.shrink();
 
-    final isDangerous = dangerInfo['dangerous'] == true;
-    final symptoms = dangerInfo['symptoms']?.toString() ?? 'No specific symptoms known.';
+    final isExcellent = condition.toString().toLowerCase().contains('excellent');
+    final isGood = condition.toString().toLowerCase().contains('good');
+    final isFair = condition.toString().toLowerCase().contains('fair');
+    final isPoor = condition.toString().toLowerCase().contains('poor');
+
+    // Determine condition level and colors
+    Color conditionColor;
+    Color backgroundColor;
+    IconData conditionIcon;
+    String conditionText;
+
+    if (isExcellent) {
+      conditionColor = Colors.green;
+      backgroundColor = const Color(0xFFE8F5E8);
+      conditionIcon = Icons.check_circle_rounded;
+      conditionText = 'Excellent Condition';
+    } else if (isGood) {
+      conditionColor = Colors.blue;
+      backgroundColor = const Color(0xFFE3F2FD);
+      conditionIcon = Icons.info_rounded;
+      conditionText = 'Good Condition';
+    } else if (isFair) {
+      conditionColor = Colors.orange;
+      backgroundColor = const Color(0xFFFFF3E0);
+      conditionIcon = Icons.warning_rounded;
+      conditionText = 'Fair Condition';
+    } else if (isPoor) {
+      conditionColor = Colors.red;
+      backgroundColor = const Color(0xFFFFEBEE);
+      conditionIcon = Icons.error_rounded;
+      conditionText = 'Poor Condition';
+    } else {
+      conditionColor = Colors.grey;
+      backgroundColor = const Color(0xFFF5F5F5);
+      conditionIcon = Icons.help_rounded;
+      conditionText = 'Condition: $condition';
+    }
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: isDangerous
-              ? [
-                  const Color(0xFFFFEBEE),
-                  const Color(0xFFFFCDD2),
-                ]
-              : [
-                  const Color(0xFFE8F5E8),
-                  const Color(0xFFC8E6C9),
-                ],
+          colors: [
+            backgroundColor,
+            backgroundColor.withValues(alpha: 0.7),
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDangerous ? Colors.red.withValues(alpha: 0.3) : Colors.green.withValues(alpha: 0.3),
+          color: conditionColor.withValues(alpha: 0.3),
           width: 2,
         ),
         boxShadow: [
           BoxShadow(
-            color: (isDangerous ? Colors.red : Colors.green).withValues(alpha: 0.1),
+            color: conditionColor.withValues(alpha: 0.1),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -277,18 +307,18 @@ class ItemDetailScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: isDangerous ? Colors.red : Colors.green,
+                  color: conditionColor,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: (isDangerous ? Colors.red : Colors.green).withValues(alpha: 0.3),
+                      color: conditionColor.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
                   ],
                 ),
                 child: Icon(
-                  isDangerous ? Icons.warning_rounded : Icons.check_circle_rounded,
+                  conditionIcon,
                   color: Colors.white,
                   size: 24,
                 ),
@@ -299,20 +329,20 @@ class ItemDetailScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      isDangerous ? '⚠️ Dangerous to Humans' : '✅ Safe for Humans',
+                      conditionText,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: isDangerous ? Colors.red[800] : Colors.green[800],
+                        color: conditionColor,
                         letterSpacing: -0.5,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      isDangerous ? 'Exercise caution and avoid contact' : 'Generally safe to be around',
+                      'Condition Assessment',
                       style: TextStyle(
                         fontSize: 14,
-                        color: (isDangerous ? Colors.red[700]! : Colors.green[700]!).withValues(alpha: 0.8),
+                        color: conditionColor.withValues(alpha: 0.8),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -321,7 +351,7 @@ class ItemDetailScreen extends StatelessWidget {
               ),
             ],
           ),
-          if (isDangerous) ...[
+          if (isPoor || isFair) ...[
             const SizedBox(height: 20),
             Container(
               padding: const EdgeInsets.all(16),
@@ -356,10 +386,10 @@ class ItemDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    symptoms,
+                    'This item may require special care or restoration work.',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.red[900],
+                      color: conditionColor,
                       height: 1.4,
                     ),
                   ),
@@ -473,17 +503,19 @@ class ItemDetailScreen extends StatelessWidget {
   Widget _buildKeyDetailsSection(BuildContext context, Map<String, dynamic> details) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final keyDetails = [
-      'scientificName',
-      'commonName',
-      'order',
-      'family',
-      'characteristics',
-      'habitat',
-      'behavior',
-      'diet',
-      'lifeCycle',
-      'ecologicalRole',
-      'estimatedPrevalence',
+      'itemType',
+      'specificCategory',
+      'estimatedAge',
+      'origin',
+      'makerOrManufacturer',
+      'materials',
+      'style',
+      'condition',
+      'authenticity',
+      'rarity',
+      'estimatedValue',
+      'provenance',
+      'historicalContext',
     ];
 
     final validDetails = keyDetails.where((key) {

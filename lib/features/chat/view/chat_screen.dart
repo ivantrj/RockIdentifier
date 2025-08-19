@@ -1,7 +1,7 @@
+import 'package:antique_id/data/models/identified_item.dart';
 import 'package:flutter/material.dart';
-import 'package:bug_id/data/models/identified_item.dart';
-import 'package:bug_id/services/chat_service.dart';
-import 'package:bug_id/core/theme/app_theme.dart';
+import 'package:antique_id/services/chat_service.dart';
+import 'package:antique_id/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -67,10 +67,9 @@ class _ChatScreenState extends State<ChatScreen> {
     try {
       // Send message to AI
       final response = await _chatService.sendMessage(
-        itemId: widget.item.id,
-        message: message,
-        item: widget.item,
-        chatHistory: _messages.where((m) => !m.isUser).toList(),
+        widget.item.id,
+        message,
+        _messages.map((m) => {'role': m.isUser ? 'user' : 'model', 'content': m.message}).toList(),
       );
 
       // Add AI response

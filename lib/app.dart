@@ -1,10 +1,10 @@
 // lib/app.dart
 library;
 
-import 'package:bug_id/features/paywall/paywall_screen.dart';
+import 'package:antique_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:bug_id/features/library/view/library_screen.dart';
+import 'package:antique_id/features/library/view/library_screen.dart';
 import 'core/navigation/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'services/theme_service.dart';
@@ -57,7 +57,7 @@ class _AppState extends State<App> {
     }
     return MaterialApp(
       navigatorKey: rootNavKey,
-      title: 'bug_id',
+      title: 'Antique Identifier',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

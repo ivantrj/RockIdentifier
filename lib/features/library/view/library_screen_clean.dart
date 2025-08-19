@@ -1,20 +1,20 @@
-import 'package:bug_id/features/paywall/paywall_screen.dart';
+import 'package:antique_id/features/library/view/widgets/not_antique_dialog.dart';
+import 'package:antique_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
-import 'package:bug_id/features/library/view/detail_screen.dart';
+import 'package:antique_id/features/library/view/detail_screen.dart';
 import '../viewmodel/library_viewmodel.dart';
-import 'package:bug_id/data/models/identified_item.dart';
+import 'package:antique_id/data/models/identified_item.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../main.dart' as main;
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:bug_id/app.dart' as app;
-import 'package:bug_id/services/image_processing_service.dart';
-import 'package:bug_id/services/logging_service.dart';
+import 'package:antique_id/app.dart' as app;
+import 'package:antique_id/services/image_processing_service.dart';
+import 'package:antique_id/services/logging_service.dart';
 import 'widgets/fab_menu.dart';
 import 'widgets/library_item_card.dart';
 import 'widgets/loading_dialog.dart';
-import 'widgets/not_bug_dialog.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -127,7 +127,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
           showDialog(
             context: context,
-            builder: (context) => const NotBugDialog(),
+            builder: (context) => const NotAntiqueDialog(),
           );
         } else {
           LoggingService.error('Error processing image', error: e, tag: 'LibraryScreen');

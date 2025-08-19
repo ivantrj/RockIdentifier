@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:bug_id/data/models/identified_item.dart';
-import 'package:bug_id/services/logging_service.dart';
+import 'package:antique_id/data/models/identified_item.dart';
+import 'package:antique_id/services/logging_service.dart';
 
 class ChatMessage {
   final String id;
@@ -34,58 +34,42 @@ class ChatMessage {
 class ChatService {
   static const String _baseUrl = 'https://own-ai-backend-dev.fly.dev';
 
-  /// Send a message to the AI about a specific item (bug, plant, or any other type)
-  Future<String> sendMessage({
-    required String itemId,
-    required String message,
-    required IdentifiedItem item,
-    List<ChatMessage>? chatHistory,
-  }) async {
+  /// Send a chat message about a specific identified item
+  Future<String> sendMessage(String itemId, String message, List<Map<String, String>> history) async {
     try {
-      LoggingService.apiOperation('Sending chat message',
-          details: 'itemId: $itemId, message length: ${message.length}');
-      final uri = Uri.parse('$_baseUrl/chat');
+      LoggingService.apiOperation('Sending chat message', details: 'itemId: $itemId', tag: 'ChatService');
 
-      // Convert chat history to the format expected by the server
-      List<Map<String, dynamic>>? history;
-      if (chatHistory != null && chatHistory.isNotEmpty) {
-        history = chatHistory
-            .map((msg) => {
-                  'role': msg.isUser ? 'user' : 'model',
-                  'parts': [
-                    {'text': msg.message}
-                  ]
-                })
-            .toList();
+      final uri = Uri.parse('$_baseUrl/chat');
+      final item = await _getItemById(itemId);
+
+      if (item == null) {
+        throw Exception('Item not found');
       }
 
-      // Determine item type based on the result or category
-      String itemType = _determineItemType(item);
-
-      // Build item details for the new endpoint
-      Map<String, dynamic> itemDetails = {
-        'name': item.result,
-        'type': itemType,
-        'subtitle': item.subtitle,
+      // Create item details map with antique-specific properties
+      final itemDetails = {
+        'itemType': item.itemType ?? 'Unknown',
+        'specificCategory': item.specificCategory ?? 'Unknown',
         'confidence': '${(item.confidence * 100).toStringAsFixed(1)}%',
-        'description': item.details['Description'] ?? 'No description available',
-        'species': item.species ?? 'Unknown',
-        'family': item.family ?? 'Unknown',
-        'order': item.order ?? 'Unknown',
-        'habitat': item.habitat ?? 'Unknown',
-        'dangerLevel': item.dangerLevel ?? 'Unknown',
-        'commonName': item.commonName ?? 'Unknown',
-        'distribution': item.distribution ?? 'Unknown',
-        'size': item.size ?? 'Unknown',
-        'color': item.color ?? 'Unknown',
-        'lifeCycle': item.lifeCycle ?? 'Unknown',
-        'feedingHabits': item.feedingHabits ?? 'Unknown',
-        'conservationStatus': item.conservationStatus ?? 'Unknown',
+        'estimatedAge': item.estimatedAge ?? 'Unknown',
+        'origin': item.origin ?? 'Unknown',
+        'makerOrManufacturer': item.makerOrManufacturer ?? 'Unknown',
+        'materials': item.materials ?? 'Unknown',
+        'style': item.style ?? 'Unknown',
+        'condition': item.condition ?? 'Unknown',
+        'authenticity': item.authenticity ?? 'Unknown',
+        'rarity': item.rarity ?? 'Unknown',
+        'estimatedValue': item.estimatedValue ?? 'Unknown',
+        'provenance': item.provenance ?? 'Unknown',
+        'historicalContext': item.historicalContext ?? 'Unknown',
+        'careInstructions': item.careInstructions ?? 'Unknown',
+        'investmentPotential': item.investmentPotential ?? 'Unknown',
+        'marketDemand': item.marketDemand ?? 'Unknown',
       };
 
       // Add Wikipedia link if available
-      if (item.details['Wikipedia'] != null) {
-        itemDetails['wikipedia'] = item.details['Wikipedia'];
+      if (item.wikiLink != null) {
+        itemDetails['wikipedia'] = item.wikiLink!;
       }
 
       final response = await http.post(
@@ -132,43 +116,114 @@ class ChatService {
     // Check the result text for common keywords
     String result = item.result.toLowerCase();
 
-    // Bug/insect keywords
-    if (result.contains('bug') ||
-        result.contains('insect') ||
-        result.contains('beetle') ||
-        result.contains('ant') ||
-        result.contains('bee') ||
-        result.contains('wasp') ||
-        result.contains('fly') ||
-        result.contains('mosquito') ||
-        result.contains('moth') ||
-        result.contains('butterfly') ||
-        result.contains('spider') ||
-        result.contains('arachnid') ||
-        result.contains('caterpillar') ||
-        result.contains('larva') ||
-        result.contains('dragonfly') ||
-        result.contains('grasshopper') ||
-        result.contains('cricket') ||
-        result.contains('mantis') ||
-        result.contains('roach') ||
-        result.contains('termite')) {
-      return 'bug';
+    // Antique keywords
+    if (result.contains('furniture') ||
+        result.contains('chair') ||
+        result.contains('table') ||
+        result.contains('desk') ||
+        result.contains('cabinet') ||
+        result.contains('dresser') ||
+        result.contains('sofa') ||
+        result.contains('bed') ||
+        result.contains('mirror') ||
+        result.contains('lamp')) {
+      return 'furniture';
     }
 
-    // Plant keywords (optional, keep for future expansion)
-    if (result.contains('plant') ||
-        result.contains('flower') ||
-        result.contains('tree') ||
-        result.contains('cactus') ||
-        result.contains('succulent') ||
-        result.contains('herb') ||
-        result.contains('leaf')) {
-      return 'plant';
+    if (result.contains('vase') ||
+        result.contains('pottery') ||
+        result.contains('ceramic') ||
+        result.contains('porcelain') ||
+        result.contains('china') ||
+        result.contains('plate') ||
+        result.contains('bowl') ||
+        result.contains('cup') ||
+        result.contains('saucer')) {
+      return 'ceramics';
     }
 
-    // Default to the result as the type
-    return item.result;
+    if (result.contains('glass') ||
+        result.contains('crystal') ||
+        result.contains('bottle') ||
+        result.contains('decanter') ||
+        result.contains('goblet') ||
+        result.contains('wine glass')) {
+      return 'glassware';
+    }
+
+    if (result.contains('painting') ||
+        result.contains('artwork') ||
+        result.contains('portrait') ||
+        result.contains('landscape') ||
+        result.contains('oil') ||
+        result.contains('watercolor') ||
+        result.contains('print') ||
+        result.contains('etching')) {
+      return 'artwork';
+    }
+
+    if (result.contains('coin') ||
+        result.contains('currency') ||
+        result.contains('medal') ||
+        result.contains('token')) {
+      return 'numismatics';
+    }
+
+    if (result.contains('book') ||
+        result.contains('manuscript') ||
+        result.contains('document') ||
+        result.contains('letter') ||
+        result.contains('map')) {
+      return 'books_documents';
+    }
+
+    if (result.contains('jewelry') ||
+        result.contains('ring') ||
+        result.contains('necklace') ||
+        result.contains('bracelet') ||
+        result.contains('earring') ||
+        result.contains('brooch')) {
+      return 'jewelry';
+    }
+
+    if (result.contains('textile') ||
+        result.contains('fabric') ||
+        result.contains('rug') ||
+        result.contains('carpet') ||
+        result.contains('tapestry') ||
+        result.contains('quilt')) {
+      return 'textiles';
+    }
+
+    if (result.contains('tool') ||
+        result.contains('instrument') ||
+        result.contains('equipment') ||
+        result.contains('machine')) {
+      return 'tools_equipment';
+    }
+
+    if (result.contains('toy') || result.contains('doll') || result.contains('game') || result.contains('puzzle')) {
+      return 'toys_games';
+    }
+
+    if (result.contains('musical') ||
+        result.contains('instrument') ||
+        result.contains('piano') ||
+        result.contains('violin') ||
+        result.contains('guitar') ||
+        result.contains('flute')) {
+      return 'musical_instruments';
+    }
+
+    // Default to antique if no specific category is found
+    return 'antique';
+  }
+
+  /// Get item by ID (placeholder - implement based on your data storage)
+  Future<IdentifiedItem?> _getItemById(String itemId) async {
+    // This should be implemented based on how you store and retrieve items
+    // For now, return null as a placeholder
+    return null;
   }
 
   /// Get chat history for an item (for future use)

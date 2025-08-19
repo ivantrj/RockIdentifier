@@ -1,7 +1,7 @@
 // lib/data/sources/local/preferences_service.dart
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart'; // Import material for ThemeMode
-import 'package:bug_id/services/logging_service.dart';
+import 'package:antique_id/services/logging_service.dart';
 
 class PreferencesService {
   late SharedPreferences _prefs;

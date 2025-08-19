@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:bug_id/core/theme/app_theme.dart';
+import 'package:antique_id/core/theme/app_theme.dart';
 
 class LoadingDialog extends StatefulWidget {
   const LoadingDialog({super.key});
@@ -11,18 +11,22 @@ class LoadingDialog extends StatefulWidget {
 
 class _LoadingDialogState extends State<LoadingDialog> with SingleTickerProviderStateMixin {
   static final List<String> _funTexts = [
-    'Examining the specimen...',
-    'Analyzing features...',
-    'Checking identification markers...',
-    'Consulting the field guide...',
+    'Examining the antique...',
+    'Analyzing craftsmanship...',
+    'Checking historical markers...',
+    'Consulting antique databases...',
     'Measuring dimensions...',
-    'Comparing with known species...',
-    'Looking for distinctive patterns...',
-    'Examining the anatomy...',
-    'Verifying classification...',
-    'Studying the habitat...',
+    'Comparing with known pieces...',
+    'Looking for distinctive features...',
+    'Examining materials...',
+    'Verifying authenticity...',
+    'Studying the period...',
     'Matching characteristics...',
-    'Evaluating taxonomy...'
+    'Evaluating value...',
+    'Researching provenance...',
+    'Identifying maker marks...',
+    'Analyzing style elements...',
+    'Checking condition...'
   ];
 
   late final AnimationController _controller;
@@ -71,7 +75,7 @@ class _LoadingDialogState extends State<LoadingDialog> with SingleTickerProvider
             ScaleTransition(
               scale: _animation,
               child: Icon(
-                Icons.bug_report,
+                Icons.history_edu,
                 color: AppTheme.primaryColor,
                 size: 64,
               ),

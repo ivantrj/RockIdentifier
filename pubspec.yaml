@@ -1,5 +1,5 @@
-name: bug_id
-description: "A new Flutter project."
+name: antique_id
+description: "An AI-powered antique identification app that helps you identify and learn about antiques, artifacts, and collectibles."
 publish_to: "none"
 version: 0.1.0
 

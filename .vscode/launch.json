@@ -5,19 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "bug_id",
+      "name": "antique_id",
       "request": "launch",
       "type": "dart",
       "flutterMode": "debug"
     },
     {
-      "name": "bug_id (profile mode)",
+      "name": "antique_id (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
-      "name": "bug_id (release mode)",
+      "name": "antique_id (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"

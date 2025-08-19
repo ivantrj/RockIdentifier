@@ -1,22 +1,22 @@
-import 'package:bug_id/features/paywall/paywall_screen.dart';
+import 'package:antique_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
-import 'package:bug_id/features/library/view/detail_screen.dart';
+import 'package:antique_id/features/library/view/detail_screen.dart';
 import '../viewmodel/library_viewmodel.dart';
-import 'package:bug_id/data/models/identified_item.dart';
+import 'package:antique_id/data/models/identified_item.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../main.dart' as main;
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:bug_id/app.dart' as app;
-import 'package:bug_id/services/image_processing_service.dart';
-import 'package:bug_id/services/logging_service.dart';
-import 'package:bug_id/locator.dart';
+import 'package:antique_id/app.dart' as app;
+import 'package:antique_id/services/image_processing_service.dart';
+import 'package:antique_id/services/logging_service.dart';
+import 'package:antique_id/locator.dart';
 import 'widgets/fab_menu.dart';
 import 'widgets/library_item_card.dart';
 import 'widgets/loading_dialog.dart';
-import 'widgets/not_bug_dialog.dart';
-import 'package:bug_id/services/haptic_service.dart';
+import 'widgets/not_antique_dialog.dart';
+import 'package:antique_id/services/haptic_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class LibraryScreen extends StatelessWidget {
@@ -160,18 +160,19 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           LoggingService.warning('Error closing loading dialog in catch block', tag: 'LibraryScreen');
         }
 
-        // Check for NOT_BUG error with more robust detection
+        // Check for NOT_ANTIQUE error with more robust detection
         final errorMessage = e.toString().toLowerCase();
-        if (errorMessage.contains('not_bug') ||
-            errorMessage.contains('does not contain bug') ||
-            errorMessage.contains('not bug') ||
-            errorMessage.contains('no bug') ||
-            errorMessage.contains('not insect')) {
-          LoggingService.info('Image identified as not a bug - showing dialog', tag: 'LibraryScreen');
+        if (errorMessage.contains('not_antique') ||
+            errorMessage.contains('does not contain antique') ||
+            errorMessage.contains('not antique') ||
+            errorMessage.contains('no antique') ||
+            errorMessage.contains('modern item') ||
+            errorMessage.contains('not artifact')) {
+          LoggingService.info('Image identified as not an antique - showing dialog', tag: 'LibraryScreen');
           showDialog(
             context: context,
             barrierDismissible: true,
-            builder: (context) => const NotBugDialog(),
+            builder: (context) => const NotAntiqueDialog(),
           );
         } else {
           LoggingService.error('Error processing image', error: e, tag: 'LibraryScreen');
@@ -292,7 +293,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   PreferredSizeWidget _buildAppBar(BuildContext context, bool isDarkMode) {
     return AppBar(
       title: const Text(
-        'Recents',
+        'Antique Collection',
         style: TextStyle(
           fontSize: 32,
           fontWeight: FontWeight.bold,
@@ -425,7 +426,7 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> {
           ),
           const SizedBox(height: 32),
           Text(
-            'No bugs here yet! 🐞',
+            'No antiques here yet! 🏺',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -434,7 +435,7 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Start identifying by tapping the button below.',
+            'Start identifying antiques by tapping the button below.',
             style: TextStyle(
               fontSize: 16,
               color: widget.isDarkMode ? Colors.white70 : Colors.black54,

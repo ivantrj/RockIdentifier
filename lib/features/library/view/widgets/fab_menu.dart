@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:bug_id/services/haptic_service.dart';
+import 'package:antique_id/services/haptic_service.dart';
 import 'dart:ui';
 
 class FabMenu extends StatelessWidget {
@@ -162,7 +162,7 @@ class _AnimatedFabMenuItemsState extends State<_AnimatedFabMenuItems> with Ticke
           delay: 0,
           child: _ActionButton(
             icon: HugeIcons.strokeRoundedCamera01,
-            label: 'Take Photo',
+            label: 'Identify Antique',
             onTap: () async {
               await HapticService.instance.vibrate();
               widget.onClose();
@@ -175,7 +175,7 @@ class _AnimatedFabMenuItemsState extends State<_AnimatedFabMenuItems> with Ticke
           delay: 80,
           child: _ActionButton(
             icon: HugeIcons.strokeRoundedImage02,
-            label: 'Upload Photo',
+            label: 'Upload Antique Photo',
             onTap: () async {
               await HapticService.instance.vibrate();
               widget.onClose();

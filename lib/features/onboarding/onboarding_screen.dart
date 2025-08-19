@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:bug_id/core/theme/app_theme.dart';
-import 'package:bug_id/core/widgets/primary_button.dart';
+import 'package:antique_id/core/theme/app_theme.dart';
+import 'package:antique_id/core/widgets/primary_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:bug_id/services/haptic_service.dart';
+import 'package:antique_id/services/haptic_service.dart';
 
 class OnboardingScreen extends StatefulWidget {
   final VoidCallback onFinish;
@@ -29,7 +29,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final pages = [
       _buildIdentificationPage(context),
       _buildExpertChatPage(context),
-      _buildCareTipsPage(context),
+      _buildValueAssessmentPage(context),
     ];
     return Scaffold(
       backgroundColor: AppTheme.lightBackgroundColor,
@@ -73,7 +73,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   const SizedBox(height: 12),
                   const Text(
-                    'Trusted by 1000+ users',
+                    'Trusted by 1000+ collectors',
                     style: TextStyle(fontSize: 14, color: Colors.black45),
                   ),
                 ],
@@ -92,7 +92,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         SvgPicture.asset('assets/onboarding/onboarding_1.svg', height: 200),
         const SizedBox(height: 32),
         const Text(
-          'Instant Bug Identification',
+          'Instant Antique Identification',
           style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
@@ -100,8 +100,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Snap a photo and discover any bug in seconds.',
-            style: TextStyle(fontSize: 18, color: Colors.black54),
+            'Take a photo of any antique or artifact and get instant identification with detailed information about its period, style, and origin.',
+            style: TextStyle(fontSize: 16, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
         ),
@@ -116,7 +116,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         SvgPicture.asset('assets/onboarding/onboarding_2.svg', height: 200),
         const SizedBox(height: 32),
         const Text(
-          'AI Bug Expert Chat',
+          'Expert Appraisal & History',
           style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
@@ -124,8 +124,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Ask anything about bugs and get instant, accurate answers.',
-            style: TextStyle(fontSize: 18, color: Colors.black54),
+            'Chat with our AI expert to learn about the historical significance, estimated value, and fascinating stories behind your antiques.',
+            style: TextStyle(fontSize: 16, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
         ),
@@ -133,14 +133,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  Widget _buildCareTipsPage(BuildContext context) {
+  Widget _buildValueAssessmentPage(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SvgPicture.asset('assets/onboarding/onboarding_3.svg', height: 200),
         const SizedBox(height: 32),
         const Text(
-          'Detailed Bug Information',
+          'Value Assessment & Care Tips',
           style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
@@ -148,8 +148,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Learn about behavior, habitat, and scientific details.',
-            style: TextStyle(fontSize: 18, color: Colors.black54),
+            'Get professional value estimates and expert care instructions to preserve your antiques for future generations.',
+            style: TextStyle(fontSize: 16, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
         ),

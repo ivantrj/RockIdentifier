@@ -1,17 +1,17 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:bug_id/services/theme_service.dart';
+import 'package:antique_id/services/theme_service.dart';
 import 'app.dart';
 import 'locator.dart'; // Import the locator setup
 import 'package:fimber/fimber.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:bug_id/services/logging_service.dart';
+import 'package:antique_id/services/logging_service.dart';
 
 Future<void> main() async {
   // Initialize logging
   Fimber.plantTree(DebugTree());
-  LoggingService.info('App starting up');
+  LoggingService.info('Antique Identifier App starting up');
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -20,7 +20,7 @@ Future<void> main() async {
 
   // Initialize RevenueCat
   await RevenueCatService.init();
-  LoggingService.info('App initialization completed');
+  LoggingService.info('Antique Identifier App initialization completed');
 
   runApp(
     MultiProvider(

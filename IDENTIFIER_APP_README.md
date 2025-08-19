@@ -1,8 +1,8 @@
-# Bug Identifier App - Technical Documentation
+# Antique Identifier App - Technical Documentation
 
-## 🐛 Overview
+## 🏺 Overview
 
-Bug Identifier is a Flutter application that uses AI to identify insects, bugs, and other small creatures from photos. The app provides detailed information about identified species, including scientific classification, habitat, behavior, and safety information.
+Antique Identifier is a Flutter application that uses AI to identify antiques, artifacts, and collectibles from photos. The app provides detailed information about identified items, including historical period, style, materials, estimated value, and authenticity information.
 
 ## 🏗️ Architecture
 
@@ -55,14 +55,14 @@ lib/
 ### 2. Library Management
 
 - **Grid View**: Displays identified items in a responsive grid
-- **Detail View**: Comprehensive information about each species
+- **Detail View**: Comprehensive information about each antique
 - **Search & Filter**: Find specific items quickly
 - **Delete Functionality**: Remove items from library
 
 ### 3. AI Chat
 
 - **Contextual Conversations**: Chat about specific identified items
-- **Expert Knowledge**: Get detailed answers about species
+- **Expert Knowledge**: Get detailed answers about antiques
 - **History**: Maintain conversation context
 
 ### 4. Subscription System
@@ -107,7 +107,7 @@ class ImageProcessingService {
   Future<String> saveImageToAppDir(String imagePath)
 
   // Calls AI backend for identification
-  Future<Map<String, dynamic>?> _identifyBugWithAI(File imageFile)
+  Future<Map<String, dynamic>?> _identifyAntiqueWithAI(File imageFile)
 }
 ```
 
@@ -147,7 +147,7 @@ class IdentifiedItem {
   final String id;
   final String imagePath;
   final String result;        // Common name
-  final String subtitle;      // Scientific classification
+  final String subtitle;      // Period/era
   final double confidence;    // AI confidence score
   final Map<String, dynamic> details;  // Detailed information
   final DateTime dateTime;    // When identified
@@ -169,7 +169,7 @@ class IdentifiedItem {
 
 - **2-column grid** on mobile devices
 - **Hero animations** for smooth transitions
-- **Price badges** for valuable specimens
+- **Value badges** for valuable antiques
 - **Confidence indicators** for AI accuracy
 
 #### FAB Menu
@@ -181,8 +181,8 @@ class IdentifiedItem {
 #### Detail Screen
 
 - **Hero image** with parallax effect
-- **Safety status** prominently displayed
-- **Scientific information** in organized sections
+- **Condition status** prominently displayed
+- **Historical information** in organized sections
 - **Chat integration** for questions
 
 ## 🔐 Security & Privacy
@@ -361,4 +361,4 @@ locator.registerSingleton<CacheService>(CacheService());
 
 ---
 
-_This documentation is maintained as part of the Bug Identifier app development process. For the latest updates, refer to the source code and commit history._
+_This documentation is maintained as part of the Antique Identifier app development process. For the latest updates, refer to the source code and commit history._

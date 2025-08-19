@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-class NotBugDialog extends StatefulWidget {
-  const NotBugDialog({super.key});
+class NotAntiqueDialog extends StatefulWidget {
+  const NotAntiqueDialog({super.key});
 
   @override
-  State<NotBugDialog> createState() => _NotBugDialogState();
+  State<NotAntiqueDialog> createState() => _NotAntiqueDialogState();
 }
 
-class _NotBugDialogState extends State<NotBugDialog> with SingleTickerProviderStateMixin {
+class _NotAntiqueDialogState extends State<NotAntiqueDialog> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _shakeAnim;
 
@@ -68,7 +68,7 @@ class _NotBugDialogState extends State<NotBugDialog> with SingleTickerProviderSt
             const SizedBox(width: 12),
             const Expanded(
               child: Text(
-                'No Bug Detected',
+                'No Antique Detected',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -82,16 +82,17 @@ class _NotBugDialogState extends State<NotBugDialog> with SingleTickerProviderSt
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'The AI couldn\'t identify a bug in this image. This could be because:',
+              'The AI couldn\'t identify an antique in this image. This could be because:',
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 12),
-            _buildTip('The image doesn\'t contain a bug or insect'),
-            _buildTip('The bug is too small or blurry to identify'),
-            _buildTip('The lighting or angle makes it difficult to see'),
+            _buildTip('The item appears to be modern or contemporary'),
+            _buildTip('The image is too blurry or poorly lit'),
+            _buildTip('The item is not clearly visible or identifiable'),
+            _buildTip('The item may be a reproduction or replica'),
             const SizedBox(height: 12),
             const Text(
-              'Try taking a clearer photo of the bug from a closer distance.',
+              'Try taking a clearer photo of the antique from multiple angles with good lighting.',
               style: TextStyle(
                 fontSize: 14,
                 fontStyle: FontStyle.italic,
