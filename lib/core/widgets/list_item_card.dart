@@ -1,6 +1,6 @@
 // lib/core/widgets/list_item_card.dart
 import 'package:flutter/material.dart';
-import 'package:antique_id/core/widgets/app_card.dart';
+import 'package:coin_id/core/widgets/app_card.dart';
 
 class ListItemCard extends StatelessWidget {
   final String title;

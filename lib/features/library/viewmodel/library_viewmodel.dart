@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:antique_id/data/models/identified_item.dart';
+import 'package:coin_id/data/models/identified_item.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 

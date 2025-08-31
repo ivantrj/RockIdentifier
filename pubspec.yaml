@@ -1,5 +1,5 @@
-name: antique_id
-description: "An AI-powered antique identification app that helps you identify and learn about antiques, artifacts, and collectibles."
+name: coin_id
+description: "An AI-powered coin identification app that helps you identify and learn about coins, currency, and numismatic items."
 publish_to: "none"
 version: 0.1.0
 

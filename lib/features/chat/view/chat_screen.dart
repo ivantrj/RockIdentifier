@@ -1,7 +1,7 @@
-import 'package:antique_id/data/models/identified_item.dart';
+import 'package:coin_id/data/models/identified_item.dart';
 import 'package:flutter/material.dart';
-import 'package:antique_id/services/chat_service.dart';
-import 'package:antique_id/core/theme/app_theme.dart';
+import 'package:coin_id/services/chat_service.dart';
+import 'package:coin_id/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -31,7 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _messages.add(ChatMessage(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       message:
-          "Hi! I'm your bug expert. I can help you with questions about this ${widget.item.result.toLowerCase()}. Ask me anything about identification, behavior, habitat, or safety!",
+          "Hi! I'm your coin expert. I can help you with questions about this ${widget.item.result.toLowerCase()}. Ask me anything about identification, history, value, or authenticity!",
       isUser: false,
       timestamp: DateTime.now(),
     ));

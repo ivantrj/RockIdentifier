@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:antique_id/core/theme/app_theme.dart';
-import 'package:antique_id/core/widgets/section_header.dart';
+import 'package:coin_id/core/theme/app_theme.dart';
+import 'package:coin_id/core/widgets/section_header.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
 import 'package:in_app_review/in_app_review.dart';
-import 'package:antique_id/services/cache_service.dart';
-import 'package:antique_id/locator.dart';
-import 'package:antique_id/services/logging_service.dart';
-import 'package:antique_id/services/haptic_service.dart';
+import 'package:coin_id/services/cache_service.dart';
+import 'package:coin_id/locator.dart';
+import 'package:coin_id/services/logging_service.dart';
+import 'package:coin_id/services/haptic_service.dart';
 import 'package:flutter/cupertino.dart';
 
 class SettingsScreen extends StatelessWidget {

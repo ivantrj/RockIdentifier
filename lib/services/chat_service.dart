@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:antique_id/data/models/identified_item.dart';
-import 'package:antique_id/services/logging_service.dart';
+import 'package:coin_id/data/models/identified_item.dart';
+import 'package:coin_id/services/logging_service.dart';
 
 class ChatMessage {
   final String id;
@@ -46,25 +46,32 @@ class ChatService {
         throw Exception('Item not found');
       }
 
-      // Create item details map with antique-specific properties
+      // Create item details map with coin-specific properties
       final itemDetails = {
-        'itemType': item.itemType ?? 'Unknown',
-        'specificCategory': item.specificCategory ?? 'Unknown',
+        'coinType': item.coinType ?? 'Unknown',
+        'denomination': item.denomination ?? 'Unknown',
         'confidence': '${(item.confidence * 100).toStringAsFixed(1)}%',
-        'estimatedAge': item.estimatedAge ?? 'Unknown',
-        'origin': item.origin ?? 'Unknown',
-        'makerOrManufacturer': item.makerOrManufacturer ?? 'Unknown',
-        'materials': item.materials ?? 'Unknown',
-        'style': item.style ?? 'Unknown',
+        'mintYear': item.mintYear ?? 'Unknown',
+        'country': item.country ?? 'Unknown',
+        'mintMark': item.mintMark ?? 'Unknown',
+        'metalComposition': item.metalComposition ?? 'Unknown',
+        'weight': item.weight ?? 'Unknown',
+        'diameter': item.diameter ?? 'Unknown',
         'condition': item.condition ?? 'Unknown',
         'authenticity': item.authenticity ?? 'Unknown',
         'rarity': item.rarity ?? 'Unknown',
         'estimatedValue': item.estimatedValue ?? 'Unknown',
-        'provenance': item.provenance ?? 'Unknown',
         'historicalContext': item.historicalContext ?? 'Unknown',
-        'careInstructions': item.careInstructions ?? 'Unknown',
+        'designDescription': item.designDescription ?? 'Unknown',
+        'edgeType': item.edgeType ?? 'Unknown',
+        'designer': item.designer ?? 'Unknown',
+        'mintage': item.mintage ?? 'Unknown',
         'investmentPotential': item.investmentPotential ?? 'Unknown',
         'marketDemand': item.marketDemand ?? 'Unknown',
+        'storageRecommendations': item.storageRecommendations ?? 'Unknown',
+        'cleaningInstructions': item.cleaningInstructions ?? 'Unknown',
+        'similarCoins': item.similarCoins ?? 'Unknown',
+        'insuranceValue': item.insuranceValue ?? 'Unknown',
       };
 
       // Add Wikipedia link if available
@@ -106,117 +113,117 @@ class ChatService {
     }
   }
 
-  /// Determine the item type based on the item's properties
-  String _determineItemType(IdentifiedItem item) {
+  /// Determine the coin type based on the item's properties
+  String _determineCoinType(IdentifiedItem item) {
     // Check if it's explicitly categorized
     if (item.category != null) {
       return item.category!;
     }
 
-    // Check the result text for common keywords
+    // Check the result text for common coin keywords
     String result = item.result.toLowerCase();
 
-    // Antique keywords
-    if (result.contains('furniture') ||
-        result.contains('chair') ||
-        result.contains('table') ||
-        result.contains('desk') ||
-        result.contains('cabinet') ||
-        result.contains('dresser') ||
-        result.contains('sofa') ||
-        result.contains('bed') ||
-        result.contains('mirror') ||
-        result.contains('lamp')) {
-      return 'furniture';
+    // Ancient coins
+    if (result.contains('roman') ||
+        result.contains('greek') ||
+        result.contains('byzantine') ||
+        result.contains('ancient') ||
+        result.contains('bc') ||
+        result.contains('ad')) {
+      return 'ancient_coins';
     }
 
-    if (result.contains('vase') ||
-        result.contains('pottery') ||
-        result.contains('ceramic') ||
-        result.contains('porcelain') ||
-        result.contains('china') ||
-        result.contains('plate') ||
-        result.contains('bowl') ||
-        result.contains('cup') ||
-        result.contains('saucer')) {
-      return 'ceramics';
+    // Medieval coins
+    if (result.contains('medieval') ||
+        result.contains('middle ages') ||
+        result.contains('crusader') ||
+        result.contains('gothic')) {
+      return 'medieval_coins';
     }
 
-    if (result.contains('glass') ||
-        result.contains('crystal') ||
-        result.contains('bottle') ||
-        result.contains('decanter') ||
-        result.contains('goblet') ||
-        result.contains('wine glass')) {
-      return 'glassware';
+    // Modern coins (1800s-1900s)
+    if (result.contains('1800') ||
+        result.contains('1900') ||
+        result.contains('victorian') ||
+        result.contains('edwardian') ||
+        result.contains('georgian')) {
+      return 'modern_coins';
     }
 
-    if (result.contains('painting') ||
-        result.contains('artwork') ||
-        result.contains('portrait') ||
-        result.contains('landscape') ||
-        result.contains('oil') ||
-        result.contains('watercolor') ||
-        result.contains('print') ||
-        result.contains('etching')) {
-      return 'artwork';
+    // Contemporary coins (2000s+)
+    if (result.contains('2000') ||
+        result.contains('2020') ||
+        result.contains('contemporary') ||
+        result.contains('modern')) {
+      return 'contemporary_coins';
     }
 
-    if (result.contains('coin') ||
-        result.contains('currency') ||
-        result.contains('medal') ||
-        result.contains('token')) {
-      return 'numismatics';
+    // Gold coins
+    if (result.contains('gold') ||
+        result.contains('sovereign') ||
+        result.contains('eagle') ||
+        result.contains('krugerrand')) {
+      return 'gold_coins';
     }
 
-    if (result.contains('book') ||
-        result.contains('manuscript') ||
-        result.contains('document') ||
-        result.contains('letter') ||
-        result.contains('map')) {
-      return 'books_documents';
+    // Silver coins
+    if (result.contains('silver') ||
+        result.contains('morgan') ||
+        result.contains('peace') ||
+        result.contains('walking liberty')) {
+      return 'silver_coins';
     }
 
-    if (result.contains('jewelry') ||
-        result.contains('ring') ||
-        result.contains('necklace') ||
-        result.contains('bracelet') ||
-        result.contains('earring') ||
-        result.contains('brooch')) {
-      return 'jewelry';
+    // Commemorative coins
+    if (result.contains('commemorative') ||
+        result.contains('anniversary') ||
+        result.contains('celebration') ||
+        result.contains('special')) {
+      return 'commemorative_coins';
     }
 
-    if (result.contains('textile') ||
-        result.contains('fabric') ||
-        result.contains('rug') ||
-        result.contains('carpet') ||
-        result.contains('tapestry') ||
-        result.contains('quilt')) {
-      return 'textiles';
+    // Error coins
+    if (result.contains('error') ||
+        result.contains('misprint') ||
+        result.contains('double') ||
+        result.contains('off-center')) {
+      return 'error_coins';
     }
 
-    if (result.contains('tool') ||
-        result.contains('instrument') ||
-        result.contains('equipment') ||
-        result.contains('machine')) {
-      return 'tools_equipment';
+    // Proof coins
+    if (result.contains('proof') || result.contains('mint state') || result.contains('uncirculated')) {
+      return 'proof_coins';
     }
 
-    if (result.contains('toy') || result.contains('doll') || result.contains('game') || result.contains('puzzle')) {
-      return 'toys_games';
+    // World coins
+    if (result.contains('foreign') || result.contains('international') || result.contains('world')) {
+      return 'world_coins';
     }
 
-    if (result.contains('musical') ||
-        result.contains('instrument') ||
-        result.contains('piano') ||
-        result.contains('violin') ||
-        result.contains('guitar') ||
-        result.contains('flute')) {
-      return 'musical_instruments';
+    // US coins
+    if (result.contains('penny') ||
+        result.contains('nickel') ||
+        result.contains('dime') ||
+        result.contains('quarter') ||
+        result.contains('half dollar') ||
+        result.contains('dollar') ||
+        result.contains('us') ||
+        result.contains('american')) {
+      return 'us_coins';
     }
 
-    // Default to antique if no specific category is found
-    return 'antique';
+    // British coins
+    if (result.contains('pound') ||
+        result.contains('shilling') ||
+        result.contains('pence') ||
+        result.contains('farthing') ||
+        result.contains('british') ||
+        result.contains('uk')) {
+      return 'british_coins';
+    }
+
+    // Default to general coin if no specific category is found
+    return 'general_coins';
   }
 
   /// Get item by ID (placeholder - implement based on your data storage)

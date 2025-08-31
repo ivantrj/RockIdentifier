@@ -4,11 +4,11 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'package:antique_id/data/models/identified_item.dart';
-import 'package:antique_id/services/cache_service.dart';
-import 'package:antique_id/services/connectivity_service.dart';
-import 'package:antique_id/services/logging_service.dart';
-import 'package:antique_id/locator.dart';
+import 'package:coin_id/data/models/identified_item.dart';
+import 'package:coin_id/services/cache_service.dart';
+import 'package:coin_id/services/connectivity_service.dart';
+import 'package:coin_id/services/logging_service.dart';
+import 'package:coin_id/locator.dart';
 
 class ImageProcessingService {
   static const String _baseUrl = 'https://own-ai-backend-dev.fly.dev';
@@ -23,7 +23,7 @@ class ImageProcessingService {
       // Create a more reliable filename format
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final extension = p.extension(imagePath);
-      final safeFileName = 'antique_$timestamp$extension';
+      final safeFileName = 'coin_$timestamp$extension';
       final savedPath = p.join(appDir.path, safeFileName);
 
       // Copy the file
@@ -42,10 +42,10 @@ class ImageProcessingService {
     }
   }
 
-  /// Process image and identify antique using AI
+  /// Process image and identify coin using AI
   Future<IdentifiedItem?> processImage(String imagePath) async {
     try {
-      LoggingService.debug('Processing image for antique identification', tag: 'ImageProcessingService');
+      LoggingService.debug('Processing image for coin identification', tag: 'ImageProcessingService');
 
       // Save image to app directory
       final savedPath = await saveImageToAppDir(imagePath);
@@ -67,11 +67,11 @@ class ImageProcessingService {
         }
 
         // Call AI API
-        LoggingService.apiOperation('Calling AI antique identification API', tag: 'ImageProcessingService');
-        aiResult = await _identifyAntiqueWithAI(File(savedPath));
+        LoggingService.apiOperation('Calling AI coin identification API', tag: 'ImageProcessingService');
+        aiResult = await _identifyCoinWithAI(File(savedPath));
 
         if (aiResult != null) {
-          LoggingService.apiOperation('AI antique identification successful', tag: 'ImageProcessingService');
+          LoggingService.apiOperation('AI coin identification successful', tag: 'ImageProcessingService');
           // Cache the result for future use
           await cacheService.cacheAnalysisResult(savedPath, aiResult);
         }
@@ -100,29 +100,29 @@ class ImageProcessingService {
     LoggingService.debug('Creating identified item from AI result', tag: 'ImageProcessingService');
 
     final details = <String, dynamic>{
-      if (aiResult['itemType'] != null) 'itemType': aiResult['itemType'],
-      if (aiResult['specificCategory'] != null) 'specificCategory': aiResult['specificCategory'],
+      if (aiResult['coinType'] != null) 'coinType': aiResult['coinType'],
+      if (aiResult['denomination'] != null) 'denomination': aiResult['denomination'],
       if (aiResult['confidence'] != null) 'confidence': aiResult['confidence'],
-      if (aiResult['estimatedAge'] != null) 'estimatedAge': aiResult['estimatedAge'],
-      if (aiResult['origin'] != null) 'origin': aiResult['origin'],
-      if (aiResult['makerOrManufacturer'] != null) 'makerOrManufacturer': aiResult['makerOrManufacturer'],
-      if (aiResult['materials'] != null) 'materials': aiResult['materials'],
-      if (aiResult['constructionTechniques'] != null) 'constructionTechniques': aiResult['constructionTechniques'],
-      if (aiResult['style'] != null) 'style': aiResult['style'],
+      if (aiResult['mintYear'] != null) 'mintYear': aiResult['mintYear'],
+      if (aiResult['country'] != null) 'country': aiResult['country'],
+      if (aiResult['mintMark'] != null) 'mintMark': aiResult['mintMark'],
+      if (aiResult['metalComposition'] != null) 'metalComposition': aiResult['metalComposition'],
+      if (aiResult['weight'] != null) 'weight': aiResult['weight'],
+      if (aiResult['diameter'] != null) 'diameter': aiResult['diameter'],
       if (aiResult['condition'] != null) 'condition': aiResult['condition'],
       if (aiResult['authenticity'] != null) 'authenticity': aiResult['authenticity'],
       if (aiResult['rarity'] != null) 'rarity': aiResult['rarity'],
       if (aiResult['estimatedValue'] != null) 'estimatedValue': aiResult['estimatedValue'],
-      if (aiResult['provenance'] != null) 'provenance': aiResult['provenance'],
-      if (aiResult['markingsOrSignatures'] != null) 'markingsOrSignatures': aiResult['markingsOrSignatures'],
       if (aiResult['historicalContext'] != null) 'historicalContext': aiResult['historicalContext'],
-      if (aiResult['careInstructions'] != null) 'careInstructions': aiResult['careInstructions'],
-      if (aiResult['restorationNotes'] != null) 'restorationNotes': aiResult['restorationNotes'],
-      if (aiResult['similarExamples'] != null) 'similarExamples': aiResult['similarExamples'],
+      if (aiResult['designDescription'] != null) 'designDescription': aiResult['designDescription'],
+      if (aiResult['edgeType'] != null) 'edgeType': aiResult['edgeType'],
+      if (aiResult['designer'] != null) 'designer': aiResult['designer'],
+      if (aiResult['mintage'] != null) 'mintage': aiResult['mintage'],
       if (aiResult['marketDemand'] != null) 'marketDemand': aiResult['marketDemand'],
       if (aiResult['investmentPotential'] != null) 'investmentPotential': aiResult['investmentPotential'],
-      if (aiResult['conservationStatus'] != null) 'conservationStatus': aiResult['conservationStatus'],
-      if (aiResult['displayRecommendations'] != null) 'displayRecommendations': aiResult['displayRecommendations'],
+      if (aiResult['storageRecommendations'] != null) 'storageRecommendations': aiResult['storageRecommendations'],
+      if (aiResult['cleaningInstructions'] != null) 'cleaningInstructions': aiResult['cleaningInstructions'],
+      if (aiResult['similarCoins'] != null) 'similarCoins': aiResult['similarCoins'],
       if (aiResult['insuranceValue'] != null) 'insuranceValue': aiResult['insuranceValue'],
       if (aiResult['wikiLink'] != null) 'wikiLink': aiResult['wikiLink'],
     };
@@ -130,8 +130,8 @@ class ImageProcessingService {
     return IdentifiedItem(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       imagePath: imagePath,
-      result: aiResult['specificCategory'] ?? aiResult['itemType'] ?? 'Unknown Antique',
-      subtitle: aiResult['estimatedAge'] ?? aiResult['style'] ?? '',
+      result: aiResult['denomination'] ?? aiResult['coinType'] ?? 'Unknown Coin',
+      subtitle: aiResult['mintYear'] ?? aiResult['country'] ?? '',
       confidence: _parseConfidence(aiResult['confidence']),
       details: details,
       dateTime: DateTime.now(),
@@ -158,10 +158,10 @@ class ImageProcessingService {
     return 0.0;
   }
 
-  /// Identify antique using AI API
-  Future<Map<String, dynamic>?> _identifyAntiqueWithAI(File imageFile) async {
+  /// Identify coin using AI API
+  Future<Map<String, dynamic>?> _identifyCoinWithAI(File imageFile) async {
     try {
-      LoggingService.apiOperation('Starting AI antique identification',
+      LoggingService.apiOperation('Starting AI coin identification',
           details: 'image: ${imageFile.path}', tag: 'ImageProcessingService');
 
       final uri = Uri.parse('$_baseUrl/identify-antique');

@@ -5,19 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "antique_id",
+      "name": "coin_id",
       "request": "launch",
       "type": "dart",
       "flutterMode": "debug"
     },
     {
-      "name": "antique_id (profile mode)",
+      "name": "coin_id (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
-      "name": "antique_id (release mode)",
+      "name": "coin_id (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"

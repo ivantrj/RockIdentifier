@@ -1,12 +1,12 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:antique_id/services/theme_service.dart';
+import 'package:coin_id/services/theme_service.dart';
 import 'app.dart';
 import 'locator.dart'; // Import the locator setup
 import 'package:fimber/fimber.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:antique_id/services/logging_service.dart';
+import 'package:coin_id/services/logging_service.dart';
 
 Future<void> main() async {
   // Initialize logging

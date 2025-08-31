@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:antique_id/core/theme/app_theme.dart';
+import 'package:coin_id/core/theme/app_theme.dart';
 
 class LoadingDialog extends StatefulWidget {
   const LoadingDialog({super.key});

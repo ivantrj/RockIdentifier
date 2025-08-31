@@ -88,30 +88,30 @@ class IdentifiedItem {
     );
   }
 
-  // Antique-specific getters based on the new API response
-  /// Get item type from details
-  String? get itemType => details['itemType'] as String?;
+  // Coin-specific getters based on the new API response
+  /// Get coin type from details
+  String? get coinType => details['coinType'] as String?;
 
-  /// Get specific category from details
-  String? get specificCategory => details['specificCategory'] as String?;
+  /// Get specific denomination from details
+  String? get denomination => details['denomination'] as String?;
 
-  /// Get estimated age from details
-  String? get estimatedAge => details['estimatedAge'] as String?;
+  /// Get mint year from details
+  String? get mintYear => details['mintYear'] as String?;
 
-  /// Get origin from details
-  String? get origin => details['origin'] as String?;
+  /// Get country of origin from details
+  String? get country => details['country'] as String?;
 
-  /// Get maker or manufacturer from details
-  String? get makerOrManufacturer => details['makerOrManufacturer'] as String?;
+  /// Get mint mark from details
+  String? get mintMark => details['mintMark'] as String?;
 
-  /// Get materials from details
-  String? get materials => details['materials'] as String?;
+  /// Get metal composition from details
+  String? get metalComposition => details['metalComposition'] as String?;
 
-  /// Get construction techniques from details
-  String? get constructionTechniques => details['constructionTechniques'] as String?;
+  /// Get weight from details
+  String? get weight => details['weight'] as String?;
 
-  /// Get style from details
-  String? get style => details['style'] as String?;
+  /// Get diameter from details
+  String? get diameter => details['diameter'] as String?;
 
   /// Get condition from details
   String? get condition => details['condition'] as String?;
@@ -125,35 +125,35 @@ class IdentifiedItem {
   /// Get estimated value from details
   String? get estimatedValue => details['estimatedValue'] as String?;
 
-  /// Get provenance from details
-  String? get provenance => details['provenance'] as String?;
-
-  /// Get markings or signatures from details
-  String? get markingsOrSignatures => details['markingsOrSignatures'] as String?;
-
   /// Get historical context from details
   String? get historicalContext => details['historicalContext'] as String?;
 
-  /// Get care instructions from details
-  String? get careInstructions => details['careInstructions'] as String?;
+  /// Get design description from details
+  String? get designDescription => details['designDescription'] as String?;
 
-  /// Get restoration notes from details
-  String? get restorationNotes => details['restorationNotes'] as String?;
+  /// Get edge type from details
+  String? get edgeType => details['edgeType'] as String?;
 
-  /// Get similar examples from details
-  String? get similarExamples => details['similarExamples'] as String?;
+  /// Get designer from details
+  String? get designer => details['designer'] as String?;
 
-  /// Get market demand from details
+  /// Get mintage from details
+  String? get mintage => details['mintage'] as String?;
+
+  /// Get current market demand from details
   String? get marketDemand => details['marketDemand'] as String?;
 
   /// Get investment potential from details
   String? get investmentPotential => details['investmentPotential'] as String?;
 
-  /// Get conservation status from details
-  String? get conservationStatus => details['conservationStatus'] as String?;
+  /// Get storage recommendations from details
+  String? get storageRecommendations => details['storageRecommendations'] as String?;
 
-  /// Get display recommendations from details
-  String? get displayRecommendations => details['displayRecommendations'] as String?;
+  /// Get cleaning instructions from details
+  String? get cleaningInstructions => details['cleaningInstructions'] as String?;
+
+  /// Get similar coins from details
+  String? get similarCoins => details['similarCoins'] as String?;
 
   /// Get insurance value from details
   String? get insuranceValue => details['insuranceValue'] as String?;
@@ -164,16 +164,16 @@ class IdentifiedItem {
   /// Get common name from details
   String? get commonName => details['commonName'] as String?;
 
-  /// Get period/era from details (alias for estimatedAge)
-  String? get period => estimatedAge;
+  /// Get era/period from details (alias for mintYear)
+  String? get era => mintYear;
 
-  /// Get antique category from details (alias for itemType)
-  String? get antiqueCategory => itemType;
+  /// Get coin category from details (alias for coinType)
+  String? get coinCategory => coinType;
 
   // Legacy getters for backward compatibility
-  String? get species => specificCategory;
-  String? get family => itemType;
-  String? get order => style;
-  String? get habitat => origin;
+  String? get species => denomination;
+  String? get family => coinType;
+  String? get order => designDescription;
+  String? get habitat => country;
   String? get dangerLevel => condition;
 }

@@ -1,22 +1,22 @@
-import 'package:antique_id/features/paywall/paywall_screen.dart';
+import 'package:coin_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
-import 'package:antique_id/features/library/view/detail_screen.dart';
+import 'package:coin_id/features/library/view/detail_screen.dart';
 import '../viewmodel/library_viewmodel.dart';
-import 'package:antique_id/data/models/identified_item.dart';
+import 'package:coin_id/data/models/identified_item.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../main.dart' as main;
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:antique_id/app.dart' as app;
-import 'package:antique_id/services/image_processing_service.dart';
-import 'package:antique_id/services/logging_service.dart';
-import 'package:antique_id/locator.dart';
+import 'package:coin_id/app.dart' as app;
+import 'package:coin_id/services/image_processing_service.dart';
+import 'package:coin_id/services/logging_service.dart';
+import 'package:coin_id/locator.dart';
 import 'widgets/fab_menu.dart';
 import 'widgets/library_item_card.dart';
 import 'widgets/loading_dialog.dart';
 import 'widgets/not_antique_dialog.dart';
-import 'package:antique_id/services/haptic_service.dart';
+import 'package:coin_id/services/haptic_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class LibraryScreen extends StatelessWidget {

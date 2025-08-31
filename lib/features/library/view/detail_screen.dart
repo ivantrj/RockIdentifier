@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:antique_id/data/models/identified_item.dart';
-import 'package:antique_id/core/theme/app_theme.dart';
+import 'package:coin_id/data/models/identified_item.dart';
+import 'package:coin_id/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:antique_id/features/chat/view/chat_screen.dart';
-import 'package:antique_id/services/logging_service.dart';
+import 'package:coin_id/features/chat/view/chat_screen.dart';
+import 'package:coin_id/services/logging_service.dart';
 
 class ItemDetailScreen extends StatelessWidget {
   final IdentifiedItem item;

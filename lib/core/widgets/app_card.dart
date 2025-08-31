@@ -1,7 +1,7 @@
 // lib/widgets/containers/app_card.dart
 import 'package:flutter/material.dart';
-import 'package:antique_id/core/theme/app_theme.dart';
-import 'package:antique_id/services/haptic_service.dart';
+import 'package:coin_id/core/theme/app_theme.dart';
+import 'package:coin_id/services/haptic_service.dart';
 
 class AppCard extends StatelessWidget {
   final Widget child;

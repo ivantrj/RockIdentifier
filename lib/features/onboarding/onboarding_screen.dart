@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:antique_id/core/theme/app_theme.dart';
-import 'package:antique_id/core/widgets/primary_button.dart';
+import 'package:coin_id/core/theme/app_theme.dart';
+import 'package:coin_id/core/widgets/primary_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:antique_id/services/haptic_service.dart';
+import 'package:coin_id/services/haptic_service.dart';
 
 class OnboardingScreen extends StatefulWidget {
   final VoidCallback onFinish;

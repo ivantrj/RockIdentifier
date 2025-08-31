@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:antique_id/core/theme/app_theme.dart';
-import 'package:antique_id/main.dart';
+import 'package:coin_id/core/theme/app_theme.dart';
+import 'package:coin_id/main.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
-import 'package:antique_id/services/logging_service.dart';
+import 'package:coin_id/services/logging_service.dart';
 
 class PaywallScreen extends StatefulWidget {
   const PaywallScreen({super.key});
