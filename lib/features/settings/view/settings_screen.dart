@@ -349,7 +349,7 @@ class _HapticFeedbackToggleState extends State<_HapticFeedbackToggle> {
                 : CupertinoSwitch(
                     value: _enabled,
                     onChanged: _toggle,
-                    activeColor: Theme.of(context).colorScheme.primary,
+                    activeTrackColor: Theme.of(context).colorScheme.primary,
                   ),
             onTap: _loading ? null : () => _toggle(!_enabled),
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),

@@ -23,7 +23,7 @@ class ConnectivityService {
       final hasInternet = result.isNotEmpty && result[0].rawAddress.isNotEmpty;
       LoggingService.debug('Internet connectivity check - hasInternet: $hasInternet', tag: 'ConnectivityService');
       return hasInternet;
-    } on SocketException catch (e) {
+    } on SocketException {
       LoggingService.warning('Socket exception during connectivity check', tag: 'ConnectivityService');
       return false;
     } catch (e) {
