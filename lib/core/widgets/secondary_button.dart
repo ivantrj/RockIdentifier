@@ -1,114 +1,75 @@
-// lib/widgets/buttons/secondary_button.dart
+// lib/core/widgets/secondary_button.dart
 import 'package:flutter/material.dart';
 import 'package:coin_id/core/theme/app_theme.dart';
-import 'package:coin_id/services/haptic_service.dart';
 
-class SecondaryButton extends StatefulWidget {
-  final VoidCallback? onPressed;
+class SecondaryButton extends StatelessWidget {
   final String text;
-  final IconData? icon;
-  final bool isFullWidth;
+  final VoidCallback? onPressed;
   final bool isLoading;
+  final IconData? icon;
+  final bool fullWidth;
+  final Color? borderColor;
+  final Color? textColor;
 
   const SecondaryButton({
-    required this.onPressed,
-    required this.text,
-    this.icon,
-    this.isFullWidth = true,
-    this.isLoading = false,
     super.key,
+    required this.text,
+    this.onPressed,
+    this.isLoading = false,
+    this.icon,
+    this.fullWidth = true,
+    this.borderColor,
+    this.textColor,
   });
 
   @override
-  State<SecondaryButton> createState() => _SecondaryButtonState();
-}
-
-class _SecondaryButtonState extends State<SecondaryButton> {
-  double _scale = 1.0;
-
-  void _onTapDown(TapDownDetails details) {
-    setState(() => _scale = 0.93);
-  }
-
-  void _onTapUp(TapUpDetails details) {
-    setState(() => _scale = 1.0);
-  }
-
-  void _onTapCancel() {
-    setState(() => _scale = 1.0);
-  }
-
-  Future<void> _onTap() async {
-    await HapticService.instance.vibrate();
-    if (widget.onPressed != null) widget.onPressed!();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: AnimatedScale(
-        scale: _scale,
-        duration: const Duration(milliseconds: 140),
-        curve: Curves.easeOutBack,
-        child: Container(
-          width: widget.isFullWidth ? double.infinity : null,
-          height: AppTheme.buttonHeight,
-          decoration: BoxDecoration(
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
+    return SizedBox(
+      width: fullWidth ? double.infinity : null,
+      height: AppTheme.buttonHeight,
+      child: OutlinedButton(
+        onPressed: isLoading ? null : onPressed,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: textColor ?? AppTheme.primaryColor,
+          side: BorderSide(
+            color: borderColor ?? AppTheme.primaryColor,
+            width: 1.5,
+          ),
+          elevation: 0,
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
-            color: isDarkMode ? AppTheme.darkSurfaceColor : AppTheme.lightSurfaceColor,
-            border: Border.all(
-              color: isDarkMode ? AppTheme.darkBorderColor : AppTheme.lightBorderColor,
-              width: 1.0,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: isDarkMode ? AppTheme.darkShadowColor : AppTheme.lightShadowColor,
-                blurRadius: 4,
-                offset: const Offset(0, 1),
-              ),
-            ],
           ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
-              splashColor: AppTheme.primaryColor.withValues(alpha: 0.1),
-              highlightColor: AppTheme.primaryColor.withValues(alpha: 0.05),
-              onTap: widget.isLoading ? null : _onTap,
-              onTapDown: widget.isLoading ? null : (d) => _onTapDown(d),
-              onTapUp: widget.isLoading ? null : (d) => _onTapUp(d),
-              onTapCancel: widget.isLoading ? null : _onTapCancel,
-              child: Center(
-                child: widget.isLoading
-                    ? SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          color: AppTheme.primaryColor,
-                          strokeWidth: 2.5,
-                        ),
-                      )
-                    : Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (widget.icon != null) ...[
-                            Icon(widget.icon, size: 18, color: AppTheme.primaryColor),
-                            const SizedBox(width: 8),
-                          ],
-                          Text(
-                            widget.text,
-                            style: AppTheme.buttonTextStyle.copyWith(
-                              color: AppTheme.primaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
-              ),
-            ),
-          ),
+          padding: AppTheme.buttonPadding,
         ),
+        child: isLoading
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
+                ),
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (icon != null) ...[
+                    Icon(icon, size: 18),
+                    const SizedBox(width: 8),
+                  ],
+                  Text(
+                    text,
+                    style: AppTheme.buttonTextStyle.copyWith(
+                      color: textColor ?? AppTheme.primaryColor,
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }

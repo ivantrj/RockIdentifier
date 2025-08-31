@@ -73,7 +73,7 @@ class _ActionButton extends StatelessWidget {
       elevation: 6,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -90,7 +90,7 @@ class _ActionButton extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  fontSize: 18,
+                  fontSize: 14,
                   color: isDarkMode ? Colors.white : Colors.black,
                 ),
               ),

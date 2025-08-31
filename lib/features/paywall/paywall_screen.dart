@@ -288,10 +288,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Column(
                 children: [
-                  _featureRow(Icons.camera_alt_rounded, 'Unlimited antique identification', primaryColor),
-                  _featureRow(Icons.search_rounded, 'Detailed AI analysis', primaryColor),
-                  _featureRow(Icons.menu_book_rounded, 'Historical information', primaryColor),
-                  _featureRow(Icons.lock_open_rounded, 'No usage limits', primaryColor),
+                  _featureRow(Icons.camera_alt_rounded, 'Unlimited artifact identification', primaryColor),
+                  _featureRow(Icons.search_rounded, 'Comprehensive AI analysis', primaryColor),
+                  _featureRow(Icons.menu_book_rounded, 'Detailed historical context', primaryColor),
+                  _featureRow(Icons.lock_open_rounded, 'Unrestricted access', primaryColor),
                 ],
               ),
             ),

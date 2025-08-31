@@ -81,7 +81,7 @@ class _LibraryItemCardState extends State<LibraryItemCard> with SingleTickerProv
           scale: widget.isJustAdded ? _scaleAnim.value : 1.0,
           child: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: widget.isJustAdded && _glowAnim.value != null
                   ? [
                       BoxShadow(
@@ -102,7 +102,7 @@ class _LibraryItemCardState extends State<LibraryItemCard> with SingleTickerProv
           children: [
             // Image
             ClipRRect(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(12),
               child: exists
                   ? Image.file(
                       File(widget.item.imagePath),
@@ -124,7 +124,7 @@ class _LibraryItemCardState extends State<LibraryItemCard> with SingleTickerProv
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
                     color: Colors.black.withValues(alpha: 0.7),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.2),
@@ -188,7 +188,7 @@ class _LibraryItemCardState extends State<LibraryItemCard> with SingleTickerProv
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
                                 color: Colors.white.withValues(alpha: 0.25),
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
                                 '${(widget.item.confidence * 100).toStringAsFixed(0)}%',

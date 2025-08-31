@@ -42,7 +42,7 @@ class CategoryCard extends StatelessWidget {
         height: 100,
         decoration: BoxDecoration(
           color: adjustedBackgroundColor,
-          borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius / 1.5),
+          borderRadius: BorderRadius.circular(8),
           // Add a subtle border in dark mode
           border: isDarkMode
               ? Border.all(

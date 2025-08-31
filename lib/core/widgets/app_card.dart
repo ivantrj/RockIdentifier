@@ -48,7 +48,7 @@ class AppCard extends StatelessWidget {
       margin: cardMargin,
       decoration: BoxDecoration(
         color: cardColor ?? theme.cardColor,
-        borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
+        borderRadius: BorderRadius.circular(12),
         border: useBorder
             ? Border.all(
                 color: isDarkMode ? AppTheme.darkBorderColor : AppTheme.lightBorderColor,
@@ -68,8 +68,8 @@ class AppCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isDarkMode ? AppTheme.darkShadowColor : AppTheme.lightShadowColor,
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            blurRadius: 4,
+            offset: const Offset(0, 1),
             spreadRadius: 0,
           ),
         ],

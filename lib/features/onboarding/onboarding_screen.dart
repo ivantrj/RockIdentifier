@@ -69,12 +69,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       await HapticService.instance.vibrate();
                       _next();
                     },
-                    isFullWidth: true,
+                    fullWidth: true,
                   ),
                   const SizedBox(height: 12),
                   const Text(
-                    'Trusted by 1000+ collectors',
-                    style: TextStyle(fontSize: 14, color: Colors.black45),
+                    'Trusted by collectors worldwide',
+                    style: TextStyle(fontSize: 12, color: Colors.black45),
                   ),
                 ],
               ),
@@ -92,16 +92,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         SvgPicture.asset('assets/onboarding/onboarding_1.svg', height: 200),
         const SizedBox(height: 32),
         const Text(
-          'Instant Coin Identification',
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          'Professional Artifact Identification',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 16),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Take a photo of any antique or artifact and get instant identification with detailed information about its period, style, and origin.',
-            style: TextStyle(fontSize: 16, color: Colors.black54),
+            'Capture images of antiques and artifacts to receive comprehensive identification including historical period, style classification, and origin details.',
+            style: TextStyle(fontSize: 14, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
         ),
@@ -116,16 +116,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         SvgPicture.asset('assets/onboarding/onboarding_2.svg', height: 200),
         const SizedBox(height: 32),
         const Text(
-          'Expert Appraisal & History',
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          'Expert Analysis & Historical Context',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 16),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Chat with our AI expert to learn about the historical significance, estimated value, and fascinating stories behind your antiques.',
-            style: TextStyle(fontSize: 16, color: Colors.black54),
+            'Engage with our AI specialist to discover historical significance, valuation insights, and detailed provenance information for your artifacts.',
+            style: TextStyle(fontSize: 14, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
         ),
@@ -140,16 +140,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         SvgPicture.asset('assets/onboarding/onboarding_3.svg', height: 200),
         const SizedBox(height: 32),
         const Text(
-          'Value Assessment & Care Tips',
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          'Valuation & Preservation Guidance',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 16),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Text(
-            'Get professional value estimates and expert care instructions to preserve your antiques for future generations.',
-            style: TextStyle(fontSize: 16, color: Colors.black54),
+            'Receive professional valuation assessments and expert preservation recommendations to maintain your artifacts for future generations.',
+            style: TextStyle(fontSize: 14, color: Colors.black54),
             textAlign: TextAlign.center,
           ),
         ),

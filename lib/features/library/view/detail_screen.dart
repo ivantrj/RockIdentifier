@@ -179,10 +179,10 @@ class ItemDetailScreen extends StatelessWidget {
         Text(
           item.result,
           style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
             color: isDarkMode ? Colors.white : Colors.black,
-            height: 1.1,
+            height: 1.2,
           ),
         ),
         if (item.subtitle.isNotEmpty) ...[
@@ -190,7 +190,7 @@ class ItemDetailScreen extends StatelessWidget {
           Text(
             item.subtitle,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               color: (isDarkMode ? Colors.white : Colors.black).withValues(alpha: 0.7),
               fontWeight: FontWeight.w500,
             ),
@@ -529,7 +529,7 @@ class ItemDetailScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(context, 'Key Details', HugeIcons.strokeRoundedDiamond01),
+        _buildSectionHeader(context, 'Specifications', HugeIcons.strokeRoundedDiamond01),
         const SizedBox(height: 20),
         Container(
           decoration: BoxDecoration(
@@ -640,7 +640,7 @@ class ItemDetailScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionHeader(context, 'Additional Information', HugeIcons.strokeRoundedInformationCircle),
+        _buildSectionHeader(context, 'Additional Details', HugeIcons.strokeRoundedInformationCircle),
         const SizedBox(height: 20),
         Container(
           decoration: BoxDecoration(
@@ -832,10 +832,10 @@ class ItemDetailScreen extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
             color: isDarkMode ? Colors.white : Colors.black,
-            letterSpacing: -0.5,
+            letterSpacing: 0.0,
           ),
         ),
       ],

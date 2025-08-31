@@ -57,7 +57,7 @@ class _AppState extends State<App> {
     }
     return MaterialApp(
       navigatorKey: rootNavKey,
-      title: 'Coin Identifier',
+      title: 'Artifact Identifier',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

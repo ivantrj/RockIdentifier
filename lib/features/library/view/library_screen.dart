@@ -293,10 +293,10 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   PreferredSizeWidget _buildAppBar(BuildContext context, bool isDarkMode) {
     return AppBar(
       title: const Text(
-        'Coin Collection',
+        'Collection',
         style: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
+          fontSize: 24,
+          fontWeight: FontWeight.w600,
         ),
       ),
       surfaceTintColor: Colors.transparent,
@@ -426,18 +426,18 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> {
           ),
           const SizedBox(height: 32),
           Text(
-            'No antiques here yet! 🏺',
+            'Your collection is empty',
             style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
               color: widget.isDarkMode ? Colors.white : Colors.black,
             ),
           ),
           const SizedBox(height: 12),
           Text(
-            'Start identifying antiques by tapping the button below.',
+            'Begin identifying artifacts by tapping the camera button below.',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               color: widget.isDarkMode ? Colors.white70 : Colors.black54,
             ),
             textAlign: TextAlign.center,

@@ -31,7 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _messages.add(ChatMessage(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       message:
-          "Hi! I'm your coin expert. I can help you with questions about this ${widget.item.result.toLowerCase()}. Ask me anything about identification, history, value, or authenticity!",
+          "Hello, I'm your artifact specialist. I can assist you with inquiries about this ${widget.item.result.toLowerCase()}. Feel free to ask about identification, historical context, valuation, or authenticity verification.",
       isUser: false,
       timestamp: DateTime.now(),
     ));

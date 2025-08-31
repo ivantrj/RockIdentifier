@@ -37,7 +37,7 @@ class ListItemCard extends StatelessWidget {
             height: 48,
             decoration: BoxDecoration(
               color: iconBackgroundColor,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               icon,
