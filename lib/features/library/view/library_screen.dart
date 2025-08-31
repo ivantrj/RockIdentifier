@@ -172,7 +172,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           showDialog(
             context: context,
             barrierDismissible: true,
-            builder: (context) => const NotAntiqueDialog(),
+            builder: (context) => const NotCoinDialog(),
           );
         } else {
           LoggingService.error('Error processing image', error: e, tag: 'LibraryScreen');
@@ -293,7 +293,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   PreferredSizeWidget _buildAppBar(BuildContext context, bool isDarkMode) {
     return AppBar(
       title: const Text(
-        'Antique Collection',
+        'Coin Collection',
         style: TextStyle(
           fontSize: 32,
           fontWeight: FontWeight.bold,

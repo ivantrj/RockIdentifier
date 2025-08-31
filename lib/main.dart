@@ -11,7 +11,7 @@ import 'package:coin_id/services/logging_service.dart';
 Future<void> main() async {
   // Initialize logging
   Fimber.plantTree(DebugTree());
-  LoggingService.info('Antique Identifier App starting up');
+  LoggingService.info('Coin Identifier App starting up');
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -20,7 +20,7 @@ Future<void> main() async {
 
   // Initialize RevenueCat
   await RevenueCatService.init();
-  LoggingService.info('Antique Identifier App initialization completed');
+  LoggingService.info('Coin Identifier App initialization completed');
 
   runApp(
     MultiProvider(

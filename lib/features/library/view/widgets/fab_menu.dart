@@ -162,7 +162,7 @@ class _AnimatedFabMenuItemsState extends State<_AnimatedFabMenuItems> with Ticke
           delay: 0,
           child: _ActionButton(
             icon: HugeIcons.strokeRoundedCamera01,
-            label: 'Identify Antique',
+            label: 'Identify Coin',
             onTap: () async {
               await HapticService.instance.vibrate();
               widget.onClose();
@@ -175,7 +175,7 @@ class _AnimatedFabMenuItemsState extends State<_AnimatedFabMenuItems> with Ticke
           delay: 80,
           child: _ActionButton(
             icon: HugeIcons.strokeRoundedImage02,
-            label: 'Upload Antique Photo',
+            label: 'Upload Coin Photo',
             onTap: () async {
               await HapticService.instance.vibrate();
               widget.onClose();

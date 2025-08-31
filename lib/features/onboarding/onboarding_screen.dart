@@ -92,7 +92,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         SvgPicture.asset('assets/onboarding/onboarding_1.svg', height: 200),
         const SizedBox(height: 32),
         const Text(
-          'Instant Antique Identification',
+          'Instant Coin Identification',
           style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),

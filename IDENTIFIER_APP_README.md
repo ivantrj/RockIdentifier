@@ -1,8 +1,8 @@
-# Antique Identifier App - Technical Documentation
+# Coin Identifier App - Technical Documentation
 
 ## 🏺 Overview
 
-Antique Identifier is a Flutter application that uses AI to identify antiques, artifacts, and collectibles from photos. The app provides detailed information about identified items, including historical period, style, materials, estimated value, and authenticity information.
+Coin Identifier is a Flutter application that uses AI to identify antiques, artifacts, and collectibles from photos. The app provides detailed information about identified items, including historical period, style, materials, estimated value, and authenticity information.
 
 ## 🏗️ Architecture
 
@@ -107,7 +107,7 @@ class ImageProcessingService {
   Future<String> saveImageToAppDir(String imagePath)
 
   // Calls AI backend for identification
-  Future<Map<String, dynamic>?> _identifyAntiqueWithAI(File imageFile)
+  Future<Map<String, dynamic>?> _identifyCoinWithAI(File imageFile)
 }
 ```
 
@@ -361,4 +361,4 @@ locator.registerSingleton<CacheService>(CacheService());
 
 ---
 
-_This documentation is maintained as part of the Antique Identifier app development process. For the latest updates, refer to the source code and commit history._
+_This documentation is maintained as part of the Coin Identifier app development process. For the latest updates, refer to the source code and commit history._

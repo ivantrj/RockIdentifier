@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-class NotAntiqueDialog extends StatefulWidget {
-  const NotAntiqueDialog({super.key});
+class NotCoinDialog extends StatefulWidget {
+  const NotCoinDialog({super.key});
 
   @override
-  State<NotAntiqueDialog> createState() => _NotAntiqueDialogState();
+  State<NotCoinDialog> createState() => _NotCoinDialogState();
 }
 
-class _NotAntiqueDialogState extends State<NotAntiqueDialog> with SingleTickerProviderStateMixin {
+class _NotCoinDialogState extends State<NotCoinDialog> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _shakeAnim;
 
@@ -68,7 +68,7 @@ class _NotAntiqueDialogState extends State<NotAntiqueDialog> with SingleTickerPr
             const SizedBox(width: 12),
             const Expanded(
               child: Text(
-                'No Antique Detected',
+                'No Coin Detected',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
