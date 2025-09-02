@@ -1,6 +1,5 @@
 // lib/core/widgets/section_header.dart
 import 'package:flutter/material.dart';
-import 'package:coin_id/core/theme/app_theme.dart';
 
 class SectionHeader extends StatelessWidget {
   final String title;
@@ -33,7 +32,7 @@ class SectionHeader extends StatelessWidget {
             child: Text(
               actionText!,
               style: textTheme.bodyMedium?.copyWith(
-                color: AppTheme.primaryColor,
+                color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.w600,
               ),
             ),

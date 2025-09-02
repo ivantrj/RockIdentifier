@@ -8,7 +8,6 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:coin_id/core/theme/app_theme.dart';
 import 'package:coin_id/core/widgets/app_card.dart';
 import 'package:coin_id/core/widgets/category_card.dart';
 import 'package:coin_id/core/widgets/list_item_card.dart';
@@ -75,7 +74,7 @@ class HomeScreen extends StatelessWidget {
                       Text(
                         'SECTION LABEL',
                         style: textTheme.labelMedium?.copyWith(
-                          color: AppTheme.primaryColor,
+                          color: Colors.blue, // Placeholder
                           fontWeight: FontWeight.w600,
                           letterSpacing: 1.2,
                         ),
@@ -129,19 +128,19 @@ class HomeScreen extends StatelessWidget {
                     CategoryCard(
                       title: 'Type 1',
                       icon: Iconsax.sun_1,
-                      backgroundColor: AppTheme.focusColor,
+                      backgroundColor: Colors.orange, // Placeholder
                       onTap: () {},
                     ),
                     CategoryCard(
                       title: 'Type 2',
                       icon: Iconsax.lock_1,
-                      backgroundColor: AppTheme.sleepColor,
+                      backgroundColor: Colors.purple, // Placeholder
                       onTap: () {},
                     ),
                     CategoryCard(
                       title: 'Type 3',
                       icon: Iconsax.emoji_happy,
-                      backgroundColor: AppTheme.stressColor,
+                      backgroundColor: Colors.pink, // Placeholder
                       onTap: () {},
                     ),
                   ],
@@ -159,7 +158,7 @@ class HomeScreen extends StatelessWidget {
                   title: 'List Item Title',
                   subtitle: 'Subtitle with additional information',
                   icon: Iconsax.moon,
-                  iconBackgroundColor: AppTheme.sleepColor,
+                  iconBackgroundColor: Colors.purple, // Placeholder
                   onTap: () {},
                   trailing: IconButton(
                     onPressed: () {},

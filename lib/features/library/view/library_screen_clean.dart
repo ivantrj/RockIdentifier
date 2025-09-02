@@ -334,7 +334,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
             child: Icon(
               HugeIcons.strokeRoundedImage01,
               size: 48,
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
           const SizedBox(height: 24),

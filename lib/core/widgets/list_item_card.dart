@@ -26,7 +26,6 @@ class ListItemCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return AppCard(
-      useBorder: true,
       onTap: onTap,
       // Use fixed padding to ensure consistent sizing
       padding: const EdgeInsets.all(16),

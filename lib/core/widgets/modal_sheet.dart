@@ -199,7 +199,7 @@ class _ModalSheetContent extends StatelessWidget {
                 child: PrimaryButton(
                   onPressed: onButtonPressed,
                   text: buttonText!,
-                  isFullWidth: true,
+                  fullWidth: true,
                 ),
               ),
             ],

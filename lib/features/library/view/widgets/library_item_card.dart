@@ -73,7 +73,6 @@ class _LibraryItemCardState extends State<LibraryItemCard> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    final exists = widget.item.imagePath.isNotEmpty && File(widget.item.imagePath).existsSync();
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
@@ -103,17 +102,7 @@ class _LibraryItemCardState extends State<LibraryItemCard> with SingleTickerProv
             // Image
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: exists
-                  ? Image.file(
-                      File(widget.item.imagePath),
-                      width: double.infinity,
-                      height: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return _buildPlaceholder();
-                      },
-                    )
-                  : _buildPlaceholder(),
+              child: _buildImage(),
             ),
             // Price badge
             if (_shouldShowPriceBadge())
@@ -221,6 +210,37 @@ class _LibraryItemCardState extends State<LibraryItemCard> with SingleTickerProv
         ),
       ),
     );
+  }
+
+  Widget _buildImage() {
+    // Check if it's an asset path (starts with 'assets/')
+    if (widget.item.imagePath.startsWith('assets/')) {
+      return Image.asset(
+        widget.item.imagePath,
+        width: double.infinity,
+        height: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildPlaceholder();
+        },
+      );
+    } else {
+      // It's a file path, check if it exists
+      final exists = File(widget.item.imagePath).existsSync();
+      if (exists) {
+        return Image.file(
+          File(widget.item.imagePath),
+          width: double.infinity,
+          height: double.infinity,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return _buildPlaceholder();
+          },
+        );
+      } else {
+        return _buildPlaceholder();
+      }
+    }
   }
 
   Widget _buildPlaceholder() {

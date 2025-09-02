@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui'; // Required for ImageFilter
 import 'package:flutter/material.dart';
 import 'package:coin_id/core/theme/app_theme.dart';
 
@@ -9,28 +10,26 @@ class LoadingDialog extends StatefulWidget {
   State<LoadingDialog> createState() => _LoadingDialogState();
 }
 
-class _LoadingDialogState extends State<LoadingDialog> with SingleTickerProviderStateMixin {
+class _LoadingDialogState extends State<LoadingDialog> {
   static final List<String> _funTexts = [
-    'Examining the antique...',
-    'Analyzing craftsmanship...',
-    'Checking historical markers...',
-    'Consulting antique databases...',
-    'Measuring dimensions...',
-    'Comparing with known pieces...',
-    'Looking for distinctive features...',
-    'Examining materials...',
+    'Scanning coin surface...',
+    'Analyzing mint marks...',
+    'Checking for die cracks...',
+    'Consulting numismatic databases...',
+    'Measuring diameter and weight...',
+    'Comparing against catalogs...',
+    'Identifying key features...',
+    'Analyzing metal composition...',
     'Verifying authenticity...',
-    'Studying the period...',
-    'Matching characteristics...',
-    'Evaluating value...',
+    'Cross-referencing dates...',
+    'Matching edge lettering...',
+    'Evaluating strike quality...',
     'Researching provenance...',
-    'Identifying maker marks...',
-    'Analyzing style elements...',
-    'Checking condition...'
+    'Identifying engraver marks...',
+    'Analyzing design elements...',
+    'Checking overall condition...'
   ];
 
-  late final AnimationController _controller;
-  late final Animation<double> _animation;
   late String _currentText;
   late int _textIndex;
 
@@ -39,9 +38,6 @@ class _LoadingDialogState extends State<LoadingDialog> with SingleTickerProvider
     super.initState();
     _textIndex = Random().nextInt(_funTexts.length);
     _currentText = _funTexts[_textIndex];
-    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 1))..repeat(reverse: true);
-    _animation =
-        Tween<double>(begin: 0.85, end: 1.15).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     // Change text every 2 seconds
     Future.doWhile(() async {
@@ -56,47 +52,46 @@ class _LoadingDialogState extends State<LoadingDialog> with SingleTickerProvider
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Dialog(
-      backgroundColor: isDarkMode ? const Color(0xFF23232B) : Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 36),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ScaleTransition(
-              scale: _animation,
-              child: Icon(
-                Icons.history_edu,
-                color: AppTheme.primaryColor,
-                size: 64,
-              ),
+      // Set the dialog background to transparent to let the blur show through
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            // Use the semi-transparent glass color from our theme
+            decoration: BoxDecoration(
+              color: AppTheme.glassColor,
+              borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
+              border: Border.all(color: AppTheme.subtleBorderColor),
             ),
-            const SizedBox(height: 32),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 400),
-              child: Text(
-                _currentText,
-                key: ValueKey(_currentText),
-                style: TextStyle(
-                  fontSize: 18,
-                  color: isDarkMode ? Colors.white : Colors.black,
-                  fontWeight: FontWeight.w600,
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 36),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(
+                  color: AppTheme.metallicGold,
+                  strokeWidth: 3,
                 ),
-                textAlign: TextAlign.center,
-              ),
+                const SizedBox(height: 32),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
+                  transitionBuilder: (child, animation) {
+                    return FadeTransition(opacity: animation, child: child);
+                  },
+                  child: Text(
+                    _currentText,
+                    key: ValueKey(_currentText),
+                    style: Theme.of(context).textTheme.titleMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            CircularProgressIndicator(color: AppTheme.primaryColor, strokeWidth: 3),
-          ],
+          ),
         ),
       ),
     );

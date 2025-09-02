@@ -59,7 +59,7 @@ class _AppState extends State<App> {
       navigatorKey: rootNavKey,
       title: 'Artifact Identifier',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
+      theme: AppTheme.darkTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeService.themeMode,
       home: _showOnboarding
@@ -73,7 +73,7 @@ class _AppState extends State<App> {
                     await showModalBottomSheet(
                       context: rootNavKey.currentContext!,
                       isScrollControlled: true,
-                      backgroundColor: Colors.white,
+                      backgroundColor: Colors.transparent, // Use transparent to see blur
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                       ),

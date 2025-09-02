@@ -1,6 +1,4 @@
-// lib/core/widgets/primary_button.dart
 import 'package:flutter/material.dart';
-import 'package:coin_id/core/theme/app_theme.dart';
 
 class PrimaryButton extends StatelessWidget {
   final String text;
@@ -8,8 +6,6 @@ class PrimaryButton extends StatelessWidget {
   final bool isLoading;
   final IconData? icon;
   final bool fullWidth;
-  final Color? backgroundColor;
-  final Color? textColor;
 
   const PrimaryButton({
     super.key,
@@ -18,56 +14,41 @@ class PrimaryButton extends StatelessWidget {
     this.isLoading = false,
     this.icon,
     this.fullWidth = true,
-    this.backgroundColor,
-    this.textColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
-
-    return SizedBox(
-      width: fullWidth ? double.infinity : null,
-      height: AppTheme.buttonHeight,
-      child: ElevatedButton(
-        onPressed: isLoading ? null : onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor ?? AppTheme.primaryColor,
-          foregroundColor: textColor ?? Colors.white,
-          elevation: 0,
-          shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
-          ),
-          padding: AppTheme.buttonPadding,
-        ),
-        child: isLoading
-            ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              )
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (icon != null) ...[
-                    Icon(icon, size: 18),
-                    const SizedBox(width: 8),
-                  ],
-                  Text(
-                    text,
-                    style: AppTheme.buttonTextStyle.copyWith(
-                      color: textColor ?? Colors.white,
-                    ),
-                  ),
-                ],
+    // The new AppTheme defines the style for all ElevatedButtons.
+    // We no longer need to style it manually here.
+    final button = ElevatedButton(
+      onPressed: isLoading ? null : onPressed,
+      child: isLoading
+          ? const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 3,
+                // The color is inherited from the button's foregroundColor
               ),
-      ),
+            )
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (icon != null) ...[
+                  Icon(icon, size: 20),
+                  const SizedBox(width: 12),
+                ],
+                Text(text),
+              ],
+            ),
     );
+
+    return fullWidth
+        ? SizedBox(
+            width: double.infinity,
+            child: button,
+          )
+        : button;
   }
 }

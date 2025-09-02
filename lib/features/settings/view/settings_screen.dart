@@ -17,23 +17,14 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Settings',
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: const Text('Settings'),
         centerTitle: false,
         elevation: 0,
-        surfaceTintColor: Colors.transparent,
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         children: [
-          // Haptic Feedback Toggle (at the very top)
           const _HapticFeedbackToggle(),
-          // App Settings Section
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
             child: SectionHeader(title: 'App'),
@@ -44,28 +35,17 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.star_rate_rounded,
             onTap: () => _rateApp(context),
           ),
-          // Haptic Feedback Toggle
-          // _buildSettingsItem(
-          //   context: context,
-          //   title: 'Share App',
-          //   icon: Icons.share_rounded,
-          //   onTap: () => _shareApp(context),
-          // ),
           _buildSettingsItem(
             context: context,
             title: 'Send Feedback',
             icon: Icons.feedback_rounded,
             onTap: () => _launchUrl('mailto:hello.ivantrj@gmail.com?subject=App Feedback'),
           ),
-
-          // Storage Section
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
             child: SectionHeader(title: 'Storage'),
           ),
           _buildCacheSettingsItem(context),
-
-          // Support Section
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
             child: SectionHeader(title: 'Support'),
@@ -82,8 +62,6 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.description_rounded,
             onTap: () => _launchUrl('https://www.apple.com/legal/internet-services/itunes/dev/stdeula/'),
           ),
-
-          // About Section
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
             child: SectionHeader(title: 'About'),
@@ -102,8 +80,6 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildAppInfo(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -111,25 +87,23 @@ class SettingsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isDarkMode
-                  ? Colors.white.withValues(alpha: AppTheme.surfaceOverlayOpacity / 2)
-                  : Colors.black.withValues(alpha: AppTheme.surfaceOverlayOpacity / 3),
+              color: AppTheme.darkCharcoal.withOpacity(0.5),
               borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
             ),
             child: Column(
               children: [
                 Text(
-                  '© ${DateTime.now().year} AI Bug Identifier',
+                  '© ${DateTime.now().year} Coin Identifier',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
-                        color: isDarkMode ? Colors.white70 : Colors.black87,
+                        color: AppTheme.primaryTextColor.withOpacity(0.8),
                       ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'All rights reserved',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: isDarkMode ? Colors.white54 : Colors.black54,
+                        color: AppTheme.secondaryTextColor,
                       ),
                 ),
               ],
@@ -143,7 +117,6 @@ class SettingsScreen extends StatelessWidget {
   Future<void> _launchUrl(String urlString) async {
     final Uri url = Uri.parse(urlString);
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-      // Error is silently ignored as it's not critical
       LoggingService.urlLaunchError(urlString, tag: 'SettingsScreen');
     }
   }
@@ -213,18 +186,10 @@ class SettingsScreen extends StatelessWidget {
     required IconData icon,
     VoidCallback? onTap,
   }) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
-      elevation: AppTheme.cardElevation,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
-        side: BorderSide(
-          color: isDarkMode ? AppTheme.darkBorderColor : AppTheme.lightBorderColor,
-          width: 1.0,
-        ),
-      ),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
@@ -233,19 +198,17 @@ class SettingsScreen extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: AppTheme.iconContainerSize,
-                height: AppTheme.iconContainerSize,
+                width: 48,
+                height: 48,
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  color: isDarkMode
-                      ? AppTheme.primaryColor.withValues(alpha: AppTheme.surfaceOverlayOpacity * 2)
-                      : AppTheme.primaryColor.withValues(alpha: AppTheme.surfaceOverlayOpacity),
-                  borderRadius: BorderRadius.circular(AppTheme.iconContainerBorderRadius),
+                  color: theme.colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
                 ),
                 child: Icon(
                   icon,
-                  color: AppTheme.primaryColor,
-                  size: AppTheme.iconSize,
+                  color: theme.colorScheme.primary,
+                  size: 24,
                 ),
               ),
               const SizedBox(width: 16.0),
@@ -255,17 +218,13 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                      style: theme.textTheme.titleMedium,
                     ),
                     if (subtitle != null) ...[
                       const SizedBox(height: 2.0),
                       Text(
                         subtitle,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context).hintColor,
-                            ),
+                        style: theme.textTheme.bodySmall,
                       ),
                     ],
                   ],
@@ -274,7 +233,7 @@ class SettingsScreen extends StatelessWidget {
               if (onTap != null)
                 Icon(
                   Iconsax.arrow_right_3,
-                  color: AppTheme.primaryColor,
+                  color: theme.colorScheme.secondary,
                   size: 18.0,
                 ),
             ],
@@ -318,45 +277,35 @@ class _HapticFeedbackToggleState extends State<_HapticFeedbackToggle> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return Column(
-      children: [
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: isDarkMode ? const Color(0xFF23232B) : Colors.white,
-            borderRadius: BorderRadius.circular(18),
-            boxShadow: [
-              BoxShadow(
-                color: isDarkMode ? Colors.black.withOpacity(0.10) : Colors.grey.withOpacity(0.08),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: ListTile(
-            leading: Icon(Icons.vibration, size: 28, color: Theme.of(context).colorScheme.primary),
-            title: const Text(
-              'Haptic Feedback',
-              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
-            ),
-            subtitle: const Text(
-              'Vibrate on button taps',
-              style: TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-            trailing: _loading
-                ? const SizedBox(width: 40, height: 40, child: CircularProgressIndicator(strokeWidth: 2))
-                : CupertinoSwitch(
-                    value: _enabled,
-                    onChanged: _toggle,
-                    activeTrackColor: Theme.of(context).colorScheme.primary,
-                  ),
-            onTap: _loading ? null : () => _toggle(!_enabled),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-          ),
+    final theme = Theme.of(context);
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: AppTheme.darkCharcoal,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppTheme.subtleBorderColor),
+      ),
+      child: ListTile(
+        leading: Icon(Icons.vibration, size: 28, color: theme.colorScheme.primary),
+        title: const Text(
+          'Haptic Feedback',
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
         ),
-      ],
+        subtitle: const Text(
+          'Vibrate on button taps',
+          style: TextStyle(fontSize: 14, color: Colors.grey),
+        ),
+        trailing: _loading
+            ? const SizedBox(width: 40, height: 40, child: CircularProgressIndicator(strokeWidth: 2))
+            : CupertinoSwitch(
+                value: _enabled,
+                onChanged: _toggle,
+                activeColor: theme.colorScheme.primary,
+              ),
+        onTap: _loading ? null : () => _toggle(!_enabled),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      ),
     );
   }
 }

@@ -1,5 +1,8 @@
+import 'package:coin_id/core/widgets/coin_card.dart';
+import 'package:coin_id/core/widgets/coin_card_placeholder.dart';
 import 'package:coin_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
 import 'package:coin_id/features/library/view/detail_screen.dart';
@@ -13,7 +16,6 @@ import 'package:coin_id/services/image_processing_service.dart';
 import 'package:coin_id/services/logging_service.dart';
 import 'package:coin_id/locator.dart';
 import 'widgets/fab_menu.dart';
-import 'widgets/library_item_card.dart';
 import 'widgets/loading_dialog.dart';
 import 'widgets/not_antique_dialog.dart';
 import 'package:coin_id/services/haptic_service.dart';
@@ -375,26 +377,36 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   }
 
   Widget _buildBody(BuildContext context, List<IdentifiedItem> items, bool isDarkMode) {
+    final libraryViewModel = context.watch<LibraryViewModel>();
+
+    if (items.isEmpty) {
+      return MasonryGridView.count(
+        padding: const EdgeInsets.all(16),
+        crossAxisCount: 2,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+        itemCount: 6, // Show 6 shimmering placeholders
+        itemBuilder: (context, index) => const CoinCardPlaceholder(),
+      );
+    }
+
     if (items.isEmpty) {
       return _buildEmptyState(context, isDarkMode);
     }
 
-    return GridView.builder(
+    return MasonryGridView.count(
       padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 20,
-        childAspectRatio: 0.85,
-      ),
+      crossAxisCount: 2,
+      mainAxisSpacing: 16,
+      crossAxisSpacing: 16,
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
-        return LibraryItemCard(
+        // Note: The 3D flip animation would be implemented here on tap.
+        // For now, we use the existing navigation.
+        return CoinCard(
           item: item,
           onTap: () => _onOpenDetail(item),
-          isJustAdded: item.id == _justAddedId,
-          onJustAddedAnimationEnd: item.id == _justAddedId ? () => setState(() => _justAddedId = null) : null,
         );
       },
     );
