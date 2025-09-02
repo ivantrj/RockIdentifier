@@ -200,37 +200,110 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.nearBlack,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Top spacing
-            const SizedBox(height: 20),
-
-            // Progress indicator
-            _buildProgressIndicator(),
-
-            const SizedBox(height: 20),
-
-            // Content area - Flexible to prevent overflow
-            Flexible(
-              child: AnimatedOpacity(
-                opacity: _onboardingOpacity,
-                duration: const Duration(milliseconds: 500),
-                child: _buildContent(),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppTheme.nearBlack,
+              Color(0xFF1A1A1A),
+              AppTheme.nearBlack,
+            ],
+            stops: [0.0, 0.5, 1.0],
+          ),
+        ),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              // Background decorative elements
+              Positioned(
+                top: -50,
+                right: -50,
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppTheme.metallicGold.withValues(alpha: 0.03),
+                  ),
+                ),
               ),
-            ),
+              Positioned(
+                bottom: -80,
+                left: -80,
+                child: Container(
+                  width: 250,
+                  height: 250,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppTheme.metallicGold.withValues(alpha: 0.02),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.4,
+                right: -30,
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppTheme.metallicGold.withValues(alpha: 0.02),
+                  ),
+                ),
+              ),
 
-            // Bottom section
-            _buildBottomSection(),
-          ],
+              // Main content
+              Column(
+                children: [
+                  // Top spacing
+                  const SizedBox(height: 20),
+
+                  // Progress indicator
+                  _buildProgressIndicator(),
+
+                  const SizedBox(height: 20),
+
+                  // Content area - Flexible to prevent overflow
+                  Flexible(
+                    child: AnimatedOpacity(
+                      opacity: _onboardingOpacity,
+                      duration: const Duration(milliseconds: 500),
+                      child: _buildContent(),
+                    ),
+                  ),
+
+                  // Bottom section
+                  _buildBottomSection(),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildProgressIndicator() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppTheme.metallicGold.withValues(alpha: 0.2),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.metallicGold.withValues(alpha: 0.1),
+            blurRadius: 20,
+            spreadRadius: 0,
+          ),
+        ],
+      ),
       child: Row(
         children: [
           _buildProgressStep(
@@ -240,11 +313,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
           ),
           Expanded(
             child: Container(
-              height: 2,
-              margin: const EdgeInsets.symmetric(horizontal: 10),
+              height: 3,
+              margin: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
                 color: _animatedStep > 0 ? AppTheme.metallicGold : Colors.white.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(1),
+                borderRadius: BorderRadius.circular(2),
+                boxShadow: _animatedStep > 0
+                    ? [
+                        BoxShadow(
+                          color: AppTheme.metallicGold.withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          spreadRadius: 0,
+                        ),
+                      ]
+                    : null,
               ),
             ),
           ),
@@ -255,11 +337,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
           ),
           Expanded(
             child: Container(
-              height: 2,
-              margin: const EdgeInsets.symmetric(horizontal: 10),
+              height: 3,
+              margin: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
                 color: _animatedStep > 1 ? AppTheme.metallicGold : Colors.white.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(1),
+                borderRadius: BorderRadius.circular(2),
+                boxShadow: _animatedStep > 1
+                    ? [
+                        BoxShadow(
+                          color: AppTheme.metallicGold.withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          spreadRadius: 0,
+                        ),
+                      ]
+                    : null,
               ),
             ),
           ),
@@ -278,16 +369,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
       scale: isActive ? 1.2 : 0.8,
       duration: const Duration(milliseconds: 300),
       child: Container(
-        width: 30,
-        height: 30,
+        width: 32,
+        height: 32,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: isActive ? AppTheme.metallicGold : Colors.white.withValues(alpha: 0.3),
+          color: isActive ? AppTheme.metallicGold : Colors.white.withValues(alpha: 0.2),
+          border: Border.all(
+            color: isActive ? AppTheme.metallicGold.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.1),
+            width: 1.5,
+          ),
+          boxShadow: isActive
+              ? [
+                  BoxShadow(
+                    color: AppTheme.metallicGold.withValues(alpha: 0.4),
+                    blurRadius: 12,
+                    spreadRadius: 0,
+                  ),
+                ]
+              : null,
         ),
         child: Icon(
           icon,
-          color: Colors.white,
-          size: 20,
+          color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.7),
+          size: 18,
         ),
       ),
     );
@@ -441,12 +545,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.03),
-          borderRadius: BorderRadius.circular(10),
+          color: Colors.black.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: AppTheme.metallicGold.withValues(alpha: 0.15),
             width: 1,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.metallicGold.withValues(alpha: 0.1),
+              blurRadius: 20,
+              spreadRadius: 0,
+            ),
+          ],
         ),
         child: AnimatedBuilder(
           animation: _testimonialController,
@@ -696,10 +807,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.metallicGold,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                padding: const EdgeInsets.symmetric(vertical: 18),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                 ),
+                elevation: 8,
+                shadowColor: AppTheme.metallicGold.withValues(alpha: 0.4),
               ),
               child: Text(
                 _step < 2 ? 'Continue' : 'Get Started',
