@@ -1,7 +1,7 @@
 import 'package:fimber/fimber.dart';
 
 class LoggingService {
-  static const String _tag = 'BugIdentifier';
+  static const String _tag = 'CoinID';
 
   // Debug logging
   static void debug(String message, {String? tag}) {
