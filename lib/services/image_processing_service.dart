@@ -164,7 +164,7 @@ class ImageProcessingService {
       LoggingService.apiOperation('Starting AI coin identification',
           details: 'image: ${imageFile.path}', tag: 'ImageProcessingService');
 
-      final uri = Uri.parse('$_baseUrl/identify-antique');
+      final uri = Uri.parse('$_baseUrl/identify-coin');
       final request = http.MultipartRequest('POST', uri)
         ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
 

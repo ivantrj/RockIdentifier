@@ -37,84 +37,11 @@ class LibraryViewModel extends ChangeNotifier {
       final List<dynamic> jsonList = json.decode(jsonString);
       _items.clear();
       _items.addAll(jsonList.map((e) => IdentifiedItem.fromJson(e as Map<String, dynamic>)));
-    } else {
-      // If no items are saved, add placeholders
-      _addPlaceholderData();
     }
+    // Remove placeholder data - let the collection be truly empty
 
     _isLoading = false;
     notifyListeners();
-  }
-
-  void _addPlaceholderData() {
-    _items.addAll([
-      IdentifiedItem(
-        id: '1',
-        imagePath: 'assets/images/coin.jpg', // Using an existing asset
-        result: 'Morgan Dollar',
-        subtitle: '1887, USA',
-        confidence: 0.98,
-        details: {
-          'Country': 'USA',
-          'Year': '1887',
-          'Denomination': '\$1',
-          'Composition': '90% Silver, 10% Copper',
-          'Mintage': '20,290,000',
-          'Description':
-              'The Morgan dollar was a United States dollar coin minted from 1878 to 1904, and again in 1921.',
-          'Grade': 'MS-63',
-          'Designer': 'George T. Morgan',
-          'Edge': 'Reeded',
-          'Diameter': '38.1 mm',
-          'Weight': '26.73 g'
-        },
-        dateTime: DateTime.now().subtract(const Duration(days: 1)),
-      ),
-      IdentifiedItem(
-        id: '2',
-        imagePath: 'assets/images/coin.jpg', // Using an existing asset
-        result: 'Roman Denarius',
-        subtitle: 'AD 117-138, Roman Empire',
-        confidence: 0.94,
-        details: {
-          'Country': 'Roman Empire',
-          'Year': 'c. AD 120',
-          'Denomination': 'Denarius',
-          'Composition': 'Silver',
-          'Mintage': 'N/A',
-          'Description':
-              'This denarius was struck under Emperor Hadrian, known for his substantial building projects, including Hadrian\'s Wall.',
-          'Grade': 'Fine',
-          'Designer': 'Unknown',
-          'Edge': 'Plain',
-          'Diameter': '18 mm',
-          'Weight': '3.4 g'
-        },
-        dateTime: DateTime.now().subtract(const Duration(days: 2)),
-      ),
-      IdentifiedItem(
-        id: '3',
-        imagePath: 'assets/images/coin.jpg', // Using an existing asset
-        result: 'Japanese 1 Yen',
-        subtitle: '1901 (Meiji 34), Japan',
-        confidence: 0.99,
-        details: {
-          'Country': 'Japan',
-          'Year': '1901',
-          'Denomination': '1 Yen',
-          'Composition': '90% Silver, 10% Copper',
-          'Mintage': '1,056,000',
-          'Description':
-              'A silver one yen coin from the Meiji era, featuring a dragon design symbolic of power and good fortune.',
-          'Grade': 'AU-58',
-          'Designer': 'Katsunori Onoi',
-          'Edge': 'Reeded',
-          'Diameter': '38.6 mm',
-          'Weight': '26.96 g'
-        },
-        dateTime: DateTime.now().subtract(const Duration(days: 5)),
-      ),
-    ]);
   }
 
   Future<void> deleteItem(String id) async {

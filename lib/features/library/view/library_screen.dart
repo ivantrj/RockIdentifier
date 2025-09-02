@@ -379,7 +379,8 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   Widget _buildBody(BuildContext context, List<IdentifiedItem> items, bool isDarkMode) {
     final libraryViewModel = context.watch<LibraryViewModel>();
 
-    if (items.isEmpty) {
+    // Show shimmering placeholders only when loading
+    if (libraryViewModel.isLoading) {
       return MasonryGridView.count(
         padding: const EdgeInsets.all(16),
         crossAxisCount: 2,
@@ -390,6 +391,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       );
     }
 
+    // Show empty state when not loading and no items
     if (items.isEmpty) {
       return _buildEmptyState(context, isDarkMode);
     }
@@ -425,37 +427,210 @@ class _BouncyEmptyState extends StatefulWidget {
   State<_BouncyEmptyState> createState() => _BouncyEmptyStateState();
 }
 
-class _BouncyEmptyStateState extends State<_BouncyEmptyState> {
+class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProviderStateMixin {
+  late AnimationController _bounceController;
+  late AnimationController _floatController;
+  late Animation<double> _bounceAnimation;
+  late Animation<double> _floatAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _bounceController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _floatController = AnimationController(
+      duration: const Duration(seconds: 3),
+      vsync: this,
+    );
+
+    _bounceAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _bounceController,
+      curve: Curves.elasticOut,
+    ));
+
+    _floatAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _floatController,
+      curve: Curves.easeInOut,
+    ));
+
+    _bounceController.forward();
+    _floatController.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _bounceController.dispose();
+    _floatController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            'assets/onboarding/onboarding_1.svg',
-            height: 140,
-          ),
-          const SizedBox(height: 32),
-          Text(
-            'Your collection is empty',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: widget.isDarkMode ? Colors.white : Colors.black,
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Animated floating coin icon
+            AnimatedBuilder(
+              animation: _floatAnimation,
+              builder: (context, child) {
+                return Transform.translate(
+                  offset: Offset(0, 8 * _floatAnimation.value),
+                  child: Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: widget.isDarkMode
+                            ? [
+                                const Color(0xFFFFD700), // Gold
+                                const Color(0xFFFFA500), // Orange
+                              ]
+                            : [
+                                const Color(0xFFFFD700), // Gold
+                                const Color(0xFFFF8C00), // Dark Orange
+                              ],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: widget.isDarkMode
+                              ? const Color(0xFFFFD700).withValues(alpha: 0.3)
+                              : const Color(0xFFFFD700).withValues(alpha: 0.4),
+                          blurRadius: 20,
+                          spreadRadius: 5,
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.monetization_on_rounded,
+                      size: 60,
+                      color: Colors.white,
+                    ),
+                  ),
+                );
+              },
             ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Begin identifying artifacts by tapping the camera button below.',
-            style: TextStyle(
-              fontSize: 14,
-              color: widget.isDarkMode ? Colors.white70 : Colors.black54,
+            const SizedBox(height: 32),
+
+            // Animated title
+            AnimatedBuilder(
+              animation: _bounceAnimation,
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: _bounceAnimation.value,
+                  child: Text(
+                    'Your Collection Awaits',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                      color: widget.isDarkMode ? Colors.white : Colors.black87,
+                      letterSpacing: -0.5,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                );
+              },
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+            const SizedBox(height: 16),
+
+            // Subtitle with better typography
+            Text(
+              'Start building your numismatic collection by identifying coins and artifacts',
+              style: TextStyle(
+                fontSize: 16,
+                color: widget.isDarkMode ? Colors.white70 : Colors.black54,
+                height: 1.4,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 32),
+
+            // Decorative elements
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildDecorativeDot(widget.isDarkMode, 0),
+                const SizedBox(width: 8),
+                _buildDecorativeDot(widget.isDarkMode, 1),
+                const SizedBox(width: 8),
+                _buildDecorativeDot(widget.isDarkMode, 2),
+              ],
+            ),
+            const SizedBox(height: 40),
+
+            // Call to action hint
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              decoration: BoxDecoration(
+                color: widget.isDarkMode
+                    ? const Color(0xFF2A2A36).withValues(alpha: 0.8)
+                    : const Color(0xFFF5F5F8).withValues(alpha: 0.8),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: widget.isDarkMode ? Colors.white24 : Colors.black12,
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    HugeIcons.strokeRoundedCameraAi,
+                    size: 20,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Tap the camera to begin',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: widget.isDarkMode ? Colors.white70 : Colors.black54,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildDecorativeDot(bool isDarkMode, int index) {
+    return AnimatedBuilder(
+      animation: _floatController,
+      builder: (context, child) {
+        final delay = index * 0.2;
+        final animationValue = (_floatController.value + delay) % 1.0;
+
+        return Transform.scale(
+          scale: 0.8 + 0.2 * animationValue,
+          child: Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isDarkMode
+                  ? Colors.white.withValues(alpha: 0.3 + 0.4 * animationValue)
+                  : Colors.black.withValues(alpha: 0.2 + 0.3 * animationValue),
+            ),
+          ),
+        );
+      },
     );
   }
 }
