@@ -44,6 +44,7 @@ flutter:
   assets:
     - assets/icon/icon.png
     - assets/images/pro.png
+    - assets/images/coin.jpg
     - assets/onboarding/onboarding_1.svg
     - assets/onboarding/onboarding_2.svg
     - assets/onboarding/onboarding_3.svg

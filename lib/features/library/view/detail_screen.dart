@@ -15,56 +15,32 @@ class ItemDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
-    return Scaffold(
-      // Use the nearBlack color for the background to match the library
-      backgroundColor: AppTheme.nearBlack,
-      body: CustomScrollView(
-        slivers: [
-          _buildSliverAppBar(context),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Main Title
-                  Text(item.result, style: textTheme.headlineLarge),
-                  const SizedBox(height: 8),
-                  Text(item.subtitle, style: textTheme.bodyLarge?.copyWith(color: AppTheme.secondaryTextColor)),
-                  const SizedBox(height: 24),
-
-                  // Key Details Section
-                  _buildDetailCard(context, {
-                    'Confidence': '${(item.confidence * 100).toStringAsFixed(0)}%',
-                    // --- Placeholder Coin Data ---
-                    'Country': item.details['Country'] ?? 'N/A',
-                    'Year': item.details['Year'] ?? 'N/A',
-                    'Denomination': item.details['Denomination'] ?? 'N/A',
-                    'Composition': item.details['Composition'] ?? 'N/A',
-                    'Mintage': item.details['Mintage'] ?? 'N/A',
-                  }),
-
-                  const SizedBox(height: 24),
-
-                  // Description/History Section
-                  if (item.details['Description'] != null) _buildDescriptionCard(context, item.details['Description']!),
-                ],
-              ),
-            ),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: AppTheme.nearBlack,
+        body: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return [_buildSliverAppBar(context)];
+          },
+          body: TabBarView(
+            children: [
+              _buildDetailsTab(context),
+              _buildHistoryTab(context),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
   SliverAppBar _buildSliverAppBar(BuildContext context) {
+    final theme = Theme.of(context);
     return SliverAppBar(
       expandedHeight: 350,
       pinned: true,
       stretch: true,
-      backgroundColor: AppTheme.darkCharcoal, // Collapsed app bar color
+      backgroundColor: AppTheme.darkCharcoal,
       leading: _buildAppBarButton(context, HugeIcons.strokeRoundedArrowLeft01, () => Navigator.pop(context)),
       actions: [
         _buildAppBarButton(context, HugeIcons.strokeRoundedDelete02, () => _showDeleteDialog(context)),
@@ -72,11 +48,119 @@ class ItemDetailScreen extends StatelessWidget {
       ],
       flexibleSpace: FlexibleSpaceBar(
         stretchModes: const [StretchMode.zoomBackground, StretchMode.fadeTitle],
+        titlePadding: const EdgeInsets.only(bottom: 50, left: 16, right: 16),
+        centerTitle: true,
+        title: Text(item.result, style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
         background: Hero(
-          // Ensure the tag matches the one in CoinCard
           tag: 'coin_image_${item.id}',
-          child: _buildImage(),
+          child: Image.asset(
+            item.imagePath,
+            fit: BoxFit.cover,
+            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+              return Stack(
+                fit: StackFit.expand,
+                children: [
+                  child,
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.black.withOpacity(0.6), Colors.transparent, Colors.black.withOpacity(0.8)],
+                        stops: const [0.0, 0.4, 1.0],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
+      ),
+      bottom: TabBar(
+        indicatorColor: theme.colorScheme.primary,
+        labelColor: theme.colorScheme.primary,
+        unselectedLabelColor: theme.colorScheme.secondary,
+        tabs: const [
+          Tab(text: 'Details'),
+          Tab(text: 'History'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailsTab(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          _buildDetailCard(context, 'Identification', {
+            'Coin Name': item.result,
+            'Origin': item.subtitle,
+            'Confidence': '${(item.confidence * 100).toStringAsFixed(0)}%',
+          }),
+          const SizedBox(height: 16),
+          _buildDetailCard(context, 'Specifications', {
+            'Designer': item.details['Designer'] ?? 'N/A',
+            'Composition': item.details['Composition'] ?? 'N/A',
+            'Edge': item.details['Edge'] ?? 'N/A',
+            'Diameter': item.details['Diameter'] ?? 'N/A',
+            'Weight': item.details['Weight'] ?? 'N/A',
+          }),
+          const SizedBox(height: 16),
+          _buildDetailCard(context, 'Numismatic Info', {
+            'Grade': item.details['Grade'] ?? 'N/A',
+            'Mintage': item.details['Mintage'] ?? 'N/A',
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHistoryTab(BuildContext context) {
+    final theme = Theme.of(context);
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: AppTheme.darkCharcoal,
+          borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
+        ),
+        child: Text(
+          item.details['Description'] ?? 'No history available.',
+          style: theme.textTheme.bodyLarge?.copyWith(height: 1.6, color: AppTheme.secondaryTextColor),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailCard(BuildContext context, String title, Map<String, String> details) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: AppTheme.darkCharcoal,
+        borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: theme.textTheme.titleLarge),
+          const SizedBox(height: 8),
+          ...details.entries.map((entry) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(entry.key, style: theme.textTheme.bodyMedium?.copyWith(color: AppTheme.secondaryTextColor)),
+                  Text(entry.value, style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600)),
+                ],
+              ),
+            );
+          }).toList(),
+        ],
       ),
     );
   }
@@ -104,118 +188,29 @@ class ItemDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailCard(BuildContext context, Map<String, String> details) {
-    final textTheme = Theme.of(context).textTheme;
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.darkCharcoal,
-        borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
-        border: Border.all(color: AppTheme.subtleBorderColor),
-      ),
-      child: Column(
-        children: details.entries.map((entry) {
-          final isFirst = details.keys.first == entry.key;
-          return Column(
-            children: [
-              if (!isFirst)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Divider(height: 1, color: AppTheme.subtleBorderColor),
-                ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(entry.key, style: textTheme.bodyMedium?.copyWith(color: AppTheme.secondaryTextColor)),
-                    Text(entry.value, style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600)),
-                  ],
-                ),
-              ),
-            ],
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _buildDescriptionCard(BuildContext context, String description) {
-    final textTheme = Theme.of(context).textTheme;
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppTheme.darkCharcoal,
-        borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
-        border: Border.all(color: AppTheme.subtleBorderColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('History', style: textTheme.titleLarge),
-          const SizedBox(height: 8),
-          Text(
-            description,
-            style: textTheme.bodyMedium?.copyWith(height: 1.6),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _showDeleteDialog(BuildContext context) {
     HapticService.instance.vibrate();
     showCupertinoDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
         title: const Text('Delete Coin'),
-        content:
-            const Text('Are you sure you want to delete this coin from your collection? This action cannot be undone.'),
+        content: const Text('Are you sure you want to delete this coin from your collection? This action cannot be undone.'),
         actions: [
           CupertinoDialogAction(
-            isDefaultAction: true,
-            onPressed: () => Navigator.pop(context),
             child: const Text('Cancel'),
+            onPressed: () => Navigator.pop(context),
           ),
           CupertinoDialogAction(
             isDestructiveAction: true,
+            child: const Text('Delete'),
             onPressed: () {
               onDelete();
-              Navigator.pop(context); // Close dialog
-              Navigator.pop(context); // Go back from detail screen
+              Navigator.pop(context);
+              Navigator.pop(context);
             },
-            child: const Text('Delete'),
           ),
         ],
       ),
     );
-  }
-
-  Widget _buildImage() {
-    // Check if it's an asset path (starts with 'assets/')
-    if (item.imagePath.startsWith('assets/')) {
-      return Image.asset(
-        item.imagePath,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            color: Colors.grey[300],
-            child: const Icon(Icons.image, color: Colors.grey),
-          );
-        },
-      );
-    } else {
-      // It's a file path
-      return Image.file(
-        File(item.imagePath),
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            color: Colors.grey[300],
-            child: const Icon(Icons.image, color: Colors.grey),
-          );
-        },
-      );
-    }
   }
 }

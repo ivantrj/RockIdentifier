@@ -1,14 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:coin_id/core/theme/app_theme.dart';
-import 'package:coin_id/core/widgets/section_header.dart';
-import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
-import 'package:in_app_review/in_app_review.dart';
-import 'package:coin_id/services/cache_service.dart';
-import 'package:coin_id/locator.dart';
-import 'package:coin_id/services/logging_service.dart';
-import 'package:coin_id/services/haptic_service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:coin_id/core/theme/app_theme.dart';
+import 'package:coin_id/locator.dart';
+import 'package:coin_id/services/cache_service.dart';
+import 'package:coin_id/services/haptic_service.dart';
+import 'package:coin_id/services/logging_service.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -18,99 +17,111 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
-        centerTitle: false,
-        elevation: 0,
+        surfaceTintColor: Colors.transparent,
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        // Reduce overall padding, especially vertical
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         children: [
-          const _HapticFeedbackToggle(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
-            child: SectionHeader(title: 'App'),
+          _buildSettingsGroup(
+            context,
+            children: [const _HapticFeedbackToggle()],
           ),
-          _buildSettingsItem(
-            context: context,
-            title: 'Rate App',
-            icon: Icons.star_rate_rounded,
-            onTap: () => _rateApp(context),
+          const SizedBox(height: 12), // Reduced space between groups
+          _buildSettingsGroup(
+            context,
+            children: [
+              _buildSettingsItem(
+                context,
+                icon: Icons.star_rate_rounded,
+                title: 'Rate App',
+                onTap: () => _rateApp(context),
+              ),
+              _buildSettingsItem(
+                context,
+                icon: Icons.feedback_rounded,
+                title: 'Send Feedback',
+                onTap: () => _launchUrl('mailto:hello.ivantrj@gmail.com?subject=App Feedback'),
+              ),
+            ],
           ),
-          _buildSettingsItem(
-            context: context,
-            title: 'Send Feedback',
-            icon: Icons.feedback_rounded,
-            onTap: () => _launchUrl('mailto:hello.ivantrj@gmail.com?subject=App Feedback'),
+          const SizedBox(height: 12),
+          _buildSettingsGroup(
+            context,
+            children: [const _CacheSettingsItem()],
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
-            child: SectionHeader(title: 'Storage'),
+          const SizedBox(height: 12),
+          _buildSettingsGroup(
+            context,
+            children: [
+              _buildSettingsItem(
+                context,
+                icon: Icons.privacy_tip_rounded,
+                title: 'Privacy Policy',
+                onTap: () => _launchUrl('https://www.ivantrj.com/app-privacy-policy'),
+              ),
+              _buildSettingsItem(
+                context,
+                icon: Icons.description_rounded,
+                title: 'Terms of Service',
+                onTap: () => _launchUrl('https://www.apple.com/legal/internet-services/itunes/dev/stdeula/'),
+              ),
+            ],
           ),
-          _buildCacheSettingsItem(context),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
-            child: SectionHeader(title: 'Support'),
+          const SizedBox(height: 12),
+          _buildSettingsGroup(
+            context,
+            children: [
+              _buildSettingsItem(
+                context,
+                icon: Icons.info_rounded,
+                title: 'Version',
+                subtitle: '1.0.0',
+              ),
+            ],
           ),
-          _buildSettingsItem(
-            context: context,
-            title: 'Privacy Policy',
-            icon: Icons.privacy_tip_rounded,
-            onTap: () => _launchUrl('https://www.ivantrj.com/app-privacy-policy'),
-          ),
-          _buildSettingsItem(
-            context: context,
-            title: 'Terms of Service',
-            icon: Icons.description_rounded,
-            onTap: () => _launchUrl('https://www.apple.com/legal/internet-services/itunes/dev/stdeula/'),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 32, 24, 12),
-            child: SectionHeader(title: 'About'),
-          ),
-          _buildSettingsItem(
-            context: context,
-            title: 'Version',
-            subtitle: '1.0.0',
-            icon: Icons.info_rounded,
-          ),
-          const SizedBox(height: 24),
-          _buildAppInfo(context),
         ],
       ),
     );
   }
 
-  Widget _buildAppInfo(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppTheme.darkCharcoal.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
-            ),
-            child: Column(
-              children: [
-                Text(
-                  '© ${DateTime.now().year} Coin Identifier',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: AppTheme.primaryTextColor.withOpacity(0.8),
-                      ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'All rights reserved',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme.secondaryTextColor,
-                      ),
-                ),
-              ],
-            ),
-          ),
-        ],
+  Widget _buildSettingsGroup(BuildContext context, {required List<Widget> children}) {
+    return Container(
+      clipBehavior: Clip.antiAlias, // Ensures children conform to rounded corners
+      decoration: BoxDecoration(
+        color: AppTheme.darkCharcoal,
+        borderRadius: BorderRadius.circular(12), // Slightly less rounded for a tighter look
       ),
+      // Using a Column with manually interspersed dividers for precise control
+      child: Column(
+        children: List.generate(children.length * 2 - 1, (index) {
+          if (index.isEven) {
+            return children[index ~/ 2];
+          } else {
+            return Divider(
+              height: 1,
+              thickness: 1,
+              color: AppTheme.subtleBorderColor,
+              indent: 56,
+            );
+          }
+        }),
+      ),
+    );
+  }
+
+  Widget _buildSettingsItem(BuildContext context,
+      {required IconData icon, required String title, String? subtitle, VoidCallback? onTap}) {
+    final theme = Theme.of(context);
+    return ListTile(
+      dense: true, // Makes the ListTile more compact
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0), // Reduced vertical padding
+      leading: Icon(icon, color: theme.colorScheme.secondary, size: 22), // Slightly smaller icon
+      title: Text(title, style: theme.textTheme.bodyLarge),
+      subtitle: subtitle != null ? Text(subtitle, style: theme.textTheme.bodyMedium) : null,
+      trailing:
+          onTap != null ? const Icon(Icons.arrow_forward_ios, size: 14, color: AppTheme.secondaryTextColor) : null,
+      onTap: onTap,
     );
   }
 
@@ -125,124 +136,11 @@ class SettingsScreen extends StatelessWidget {
     final InAppReview inAppReview = InAppReview.instance;
     if (await inAppReview.isAvailable()) {
       await inAppReview.requestReview();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Rating is not available yet.')),
-      );
     }
-  }
-
-  Widget _buildCacheSettingsItem(BuildContext context) {
-    return FutureBuilder<int>(
-      future: locator<CacheService>().getCacheSize(),
-      builder: (context, snapshot) {
-        final cacheSize = snapshot.data ?? 0;
-        final formattedSize = locator<CacheService>().formatCacheSize(cacheSize);
-
-        return _buildSettingsItem(
-          context: context,
-          title: 'Clear Cache',
-          subtitle: 'Cache size: $formattedSize',
-          icon: Icons.cleaning_services_rounded,
-          onTap: () => _showClearCacheDialog(context),
-        );
-      },
-    );
-  }
-
-  Future<void> _showClearCacheDialog(BuildContext context) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Clear Cache'),
-        content: const Text('This will clear all cached AI analysis results. This action cannot be undone.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Clear'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed == true) {
-      await locator<CacheService>().clearCache();
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Cache cleared successfully')),
-        );
-      }
-    }
-  }
-
-  Widget _buildSettingsItem({
-    required BuildContext context,
-    required String title,
-    String? subtitle,
-    required IconData icon,
-    VoidCallback? onTap,
-  }) {
-    final theme = Theme.of(context);
-
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
-                ),
-                child: Icon(
-                  icon,
-                  color: theme.colorScheme.primary,
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 16.0),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: theme.textTheme.titleMedium,
-                    ),
-                    if (subtitle != null) ...[
-                      const SizedBox(height: 2.0),
-                      Text(
-                        subtitle,
-                        style: theme.textTheme.bodySmall,
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-              if (onTap != null)
-                Icon(
-                  Iconsax.arrow_right_3,
-                  color: theme.colorScheme.secondary,
-                  size: 18.0,
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }
+
+// --- Helper Widgets ---
 
 class _HapticFeedbackToggle extends StatefulWidget {
   const _HapticFeedbackToggle();
@@ -262,10 +160,12 @@ class _HapticFeedbackToggleState extends State<_HapticFeedbackToggle> {
 
   Future<void> _load() async {
     await HapticService.instance.loadSetting();
-    setState(() {
-      _enabled = HapticService.instance.enabled;
-      _loading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _enabled = HapticService.instance.enabled;
+        _loading = false;
+      });
+    }
   }
 
   Future<void> _toggle(bool value) async {
@@ -278,34 +178,85 @@ class _HapticFeedbackToggleState extends State<_HapticFeedbackToggle> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppTheme.darkCharcoal,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppTheme.subtleBorderColor),
+    return ListTile(
+      dense: true,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+      leading: Icon(Icons.vibration, color: theme.colorScheme.secondary, size: 22),
+      title: Text('Haptic Feedback', style: theme.textTheme.bodyLarge),
+      trailing: _loading
+          ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+          : CupertinoSwitch(
+              value: _enabled,
+              onChanged: _toggle,
+              activeColor: theme.colorScheme.primary,
+            ),
+      onTap: _loading ? null : () => _toggle(!_enabled),
+    );
+  }
+}
+
+class _CacheSettingsItem extends StatefulWidget {
+  const _CacheSettingsItem();
+
+  @override
+  State<_CacheSettingsItem> createState() => _CacheSettingsItemState();
+}
+
+class _CacheSettingsItemState extends State<_CacheSettingsItem> {
+  String _cacheSize = 'Loading...';
+
+  @override
+  void initState() {
+    super.initState();
+    _getCacheSize();
+  }
+
+  Future<void> _getCacheSize() async {
+    final size = await locator<CacheService>().getCacheSize();
+    if (mounted) {
+      setState(() {
+        _cacheSize = locator<CacheService>().formatCacheSize(size);
+      });
+    }
+  }
+
+  Future<void> _showClearCacheDialog(BuildContext context) async {
+    final confirmed = await showCupertinoDialog<bool>(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: const Text('Clear Cache'),
+        content: const Text('This will clear all cached AI analysis results. This action cannot be undone.'),
+        actions: [
+          CupertinoDialogAction(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            child: const Text('Clear'),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ],
       ),
-      child: ListTile(
-        leading: Icon(Icons.vibration, size: 28, color: theme.colorScheme.primary),
-        title: const Text(
-          'Haptic Feedback',
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 17),
-        ),
-        subtitle: const Text(
-          'Vibrate on button taps',
-          style: TextStyle(fontSize: 14, color: Colors.grey),
-        ),
-        trailing: _loading
-            ? const SizedBox(width: 40, height: 40, child: CircularProgressIndicator(strokeWidth: 2))
-            : CupertinoSwitch(
-                value: _enabled,
-                onChanged: _toggle,
-                activeColor: theme.colorScheme.primary,
-              ),
-        onTap: _loading ? null : () => _toggle(!_enabled),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-      ),
+    );
+
+    if (confirmed == true) {
+      await locator<CacheService>().clearCache();
+      _getCacheSize();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return ListTile(
+      dense: true,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+      leading: Icon(Icons.cleaning_services_rounded, color: theme.colorScheme.secondary, size: 22),
+      title: Text('Clear Cache', style: theme.textTheme.bodyLarge),
+      subtitle: Text(_cacheSize, style: theme.textTheme.bodyMedium),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: AppTheme.secondaryTextColor),
+      onTap: () => _showClearCacheDialog(context),
     );
   }
 }
