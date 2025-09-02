@@ -1,33 +1,98 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:coin_id/data/models/identified_item.dart';
+import 'package:coin_id/features/chat/view/chat_screen.dart';
 import 'package:coin_id/services/haptic_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:coin_id/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-class ItemDetailScreen extends StatelessWidget {
+class ItemDetailScreen extends StatefulWidget {
   final IdentifiedItem item;
   final VoidCallback onDelete;
 
   const ItemDetailScreen({required this.item, required this.onDelete, super.key});
 
   @override
+  State<ItemDetailScreen> createState() => _ItemDetailScreenState();
+}
+
+class _ItemDetailScreenState extends State<ItemDetailScreen> {
+  int _selectedTabIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        backgroundColor: AppTheme.nearBlack,
-        body: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return [_buildSliverAppBar(context)];
-          },
-          body: TabBarView(
-            children: [
-              _buildDetailsTab(context),
-              _buildHistoryTab(context),
-            ],
+    return Scaffold(
+      backgroundColor: AppTheme.nearBlack,
+      // Add a Floating Action Button for the Chat feature
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(CupertinoPageRoute(
+            builder: (_) => ChatScreen(item: widget.item),
+          ));
+        },
+        child: const Icon(HugeIcons.strokeRoundedChatBot, color: AppTheme.darkCharcoal),
+      ),
+      body: CustomScrollView(
+        slivers: [
+          _buildSliverAppBar(context),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                _buildCustomSegmentedControl(context),
+                // Use an IndexedStack to preserve the state of each tab's content
+                IndexedStack(
+                  index: _selectedTabIndex,
+                  children: [
+                    _buildDetailsTab(context),
+                    _buildHistoryTab(context),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCustomSegmentedControl(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+      padding: const EdgeInsets.all(4.0),
+      decoration: BoxDecoration(
+        color: AppTheme.darkCharcoal,
+        borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
+      ),
+      child: Row(
+        children: [
+          _buildSegment(context, 'Details', 0),
+          _buildSegment(context, 'History', 1),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSegment(BuildContext context, String title, int index) {
+    final theme = Theme.of(context);
+    final isSelected = _selectedTabIndex == index;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedTabIndex = index),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          decoration: BoxDecoration(
+            color: isSelected ? theme.colorScheme.primary : Colors.transparent,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.labelLarge?.copyWith(
+              color: isSelected ? AppTheme.darkCharcoal : AppTheme.secondaryTextColor,
+            ),
           ),
         ),
       ),
@@ -37,7 +102,7 @@ class ItemDetailScreen extends StatelessWidget {
   SliverAppBar _buildSliverAppBar(BuildContext context) {
     final theme = Theme.of(context);
     return SliverAppBar(
-      expandedHeight: 350,
+      expandedHeight: 300,
       pinned: true,
       stretch: true,
       backgroundColor: AppTheme.darkCharcoal,
@@ -46,15 +111,15 @@ class ItemDetailScreen extends StatelessWidget {
         _buildAppBarButton(context, HugeIcons.strokeRoundedDelete02, () => _showDeleteDialog(context)),
         const SizedBox(width: 16),
       ],
+      surfaceTintColor: Colors.transparent,
       flexibleSpace: FlexibleSpaceBar(
         stretchModes: const [StretchMode.zoomBackground, StretchMode.fadeTitle],
-        titlePadding: const EdgeInsets.only(bottom: 50, left: 16, right: 16),
         centerTitle: true,
-        title: Text(item.result, style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
+        title: Text(widget.item.result, style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
         background: Hero(
-          tag: 'coin_image_${item.id}',
+          tag: 'coin_image_${widget.item.id}',
           child: Image.asset(
-            item.imagePath,
+            widget.item.imagePath,
             fit: BoxFit.cover,
             frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
               return Stack(
@@ -77,40 +142,31 @@ class ItemDetailScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottom: TabBar(
-        indicatorColor: theme.colorScheme.primary,
-        labelColor: theme.colorScheme.primary,
-        unselectedLabelColor: theme.colorScheme.secondary,
-        tabs: const [
-          Tab(text: 'Details'),
-          Tab(text: 'History'),
-        ],
-      ),
     );
   }
 
   Widget _buildDetailsTab(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Column(
         children: [
           _buildDetailCard(context, 'Identification', {
-            'Coin Name': item.result,
-            'Origin': item.subtitle,
-            'Confidence': '${(item.confidence * 100).toStringAsFixed(0)}%',
+            'Coin Name': widget.item.result,
+            'Origin': widget.item.subtitle,
+            'Confidence': '${(widget.item.confidence * 100).toStringAsFixed(0)}%',
           }),
           const SizedBox(height: 16),
           _buildDetailCard(context, 'Specifications', {
-            'Designer': item.details['Designer'] ?? 'N/A',
-            'Composition': item.details['Composition'] ?? 'N/A',
-            'Edge': item.details['Edge'] ?? 'N/A',
-            'Diameter': item.details['Diameter'] ?? 'N/A',
-            'Weight': item.details['Weight'] ?? 'N/A',
+            'Designer': widget.item.details['Designer'] ?? 'N/A',
+            'Composition': widget.item.details['Composition'] ?? 'N/A',
+            'Edge': widget.item.details['Edge'] ?? 'N/A',
+            'Diameter': widget.item.details['Diameter'] ?? 'N/A',
+            'Weight': widget.item.details['Weight'] ?? 'N/A',
           }),
           const SizedBox(height: 16),
           _buildDetailCard(context, 'Numismatic Info', {
-            'Grade': item.details['Grade'] ?? 'N/A',
-            'Mintage': item.details['Mintage'] ?? 'N/A',
+            'Grade': widget.item.details['Grade'] ?? 'N/A',
+            'Mintage': widget.item.details['Mintage'] ?? 'N/A',
           }),
         ],
       ),
@@ -120,7 +176,7 @@ class ItemDetailScreen extends StatelessWidget {
   Widget _buildHistoryTab(BuildContext context) {
     final theme = Theme.of(context);
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Container(
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
@@ -128,7 +184,7 @@ class ItemDetailScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
         ),
         child: Text(
-          item.details['Description'] ?? 'No history available.',
+          widget.item.details['Description'] ?? 'No history available.',
           style: theme.textTheme.bodyLarge?.copyWith(height: 1.6, color: AppTheme.secondaryTextColor),
         ),
       ),
@@ -194,7 +250,8 @@ class ItemDetailScreen extends StatelessWidget {
       context: context,
       builder: (context) => CupertinoAlertDialog(
         title: const Text('Delete Coin'),
-        content: const Text('Are you sure you want to delete this coin from your collection? This action cannot be undone.'),
+        content:
+            const Text('Are you sure you want to delete this coin from your collection? This action cannot be undone.'),
         actions: [
           CupertinoDialogAction(
             child: const Text('Cancel'),
@@ -204,7 +261,7 @@ class ItemDetailScreen extends StatelessWidget {
             isDestructiveAction: true,
             child: const Text('Delete'),
             onPressed: () {
-              onDelete();
+              widget.onDelete();
               Navigator.pop(context);
               Navigator.pop(context);
             },
