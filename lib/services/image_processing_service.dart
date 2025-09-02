@@ -82,7 +82,8 @@ class ImageProcessingService {
       if (aiResult != null) {
         LoggingService.debug('Creating identified item from AI result', tag: 'ImageProcessingService');
         final item = _createIdentifiedItem(aiResult, savedPath);
-        LoggingService.debug('Identified item created successfully - id: ${item.id}, result: ${item.result}',
+        LoggingService.debug(
+            'Identified item created successfully - id: ${item.id}, result: ${item.result}, subtitle: ${item.subtitle}',
             tag: 'ImageProcessingService');
         return item;
       }
@@ -98,40 +99,47 @@ class ImageProcessingService {
   /// Create IdentifiedItem from AI result
   IdentifiedItem _createIdentifiedItem(Map<String, dynamic> aiResult, String imagePath) {
     LoggingService.debug('Creating identified item from AI result', tag: 'ImageProcessingService');
+    LoggingService.debug('AI result keys: ${aiResult.keys.toList()}', tag: 'ImageProcessingService');
+    LoggingService.debug('AI result: $aiResult', tag: 'ImageProcessingService');
+
+    // Extract details from the nested details object in AI response
+    final aiDetails = aiResult['details'] as Map<String, dynamic>? ?? {};
+    LoggingService.debug('AI details object: $aiDetails', tag: 'ImageProcessingService');
+    LoggingService.debug('AI details keys: ${aiDetails.keys.toList()}', tag: 'ImageProcessingService');
 
     final details = <String, dynamic>{
-      if (aiResult['coinType'] != null) 'coinType': aiResult['coinType'],
-      if (aiResult['denomination'] != null) 'denomination': aiResult['denomination'],
-      if (aiResult['confidence'] != null) 'confidence': aiResult['confidence'],
-      if (aiResult['mintYear'] != null) 'mintYear': aiResult['mintYear'],
-      if (aiResult['country'] != null) 'country': aiResult['country'],
-      if (aiResult['mintMark'] != null) 'mintMark': aiResult['mintMark'],
-      if (aiResult['metalComposition'] != null) 'metalComposition': aiResult['metalComposition'],
-      if (aiResult['weight'] != null) 'weight': aiResult['weight'],
-      if (aiResult['diameter'] != null) 'diameter': aiResult['diameter'],
-      if (aiResult['condition'] != null) 'condition': aiResult['condition'],
-      if (aiResult['authenticity'] != null) 'authenticity': aiResult['authenticity'],
-      if (aiResult['rarity'] != null) 'rarity': aiResult['rarity'],
-      if (aiResult['estimatedValue'] != null) 'estimatedValue': aiResult['estimatedValue'],
-      if (aiResult['historicalContext'] != null) 'historicalContext': aiResult['historicalContext'],
-      if (aiResult['designDescription'] != null) 'designDescription': aiResult['designDescription'],
-      if (aiResult['edgeType'] != null) 'edgeType': aiResult['edgeType'],
-      if (aiResult['designer'] != null) 'designer': aiResult['designer'],
-      if (aiResult['mintage'] != null) 'mintage': aiResult['mintage'],
-      if (aiResult['marketDemand'] != null) 'marketDemand': aiResult['marketDemand'],
-      if (aiResult['investmentPotential'] != null) 'investmentPotential': aiResult['investmentPotential'],
-      if (aiResult['storageRecommendations'] != null) 'storageRecommendations': aiResult['storageRecommendations'],
-      if (aiResult['cleaningInstructions'] != null) 'cleaningInstructions': aiResult['cleaningInstructions'],
-      if (aiResult['similarCoins'] != null) 'similarCoins': aiResult['similarCoins'],
-      if (aiResult['insuranceValue'] != null) 'insuranceValue': aiResult['insuranceValue'],
-      if (aiResult['wikiLink'] != null) 'wikiLink': aiResult['wikiLink'],
+      if (aiDetails['coinType'] != null) 'coinType': aiDetails['coinType'],
+      if (aiDetails['denomination'] != null) 'denomination': aiDetails['denomination'],
+      if (aiDetails['confidence'] != null) 'confidence': aiDetails['confidence'],
+      if (aiDetails['mintYear'] != null) 'mintYear': aiDetails['mintYear'],
+      if (aiDetails['country'] != null) 'country': aiDetails['country'],
+      if (aiDetails['mintMark'] != null) 'mintMark': aiDetails['mintMark'],
+      if (aiDetails['metalComposition'] != null) 'metalComposition': aiDetails['metalComposition'],
+      if (aiDetails['weight'] != null) 'weight': aiDetails['weight'],
+      if (aiDetails['diameter'] != null) 'diameter': aiDetails['diameter'],
+      if (aiDetails['condition'] != null) 'condition': aiDetails['condition'],
+      if (aiDetails['authenticity'] != null) 'authenticity': aiDetails['authenticity'],
+      if (aiDetails['rarity'] != null) 'rarity': aiDetails['rarity'],
+      if (aiDetails['estimatedValue'] != null) 'estimatedValue': aiDetails['estimatedValue'],
+      if (aiDetails['historicalContext'] != null) 'historicalContext': aiDetails['historicalContext'],
+      if (aiDetails['designDescription'] != null) 'designDescription': aiDetails['designDescription'],
+      if (aiDetails['edgeType'] != null) 'edgeType': aiDetails['edgeType'],
+      if (aiDetails['designer'] != null) 'designer': aiDetails['designer'],
+      if (aiDetails['mintage'] != null) 'mintage': aiDetails['mintage'],
+      if (aiDetails['marketDemand'] != null) 'marketDemand': aiDetails['marketDemand'],
+      if (aiDetails['investmentPotential'] != null) 'investmentPotential': aiDetails['investmentPotential'],
+      if (aiDetails['storageRecommendations'] != null) 'storageRecommendations': aiDetails['storageRecommendations'],
+      if (aiDetails['cleaningInstructions'] != null) 'cleaningInstructions': aiDetails['cleaningInstructions'],
+      if (aiDetails['similarCoins'] != null) 'similarCoins': aiDetails['similarCoins'],
+      if (aiDetails['insuranceValue'] != null) 'insuranceValue': aiDetails['insuranceValue'],
+      if (aiDetails['wikiLink'] != null) 'wikiLink': aiDetails['wikiLink'],
     };
 
     return IdentifiedItem(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: aiResult['id'] ?? DateTime.now().millisecondsSinceEpoch.toString(),
       imagePath: imagePath,
-      result: aiResult['denomination'] ?? aiResult['coinType'] ?? 'Unknown Coin',
-      subtitle: aiResult['mintYear'] ?? aiResult['country'] ?? '',
+      result: aiResult['result'] ?? aiResult['denomination'] ?? aiResult['coinType'] ?? 'Unknown Coin',
+      subtitle: aiResult['subtitle'] ?? aiResult['mintYear'] ?? aiResult['country'] ?? '',
       confidence: _parseConfidence(aiResult['confidence']),
       details: details,
       dateTime: DateTime.now(),

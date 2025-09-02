@@ -152,21 +152,35 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         children: [
           _buildDetailCard(context, 'Identification', {
             'Coin Name': widget.item.result,
+            'Type': widget.item.details['coinType'] ?? 'N/A',
+            'Denomination': widget.item.details['denomination'] ?? 'N/A',
             'Origin': widget.item.subtitle,
+            'Country': widget.item.details['country'] ?? 'N/A',
+            'Mint Year': widget.item.details['mintYear'] ?? 'N/A',
+            'Mint Mark': widget.item.details['mintMark'] ?? 'N/A',
             'Confidence': '${(widget.item.confidence * 100).toStringAsFixed(0)}%',
           }),
           const SizedBox(height: 16),
           _buildDetailCard(context, 'Specifications', {
-            'Designer': widget.item.details['Designer'] ?? 'N/A',
-            'Composition': widget.item.details['Composition'] ?? 'N/A',
-            'Edge': widget.item.details['Edge'] ?? 'N/A',
-            'Diameter': widget.item.details['Diameter'] ?? 'N/A',
-            'Weight': widget.item.details['Weight'] ?? 'N/A',
+            'Designer': widget.item.details['designer'] ?? widget.item.details['Designer'] ?? 'N/A',
+            'Composition': widget.item.details['metalComposition'] ?? widget.item.details['Composition'] ?? 'N/A',
+            'Edge': widget.item.details['edgeType'] ?? widget.item.details['Edge'] ?? 'N/A',
+            'Diameter': widget.item.details['diameter'] ?? widget.item.details['Diameter'] ?? 'N/A',
+            'Weight': widget.item.details['weight'] ?? widget.item.details['Weight'] ?? 'N/A',
           }),
           const SizedBox(height: 16),
           _buildDetailCard(context, 'Numismatic Info', {
-            'Grade': widget.item.details['Grade'] ?? 'N/A',
-            'Mintage': widget.item.details['Mintage'] ?? 'N/A',
+            'Grade': widget.item.details['condition'] ?? widget.item.details['Grade'] ?? 'N/A',
+            'Mintage': widget.item.details['mintage'] ?? widget.item.details['Mintage'] ?? 'N/A',
+            'Rarity': widget.item.details['rarity'] ?? 'N/A',
+            'Estimated Value': widget.item.details['estimatedValue'] ?? 'N/A',
+          }),
+          const SizedBox(height: 16),
+          _buildDetailCard(context, 'Additional Details', {
+            'Authenticity': widget.item.details['authenticity'] ?? 'N/A',
+            'Market Demand': widget.item.details['marketDemand'] ?? 'N/A',
+            'Investment Potential': widget.item.details['investmentPotential'] ?? 'N/A',
+            'Insurance Value': widget.item.details['insuranceValue'] ?? 'N/A',
           }),
         ],
       ),
@@ -184,7 +198,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
         ),
         child: Text(
-          widget.item.details['Description'] ?? 'No history available.',
+          widget.item.details['historicalContext'] ?? widget.item.details['Description'] ?? 'No history available.',
           style: theme.textTheme.bodyLarge?.copyWith(height: 1.6, color: AppTheme.secondaryTextColor),
         ),
       ),
@@ -208,10 +222,24 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(entry.key, style: theme.textTheme.bodyMedium?.copyWith(color: AppTheme.secondaryTextColor)),
-                  Text(entry.value, style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600)),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      entry.key,
+                      style: theme.textTheme.bodyMedium?.copyWith(color: AppTheme.secondaryTextColor),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      entry.value,
+                      style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                      textAlign: TextAlign.right,
+                    ),
+                  ),
                 ],
               ),
             );
