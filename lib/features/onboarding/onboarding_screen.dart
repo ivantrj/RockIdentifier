@@ -328,7 +328,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'The most accurate and efficient way to identify coins & currency',
+                      'The most accurate way to identify coins and discover their stories. Used by collectors worldwide.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white.withValues(alpha: 0.8),
                           ),
@@ -362,7 +362,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                 child: Column(
                   children: [
                     Text(
-                      'Snap a Photo to Identify Coins & Currency',
+                      'Snap a Photo to Identify Coins',
                       style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
@@ -371,7 +371,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'Quickly and accurately discover coin details with a single photo. Simply snap and identify!',
+                      'Quickly identify coins with detailed information, market values, and historical context.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white.withValues(alpha: 0.8),
                           ),
@@ -414,7 +414,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'Experience the power of AI for instant and accurate coin identification, with detailed historical information',
+                      'Advanced AI technology trained on millions of coins for accurate identification and detailed information.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white.withValues(alpha: 0.8),
                           ),
@@ -457,17 +457,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                 angle: _testimonialRotation.value * math.pi / 180,
                 child: Opacity(
                   opacity: _testimonialOpacity.value,
-                  child: Row(
+                  child: Column(
                     children: [
-                      const Spacer(),
-                      Icon(
-                        Icons.emoji_events,
-                        color: AppTheme.metallicGold,
-                        size: 45,
-                      ),
-                      const SizedBox(width: 20),
-                      Column(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Icon(
+                            Icons.emoji_events,
+                            color: AppTheme.metallicGold,
+                            size: 35,
+                          ),
+                          const SizedBox(width: 15),
                           Container(
                             width: 70,
                             height: 70,
@@ -479,42 +479,41 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                                 width: 2,
                               ),
                             ),
-                            child: Icon(
-                              Icons.person,
-                              size: 40,
-                              color: AppTheme.metallicGold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Such a good app',
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontStyle: FontStyle.italic,
-                                ),
-                          ),
-                          const SizedBox(height: 6),
-                          Row(
-                            children: List.generate(
-                              5,
-                              (index) => Icon(
-                                Icons.star,
-                                color: Colors.yellow,
-                                size: 20,
+                            child: ClipOval(
+                              child: Image.asset(
+                                'assets/images/testimonial-face.jpeg',
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ),
+                          const SizedBox(width: 15),
+                          Icon(
+                            Icons.emoji_events,
+                            color: AppTheme.metallicGold,
+                            size: 35,
+                          ),
                         ],
                       ),
-                      const SizedBox(width: 20),
-                      Transform.scale(
-                        scaleX: -1,
-                        child: Icon(
-                          Icons.emoji_events,
-                          color: AppTheme.metallicGold,
-                          size: 45,
+                      const SizedBox(height: 12),
+                      Text(
+                        'Great app for collectors',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontStyle: FontStyle.italic,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          5,
+                          (index) => Icon(
+                            Icons.star,
+                            color: Colors.yellow,
+                            size: 20,
+                          ),
                         ),
                       ),
-                      const Spacer(),
                     ],
                   ),
                 ),
@@ -757,13 +756,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   String _getTrustText() {
     switch (_step) {
       case 0:
-        return 'Trusted by 157.000+ Numismatists';
+        return 'Trusted by collectors worldwide';
       case 1:
-        return 'Over 300.000+ Coins Identified';
+        return 'Millions of coins identified';
       case 2:
-        return 'Trained on 1M+ Coins';
+        return 'Trained on extensive coin database';
       default:
-        return 'Trusted by Numismatists Worldwide';
+        return 'Professional-grade technology';
     }
   }
 }
