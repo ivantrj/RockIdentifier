@@ -32,9 +32,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   late Animation<double> _photoAllOpacity;
 
   late Animation<double> _aiOpacity;
-  late Animation<Offset> _aiFirstRowPosition;
-  late Animation<Offset> _aiSecondRowPosition;
-  late Animation<Offset> _aiThirdRowPosition;
 
   @override
   void initState() {
@@ -97,30 +94,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
       CurvedAnimation(parent: _aiAnimationController, curve: Curves.easeInOut),
     );
 
-    _aiFirstRowPosition = Tween<Offset>(
-      begin: const Offset(0, 0),
-      end: const Offset(-4, 0),
-    ).animate(CurvedAnimation(
-      parent: _aiAnimationController,
-      curve: const Interval(0.0, 1.0, curve: Curves.linear),
-    ));
-
-    _aiSecondRowPosition = Tween<Offset>(
-      begin: const Offset(0, 0),
-      end: const Offset(-10, 0),
-    ).animate(CurvedAnimation(
-      parent: _aiAnimationController,
-      curve: const Interval(0.0, 1.0, curve: Curves.linear),
-    ));
-
-    _aiThirdRowPosition = Tween<Offset>(
-      begin: const Offset(0, 0),
-      end: const Offset(-8, 0),
-    ).animate(CurvedAnimation(
-      parent: _aiAnimationController,
-      curve: const Interval(0.0, 1.0, curve: Curves.linear),
-    ));
-
     // Start testimonial animation
     _startTestimonialAnimation();
   }
@@ -138,25 +111,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   }
 
   void _startPhotoAnimation() {
-    // Reset and start the sequence
     _photoAnimationController.reset();
 
-    // Start the sequence
     Future.delayed(const Duration(milliseconds: 200), () {
       if (mounted) {
-        // Fade in
         _photoAnimationController.forward();
 
-        // Hand moves in
         Future.delayed(const Duration(milliseconds: 400), () {
           if (mounted) {
-            // Flash effect
             Future.delayed(const Duration(milliseconds: 1500), () {
               if (mounted) {
-                // Show identification result
                 Future.delayed(const Duration(milliseconds: 200), () {
                   if (mounted) {
-                    // Fade out and restart
                     Future.delayed(const Duration(milliseconds: 2300), () {
                       if (mounted) {
                         _photoAnimationController.reverse();
@@ -178,7 +144,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   void _startAIAnimation() {
     _aiAnimationController.reset();
     _aiAnimationController.forward();
-    Future.delayed(const Duration(seconds: 10), () {
+    Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
         _aiAnimationController.reverse();
         Future.delayed(const Duration(milliseconds: 400), () {
@@ -234,93 +200,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.nearBlack,
-      body: Stack(
-        children: [
-          // Header and footer background
-          _buildHeaderFooter(),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Top spacing
+            const SizedBox(height: 20),
 
-          // Main content
-          Column(
-            children: [
-              const SizedBox(height: 40),
+            // Progress indicator
+            _buildProgressIndicator(),
 
-              // Progress indicator
-              _buildProgressIndicator(),
+            const SizedBox(height: 20),
 
-              const SizedBox(height: 20),
-
-              // Content area
-              Expanded(
-                child: AnimatedOpacity(
-                  opacity: _onboardingOpacity,
-                  duration: const Duration(milliseconds: 500),
-                  child: AnimatedSlide(
-                    offset: _onboardingOpacity == 1.0 ? Offset.zero : const Offset(0, 0.1),
-                    duration: const Duration(milliseconds: 500),
-                    child: _buildContent(),
-                  ),
-                ),
-              ),
-
-              // Bottom section
-              _buildBottomSection(),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeaderFooter() {
-    return Positioned.fill(
-      child: Column(
-        children: [
-          // Header decoration
-          Container(
-            height: 120,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.red.withValues(alpha: 0.15),
-                  Colors.transparent,
-                ],
+            // Content area - Flexible to prevent overflow
+            Flexible(
+              child: AnimatedOpacity(
+                opacity: _onboardingOpacity,
+                duration: const Duration(milliseconds: 500),
+                child: _buildContent(),
               ),
             ),
-            child: Center(
-              child: Icon(
-                Icons.auto_awesome,
-                size: 60,
-                color: Colors.red.withValues(alpha: 0.4),
-              ),
-            ),
-          ),
 
-          const Spacer(),
-
-          // Footer decoration
-          Container(
-            height: 120,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.transparent,
-                  Colors.red.withValues(alpha: 0.15),
-                ],
-              ),
-            ),
-            child: Center(
-              child: Icon(
-                Icons.auto_awesome,
-                size: 60,
-                color: Colors.red.withValues(alpha: 0.4),
-              ),
-            ),
-          ),
-        ],
+            // Bottom section
+            _buildBottomSection(),
+          ],
+        ),
       ),
     );
   }
@@ -340,7 +243,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               height: 2,
               margin: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
-                color: _animatedStep > 0 ? Colors.red : Colors.white.withValues(alpha: 0.1),
+                color: _animatedStep > 0 ? AppTheme.metallicGold : Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(1),
               ),
             ),
@@ -355,7 +258,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               height: 2,
               margin: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
-                color: _animatedStep > 1 ? Colors.red : Colors.white.withValues(alpha: 0.1),
+                color: _animatedStep > 1 ? AppTheme.metallicGold : Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(1),
               ),
             ),
@@ -379,7 +282,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
         height: 30,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: isActive ? Colors.red : Colors.white.withValues(alpha: 0.3),
+          color: isActive ? AppTheme.metallicGold : Colors.white.withValues(alpha: 0.3),
         ),
         child: Icon(
           icon,
@@ -406,14 +309,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   Widget _buildWelcomeStep() {
     return Column(
       children: [
-        Expanded(
+        // Flexible content area
+        Flexible(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
-                  spacing: 20,
                   children: [
                     Text(
                       'Welcome to Coin Identifier',
@@ -423,6 +326,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                           ),
                       textAlign: TextAlign.center,
                     ),
+                    const SizedBox(height: 20),
                     Text(
                       'The most accurate and efficient way to identify coins & currency',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -436,7 +340,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
             ],
           ),
         ),
+
+        // Testimonial
         _buildTestimonial(),
+
         const SizedBox(height: 20),
       ],
     );
@@ -445,14 +352,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   Widget _buildPhotoStep() {
     return Column(
       children: [
-        Expanded(
+        // Flexible content area
+        Flexible(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
-                  spacing: 20,
                   children: [
                     Text(
                       'Snap a Photo to Identify Coins & Currency',
@@ -462,6 +369,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                           ),
                       textAlign: TextAlign.center,
                     ),
+                    const SizedBox(height: 20),
                     Text(
                       'Quickly and accurately discover coin details with a single photo. Simply snap and identify!',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -475,7 +383,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
             ],
           ),
         ),
+
+        // Photo animation
         _buildPhotoAnimation(),
+
         const SizedBox(height: 20),
       ],
     );
@@ -484,14 +395,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   Widget _buildAIStep() {
     return Column(
       children: [
-        Expanded(
+        // Flexible content area
+        Flexible(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
-                  spacing: 20,
                   children: [
                     Text(
                       'Powered by AI',
@@ -501,6 +412,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                           ),
                       textAlign: TextAlign.center,
                     ),
+                    const SizedBox(height: 20),
                     Text(
                       'Experience the power of AI for instant and accurate coin identification, with detailed historical information',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -514,7 +426,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
             ],
           ),
         ),
+
+        // AI animation
         _buildAIAnimation(),
+
         const SizedBox(height: 20),
       ],
     );
@@ -542,68 +457,64 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                 angle: _testimonialRotation.value * math.pi / 180,
                 child: Opacity(
                   opacity: _testimonialOpacity.value,
-                  child: Column(
+                  child: Row(
                     children: [
-                      Row(
+                      const Spacer(),
+                      Icon(
+                        Icons.emoji_events,
+                        color: AppTheme.metallicGold,
+                        size: 45,
+                      ),
+                      const SizedBox(width: 20),
+                      Column(
                         children: [
-                          const Spacer(),
-                          Icon(
-                            Icons.emoji_events,
-                            color: Colors.red,
-                            size: 45,
-                          ),
-                          const SizedBox(width: 20),
-                          Column(
-                            children: [
-                              Container(
-                                width: 70,
-                                height: 70,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.red.withValues(alpha: 0.2),
-                                  border: Border.all(
-                                    color: Colors.red.withValues(alpha: 0.3),
-                                    width: 2,
-                                  ),
-                                ),
-                                child: Icon(
-                                  Icons.person,
-                                  size: 40,
-                                  color: Colors.red,
-                                ),
+                          Container(
+                            width: 70,
+                            height: 70,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppTheme.metallicGold.withValues(alpha: 0.2),
+                              border: Border.all(
+                                color: AppTheme.metallicGold.withValues(alpha: 0.3),
+                                width: 2,
                               ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Such a good app',
-                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                      fontStyle: FontStyle.italic,
-                                    ),
-                              ),
-                              const SizedBox(height: 6),
-                              Row(
-                                children: List.generate(
-                                  5,
-                                  (index) => Icon(
-                                    Icons.star,
-                                    color: Colors.yellow,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(width: 20),
-                          Transform.scale(
-                            scaleX: -1,
+                            ),
                             child: Icon(
-                              Icons.emoji_events,
-                              color: Colors.red,
-                              size: 45,
+                              Icons.person,
+                              size: 40,
+                              color: AppTheme.metallicGold,
                             ),
                           ),
-                          const Spacer(),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Such a good app',
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  fontStyle: FontStyle.italic,
+                                ),
+                          ),
+                          const SizedBox(height: 6),
+                          Row(
+                            children: List.generate(
+                              5,
+                              (index) => Icon(
+                                Icons.star,
+                                color: Colors.yellow,
+                                size: 20,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
+                      const SizedBox(width: 20),
+                      Transform.scale(
+                        scaleX: -1,
+                        child: Icon(
+                          Icons.emoji_events,
+                          color: AppTheme.metallicGold,
+                          size: 45,
+                        ),
+                      ),
+                      const Spacer(),
                     ],
                   ),
                 ),
@@ -619,11 +530,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: SizedBox(
-        height: 160,
+        height: 120,
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Coin wireframe
+            // Coin image
             AnimatedBuilder(
               animation: _photoHandOpacity,
               builder: (context, child) {
@@ -632,12 +543,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   child: Opacity(
                     opacity: 1.0 - (_photoHandOpacity.value * 0.6),
                     child: Container(
-                      width: 150,
-                      height: 150,
+                      width: 100,
+                      height: 100,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Colors.red.withValues(alpha: 0.5),
+                          color: AppTheme.metallicGold.withValues(alpha: 0.5),
                           width: 2,
                         ),
                       ),
@@ -663,8 +574,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     opacity: _photoHandOpacity.value,
                     child: Icon(
                       Icons.touch_app,
-                      size: 100,
-                      color: Colors.red,
+                      size: 70,
+                      color: AppTheme.metallicGold,
                     ),
                   ),
                 );
@@ -679,8 +590,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   opacity: _photoFlashOpacity.value,
                   duration: const Duration(milliseconds: 200),
                   child: Container(
-                    width: 200,
-                    height: 200,
+                    width: 140,
+                    height: 140,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white.withValues(alpha: 0.3),
@@ -724,67 +635,48 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: SizedBox(
-        height: 160,
-        child: Stack(
-          alignment: Alignment.center,
+        height: 80,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Binary code animation
+            // AI brain icon with pulsing effect
             AnimatedBuilder(
               animation: _aiAnimationController,
               builder: (context, child) {
-                return Opacity(
-                  opacity: _aiOpacity.value,
-                  child: Column(
-                    children: [
-                      Transform.translate(
-                        offset: _aiFirstRowPosition.value * 100,
-                        child: Text(
-                          '0101010101110000011001110111001001100001011001000110010100100000011101000110111100100000011101000110100001100101001000000111000001110010011001010110110101101001011101010110110100100000011101100110010101110010011100110110100101101111011011100010000001100001011011100110010000100000011101000110',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red,
-                            fontFamily: 'monospace',
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Transform.translate(
-                        offset: _aiSecondRowPosition.value * 100,
-                        child: Text(
-                          '0101010101110000011001110111001001100001011001000110010100100000011101000110111100100000011101000110100001100101001000000111000001110010011001010110110101101001011101010110110100100000011101100110010101110010',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red,
-                            fontFamily: 'monospace',
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Transform.translate(
-                        offset: _aiThirdRowPosition.value * 100,
-                        child: Text(
-                          '0010111010101101101001000000111011001100101011100100111001101101001011011110110111000100000011000010110111001100100001000000111010001100001011010110110010100100000011000010111000001101000011011110111010001101111001000000110111101100110001000000111100101101111011101010111001000100000011001100110100',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.red,
-                            fontFamily: 'monospace',
-                          ),
-                        ),
-                      ),
-                    ],
+                return Transform.scale(
+                  scale: 1.0 + (0.1 * _aiOpacity.value),
+                  child: Icon(
+                    Icons.psychology,
+                    size: 60,
+                    color: AppTheme.metallicGold,
                   ),
                 );
               },
             ),
 
-            // AI icon
-            Icon(
-              Icons.psychology,
-              size: 80,
-              color: Colors.red.withValues(alpha: 0.8),
+            const SizedBox(height: 8),
+
+            // Simple animated dots
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(3, (index) {
+                return AnimatedBuilder(
+                  animation: _aiAnimationController,
+                  builder: (context, child) {
+                    final delay = index * 0.2;
+                    final opacity = _aiOpacity.value > delay ? 1.0 : 0.3;
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppTheme.metallicGold.withValues(alpha: opacity),
+                      ),
+                    );
+                  },
+                );
+              }),
             ),
           ],
         ),
@@ -803,7 +695,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
             child: ElevatedButton(
               onPressed: _nextStep,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
+                backgroundColor: AppTheme.metallicGold,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
@@ -831,7 +723,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               children: [
                 Icon(
                   _getTrustIcon(),
-                  color: Colors.red,
+                  color: AppTheme.metallicGold,
                   size: 16,
                 ),
                 const SizedBox(width: 8),
@@ -865,22 +757,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   String _getTrustText() {
     switch (_step) {
       case 0:
-        return 'Trusted by 2,536+ Numismatists';
+        return 'Trusted by 157.000+ Numismatists';
       case 1:
-        return 'Over 7,634+ Coins Identified';
+        return 'Over 300.000+ Coins Identified';
       case 2:
-        return 'Trained on 1,427,523+ Coin Species';
+        return 'Trained on 1M+ Coins';
       default:
         return 'Trusted by Numismatists Worldwide';
     }
-  }
-}
-
-// Helper extension for Column spacing
-extension ColumnSpacing on Column {
-  Column spacing(double spacing) {
-    return Column(
-      children: children.expand((child) => [child, SizedBox(height: spacing)]).toList()..removeLast(),
-    );
   }
 }
