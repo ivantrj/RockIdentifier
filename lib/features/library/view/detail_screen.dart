@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:coin_id/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ItemDetailScreen extends StatefulWidget {
   final IdentifiedItem item;
@@ -150,6 +151,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Column(
         children: [
+          // Value & Investment Section - Prominently displayed
+          _buildValueCard(context),
+          const SizedBox(height: 16),
+
           _buildDetailCard(context, 'Identification', {
             'Coin Name': widget.item.result,
             'Type': widget.item.details['coinType'] ?? 'N/A',
@@ -161,6 +166,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             'Confidence': '${(widget.item.confidence * 100).toStringAsFixed(0)}%',
           }),
           const SizedBox(height: 16),
+
           _buildDetailCard(context, 'Specifications', {
             'Designer': widget.item.details['designer'] ?? widget.item.details['Designer'] ?? 'N/A',
             'Composition': widget.item.details['metalComposition'] ?? widget.item.details['Composition'] ?? 'N/A',
@@ -169,22 +175,348 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             'Weight': widget.item.details['weight'] ?? widget.item.details['Weight'] ?? 'N/A',
           }),
           const SizedBox(height: 16),
-          _buildDetailCard(context, 'Numismatic Info', {
+
+          _buildDetailCard(context, 'Market & Investment', {
             'Grade': widget.item.details['condition'] ?? widget.item.details['Grade'] ?? 'N/A',
-            'Mintage': widget.item.details['mintage'] ?? widget.item.details['Mintage'] ?? 'N/A',
             'Rarity': widget.item.details['rarity'] ?? 'N/A',
-            'Estimated Value': widget.item.details['estimatedValue'] ?? 'N/A',
-          }),
-          const SizedBox(height: 16),
-          _buildDetailCard(context, 'Additional Details', {
-            'Authenticity': widget.item.details['authenticity'] ?? 'N/A',
+            'Mintage': widget.item.details['mintage'] ?? widget.item.details['Mintage'] ?? 'N/A',
             'Market Demand': widget.item.details['marketDemand'] ?? 'N/A',
             'Investment Potential': widget.item.details['investmentPotential'] ?? 'N/A',
-            'Insurance Value': widget.item.details['insuranceValue'] ?? 'N/A',
+            'Authenticity': widget.item.details['authenticity'] ?? 'N/A',
           }),
+          const SizedBox(height: 16),
+
+          _buildDetailCard(context, 'Additional Details', {
+            'Storage Recommendations': widget.item.details['storageRecommendations'] ?? 'N/A',
+            'Cleaning Instructions': widget.item.details['cleaningInstructions'] ?? 'N/A',
+            'Similar Coins': widget.item.details['similarCoins'] ?? 'N/A',
+          }),
+
+          // Wiki Link Button
+          if (widget.item.details['wikiLink'] != null) ...[
+            const SizedBox(height: 16),
+            _buildWikiButton(context, widget.item.details['wikiLink']!),
+          ],
         ],
       ),
     );
+  }
+
+  Widget _buildValueCard(BuildContext context) {
+    final theme = Theme.of(context);
+    final estimatedValue = widget.item.details['estimatedValue'];
+    final rarity = widget.item.details['rarity'];
+    final condition = widget.item.details['condition'];
+    final mintage = widget.item.details['mintage'];
+
+    return Container(
+      padding: const EdgeInsets.all(20.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A1A),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFF2D2D2D),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Estimated Value - Large and prominent
+          if (estimatedValue != null) ...[
+            Text(
+              'Estimated Value',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: AppTheme.secondaryTextColor,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              estimatedValue,
+              style: theme.textTheme.headlineMedium?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: 28,
+                letterSpacing: -0.5,
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
+
+          // Rarity with visual indicator
+          if (rarity != null) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Rarity Level',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.secondaryTextColor,
+                    fontSize: 14,
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: _getRarityColor(rarity).withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: _getRarityColor(rarity).withValues(alpha: 0.4),
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    rarity,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: _getRarityColor(rarity),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Rarity slider with clear labels
+            Container(
+              height: 8,
+              decoration: BoxDecoration(
+                color: const Color(0xFF2D2D2D),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Stack(
+                children: [
+                  // Background bar
+                  Container(
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2D2D2D),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  // Colored progress bar
+                  Container(
+                    height: 8,
+                    width: MediaQuery.of(context).size.width * 0.6 * (_getRarityValue(rarity) / 100),
+                    decoration: BoxDecoration(
+                      color: _getRarityColor(rarity),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  // Rarity indicator dot
+                  Positioned(
+                    left: MediaQuery.of(context).size.width * 0.6 * (_getRarityValue(rarity) / 100) - 4,
+                    top: 0,
+                    child: Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: _getRarityColor(rarity),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Clear rarity explanation
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Text(
+                _getRarityExplanation(rarity),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: AppTheme.secondaryTextColor,
+                  fontSize: 12,
+                  height: 1.4,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+
+          // Condition and Mintage
+          Row(
+            children: [
+              if (condition != null) ...[
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Condition',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: AppTheme.secondaryTextColor,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        condition,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              if (mintage != null) ...[
+                if (condition != null) const SizedBox(width: 24),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Mintage',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: AppTheme.secondaryTextColor,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        mintage,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getRarityColor(String? rarity) {
+    if (rarity == null) return Colors.grey;
+    switch (rarity.toLowerCase()) {
+      case 'very rare':
+      case 'ultra rare':
+        return Colors.red;
+      case 'rare':
+        return Colors.orange;
+      case 'scarce':
+        return Colors.amber;
+      case 'common':
+      case 'very common':
+        return Colors.orange;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  int _getRarityValue(String? rarity) {
+    if (rarity == null) return 0;
+    switch (rarity.toLowerCase()) {
+      case 'very rare':
+      case 'ultra rare':
+        return 90;
+      case 'rare':
+        return 70;
+      case 'scarce':
+        return 50;
+      case 'common':
+        return 30;
+      case 'very common':
+        return 20;
+      default:
+        return 0;
+    }
+  }
+
+  String _getRarityExplanation(String? rarity) {
+    if (rarity == null) return 'Rarity information not available';
+    switch (rarity.toLowerCase()) {
+      case 'very rare':
+      case 'ultra rare':
+        return 'Extremely difficult to find. These coins are highly sought after by collectors.';
+      case 'rare':
+        return 'Hard to find. These coins have significant collector value.';
+      case 'scarce':
+        return 'Limited availability. These coins are moderately valuable.';
+      case 'common':
+        return 'Readily available. These coins are easily found in circulation.';
+      case 'very common':
+        return 'Widely available. These coins are frequently encountered.';
+      default:
+        return 'Rarity level information not available.';
+    }
+  }
+
+  Widget _buildWikiButton(BuildContext context, String wikiUrl) {
+    final theme = Theme.of(context);
+    return Container(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: () => _openWikiLink(wikiUrl),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF2D2D2D),
+          foregroundColor: Colors.white,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+              color: const Color(0xFF3D3D3D),
+              width: 1,
+            ),
+          ),
+        ),
+        icon: Icon(
+          Icons.open_in_new,
+          size: 20,
+          color: AppTheme.metallicGold,
+        ),
+        label: Text(
+          'View on Wikipedia',
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _openWikiLink(String url) async {
+    try {
+      final Uri uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Could not open Wikipedia link'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error opening Wikipedia link'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
   }
 
   Widget _buildHistoryTab(BuildContext context) {
