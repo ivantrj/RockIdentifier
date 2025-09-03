@@ -82,7 +82,7 @@ class _NotCoinDialogState extends State<NotCoinDialog> with SingleTickerProvider
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'The AI couldn\'t identify an antique in this image. This could be because:',
+              'The AI couldn\'t identify an coin in this image. This could be because:',
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 12),
@@ -92,7 +92,7 @@ class _NotCoinDialogState extends State<NotCoinDialog> with SingleTickerProvider
             _buildTip('The item may be a reproduction or replica'),
             const SizedBox(height: 12),
             const Text(
-              'Try taking a clearer photo of the antique from multiple angles with good lighting.',
+              'Try taking a clearer photo of the coin from multiple angles with good lighting.',
               style: TextStyle(
                 fontSize: 14,
                 fontStyle: FontStyle.italic,

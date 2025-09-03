@@ -1,5 +1,6 @@
 import 'package:coin_id/core/widgets/coin_card.dart';
 import 'package:coin_id/core/widgets/coin_card_placeholder.dart';
+import 'package:coin_id/features/library/view/widgets/not_antique_dialog.dart';
 import 'package:coin_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -17,9 +18,7 @@ import 'package:coin_id/services/logging_service.dart';
 import 'package:coin_id/locator.dart';
 import 'widgets/fab_menu.dart';
 import 'widgets/loading_dialog.dart';
-import 'widgets/not_antique_dialog.dart';
 import 'package:coin_id/services/haptic_service.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -162,15 +161,15 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           LoggingService.warning('Error closing loading dialog in catch block', tag: 'LibraryScreen');
         }
 
-        // Check for NOT_ANTIQUE error with more robust detection
+        // Check for NOT_coin error with more robust detection
         final errorMessage = e.toString().toLowerCase();
-        if (errorMessage.contains('not_antique') ||
-            errorMessage.contains('does not contain antique') ||
-            errorMessage.contains('not antique') ||
-            errorMessage.contains('no antique') ||
+        if (errorMessage.contains('not_coin') ||
+            errorMessage.contains('does not contain coin') ||
+            errorMessage.contains('not coin') ||
+            errorMessage.contains('no coin') ||
             errorMessage.contains('modern item') ||
             errorMessage.contains('not artifact')) {
-          LoggingService.info('Image identified as not an antique - showing dialog', tag: 'LibraryScreen');
+          LoggingService.info('Image identified as not an coin - showing dialog', tag: 'LibraryScreen');
           showDialog(
             context: context,
             barrierDismissible: true,

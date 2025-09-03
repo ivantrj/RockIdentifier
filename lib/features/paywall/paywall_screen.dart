@@ -244,8 +244,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                     padding: const EdgeInsets.symmetric(horizontal: 32),
                                     child: Column(
                                       children: [
-                                        _featureRow(
-                                            Icons.camera_alt_rounded, 'Identify unlimited antiques', metallicGold),
+                                        _featureRow(Icons.camera_alt_rounded, 'Identify unlimited coins', metallicGold),
                                         _featureRow(Icons.search_rounded, 'Get detailed analysis', metallicGold),
                                         _featureRow(
                                             Icons.menu_book_rounded, 'Access historical information', metallicGold),

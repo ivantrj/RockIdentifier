@@ -190,7 +190,7 @@ class ImageProcessingService {
         final data = json.decode(response.body);
         if (data['success'] == true && data['result'] != null) {
           final result = data['result'];
-          LoggingService.apiOperation('AI antique identification successful',
+          LoggingService.apiOperation('AI coin identification successful',
               details: 'response type: ${result.runtimeType}', tag: 'ImageProcessingService');
 
           // Handle different response types
@@ -207,21 +207,21 @@ class ImageProcessingService {
             throw Exception('Invalid response format: unexpected data type');
           }
         } else if (data['success'] == false && data['error'] != null) {
-          // Check if the error indicates it's not an antique
+          // Check if the error indicates it's not an coin
           final error = data['error'].toString().toLowerCase();
           LoggingService.debug('AI error message: $error', tag: 'ImageProcessingService');
 
-          if (error.contains('does not contain antique') ||
-              error.contains('not antique') ||
-              error.contains('no antique') ||
+          if (error.contains('does not contain coin') ||
+              error.contains('not coin') ||
+              error.contains('no coin') ||
               error.contains('modern item') ||
               error.contains('not artifact')) {
-            LoggingService.info('AI determined image is not an antique - throwing NOT_ANTIQUE exception',
+            LoggingService.info('AI determined image is not an coin - throwing NOT_coin exception',
                 tag: 'ImageProcessingService');
-            throw Exception('NOT_ANTIQUE');
+            throw Exception('NOT_coin');
           }
           // For other errors, throw the actual error message
-          LoggingService.error('AI antique identification failed',
+          LoggingService.error('AI coin identification failed',
               error: Exception(data['error'].toString()), tag: 'ImageProcessingService');
           throw Exception(data['error'].toString());
         } else {
@@ -238,7 +238,7 @@ class ImageProcessingService {
       } else {
         LoggingService.error('Unexpected response status',
             error: Exception('Status: ${response.statusCode}'), tag: 'ImageProcessingService');
-        throw Exception('Failed to identify antique. Please try again.');
+        throw Exception('Failed to identify coin. Please try again.');
       }
     } on FormatException {
       LoggingService.error('Format exception in AI response', tag: 'ImageProcessingService');
@@ -250,13 +250,13 @@ class ImageProcessingService {
       LoggingService.error('Request timeout', error: e, tag: 'ImageProcessingService');
       throw Exception(e.message);
     } catch (e) {
-      // Check if this is a NOT_ANTIQUE exception and rethrow it directly
-      if (e is Exception && e.toString().contains('NOT_ANTIQUE')) {
-        LoggingService.debug('Re-throwing NOT_ANTIQUE exception', tag: 'ImageProcessingService');
+      // Check if this is a NOT_coin exception and rethrow it directly
+      if (e is Exception && e.toString().contains('NOT_coin')) {
+        LoggingService.debug('Re-throwing NOT_coin exception', tag: 'ImageProcessingService');
         rethrow;
       }
 
-      LoggingService.error('Unexpected error in AI antique identification', error: e, tag: 'ImageProcessingService');
+      LoggingService.error('Unexpected error in AI coin identification', error: e, tag: 'ImageProcessingService');
       // Provide more specific error messages based on the error type
       if (e.toString().contains('List<Map')) {
         throw Exception('Server returned unexpected data format. Please try again.');

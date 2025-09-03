@@ -2,7 +2,7 @@
 
 ## 🏺 Overview
 
-Coin Identifier is a Flutter application that uses AI to identify antiques, artifacts, and collectibles from photos. The app provides detailed information about identified items, including historical period, style, materials, estimated value, and authenticity information.
+Coin Identifier is a Flutter application that uses AI to identify coins, artifacts, and collectibles from photos. The app provides detailed information about identified items, including historical period, style, materials, estimated value, and authenticity information.
 
 ## 🏗️ Architecture
 
@@ -55,14 +55,14 @@ lib/
 ### 2. Library Management
 
 - **Grid View**: Displays identified items in a responsive grid
-- **Detail View**: Comprehensive information about each antique
+- **Detail View**: Comprehensive information about each coin
 - **Search & Filter**: Find specific items quickly
 - **Delete Functionality**: Remove items from library
 
 ### 3. AI Chat
 
 - **Contextual Conversations**: Chat about specific identified items
-- **Expert Knowledge**: Get detailed answers about antiques
+- **Expert Knowledge**: Get detailed answers about coins
 - **History**: Maintain conversation context
 
 ### 4. Subscription System
@@ -169,7 +169,7 @@ class IdentifiedItem {
 
 - **2-column grid** on mobile devices
 - **Hero animations** for smooth transitions
-- **Value badges** for valuable antiques
+- **Value badges** for valuable coins
 - **Confidence indicators** for AI accuracy
 
 #### FAB Menu
