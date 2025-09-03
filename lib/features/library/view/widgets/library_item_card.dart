@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:coin_id/data/models/identified_item.dart';
+import 'package:rock_id/data/models/identified_item.dart';
 
 class LibraryItemCard extends StatefulWidget {
   final IdentifiedItem item;
@@ -258,35 +258,35 @@ class _LibraryItemCardState extends State<LibraryItemCard> with SingleTickerProv
     );
   }
 
-  bool _shouldShowPriceBadge() {
-    final price = widget.item.details['Estimated Price'];
-    return price != null && price.toString().isNotEmpty && price.toString().toLowerCase() != 'unknown';
+  bool _shouldShowValueBadge() {
+    final value = widget.item.details['marketValue'];
+    return value != null && value.toString().isNotEmpty && value.toString().toLowerCase() != 'unknown';
   }
 
-  String _extractPriceRange(String priceText) {
-    // Extract just the price range from text like "$50-$100 depending on the specific model"
-    final priceRegex = RegExp(r'\$[\d,]+(?:-\$[\d,]+)?');
-    final match = priceRegex.firstMatch(priceText);
+  String _extractValueRange(String valueText) {
+    // Extract just the value range from text like "$50-$100 depending on the specific model"
+    final valueRegex = RegExp(r'\$[\d,]+(?:-\$[\d,]+)?');
+    final match = valueRegex.firstMatch(valueText);
     if (match != null) {
       return match.group(0)!;
     }
 
     // Try to find USD pattern like "USD 500-1000" and convert to "$500-$1000"
     final usdRegex = RegExp(r'USD\s+([\d,]+(?:-[\d,]+)?)', caseSensitive: false);
-    final usdMatch = usdRegex.firstMatch(priceText);
+    final usdMatch = usdRegex.firstMatch(valueText);
     if (usdMatch != null) {
       final numbers = usdMatch.group(1)!;
-      return '\$$numbers';
+      return '\$numbers';
     }
 
     // Try to find any price-like pattern
     final anyPriceRegex = RegExp(r'[\d,]+(?:-[\d,]+)?\s*(?:USD|dollars?|bucks?)', caseSensitive: false);
-    final anyMatch = anyPriceRegex.firstMatch(priceText);
+    final anyMatch = anyPriceRegex.firstMatch(valueText);
     if (anyMatch != null) {
       return anyMatch.group(0)!;
     }
 
-    // If no price range found, return first 20 characters
-    return priceText.length > 20 ? '${priceText.substring(0, 20)}...' : priceText;
+    // If no value range found, return first 20 characters
+    return valueText.length > 20 ? '${valueText.substring(0, 20)}...' : valueText;
   }
 }

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-class NotCoinDialog extends StatefulWidget {
-  const NotCoinDialog({super.key});
+class NotRockDialog extends StatefulWidget {
+  const NotRockDialog({super.key});
 
   @override
-  State<NotCoinDialog> createState() => _NotCoinDialogState();
+  State<NotRockDialog> createState() => _NotRockDialogState();
 }
 
-class _NotCoinDialogState extends State<NotCoinDialog> with SingleTickerProviderStateMixin {
+class _NotRockDialogState extends State<NotRockDialog> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _shakeAnim;
 
@@ -68,7 +68,7 @@ class _NotCoinDialogState extends State<NotCoinDialog> with SingleTickerProvider
             const SizedBox(width: 12),
             const Expanded(
               child: Text(
-                'No Coin Detected',
+                'No Rock Detected',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -82,17 +82,17 @@ class _NotCoinDialogState extends State<NotCoinDialog> with SingleTickerProvider
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'The AI couldn\'t identify an antique in this image. This could be because:',
+              'The AI couldn\'t identify a rock in this image. This could be because:',
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 12),
-            _buildTip('The item appears to be modern or contemporary'),
+            _buildTip('The object is not a rock or mineral'),
             _buildTip('The image is too blurry or poorly lit'),
-            _buildTip('The item is not clearly visible or identifiable'),
-            _buildTip('The item may be a reproduction or replica'),
+            _buildTip('The rock is not clearly visible or identifiable'),
+            _buildTip('The rock may be wet or covered in dirt'),
             const SizedBox(height: 12),
             const Text(
-              'Try taking a clearer photo of the antique from multiple angles with good lighting.',
+              'Try taking a clearer photo of the rock from multiple angles with good lighting.',
               style: TextStyle(
                 fontSize: 14,
                 fontStyle: FontStyle.italic,

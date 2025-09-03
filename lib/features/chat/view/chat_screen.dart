@@ -1,6 +1,6 @@
-import 'package:coin_id/data/models/identified_item.dart';
+import 'package:rock_id/data/models/identified_item.dart';
 import 'package:flutter/material.dart';
-import 'package:coin_id/services/chat_service.dart';
+import 'package:rock_id/services/chat_service.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -30,7 +30,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _messages.add(ChatMessage(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       message:
-          "I'm your AI specialist for this ${widget.item.result.toLowerCase()}. Ask me anything about its history, value, or details.",
+          "I'm your AI specialist for this ${widget.item.result.toLowerCase()}. Ask me anything about its history, composition, or details.",
       isUser: false,
       timestamp: DateTime.now(),
     ));

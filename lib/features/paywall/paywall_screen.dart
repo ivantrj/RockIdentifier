@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:coin_id/core/theme/app_theme.dart';
-import 'package:coin_id/main.dart';
+import 'package:rock_id/core/theme/app_theme.dart';
+import 'package:rock_id/main.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
-import 'package:coin_id/services/logging_service.dart';
+import 'package:rock_id/services/logging_service.dart';
 
 class PaywallScreen extends StatefulWidget {
   const PaywallScreen({super.key});
@@ -245,7 +245,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                     child: Column(
                                       children: [
                                         _featureRow(
-                                            Icons.camera_alt_rounded, 'Identify unlimited antiques', metallicGold),
+                                            Icons.camera_alt_rounded, 'Identify unlimited rocks', metallicGold),
                                         _featureRow(Icons.search_rounded, 'Get detailed analysis', metallicGold),
                                         _featureRow(
                                             Icons.menu_book_rounded, 'Access historical information', metallicGold),
@@ -363,7 +363,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'You\'re now subscribed to Coin Identifier Pro',
+              'You're now subscribed to Rock Identifier Pro',
               style: TextStyle(fontSize: 18, color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7)),
               textAlign: TextAlign.center,
             ),

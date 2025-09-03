@@ -4,11 +4,11 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'package:coin_id/data/models/identified_item.dart';
-import 'package:coin_id/services/cache_service.dart';
-import 'package:coin_id/services/connectivity_service.dart';
-import 'package:coin_id/services/logging_service.dart';
-import 'package:coin_id/locator.dart';
+import 'package:rock_id/data/models/identified_item.dart';
+import 'package:rock_id/services/cache_service.dart';
+import 'package:rock_id/services/connectivity_service.dart';
+import 'package:rock_id/services/logging_service.dart';
+import 'package:rock_id/locator.dart';
 
 class ImageProcessingService {
   static const String _baseUrl = 'https://own-ai-backend-dev.fly.dev';
@@ -159,8 +159,11 @@ class ImageProcessingService {
         case 'low':
           return 0.4;
         default:
-          final parsed = double.tryParse(confidence);
-          return parsed ?? 0.0;
+          final parsed = double.tryParse(confidence.replaceAll('%', ''));
+          if (parsed != null) {
+            return parsed / 100;
+          }
+          return 0.0;
       }
     }
     return 0.0;
@@ -250,13 +253,13 @@ class ImageProcessingService {
       LoggingService.error('Request timeout', error: e, tag: 'ImageProcessingService');
       throw Exception(e.message);
     } catch (e) {
-      // Check if this is a NOT_ANTIQUE exception and rethrow it directly
-      if (e is Exception && e.toString().contains('NOT_ANTIQUE')) {
-        LoggingService.debug('Re-throwing NOT_ANTIQUE exception', tag: 'ImageProcessingService');
+      // Check if this is a NOT_ROCK exception and rethrow it directly
+      if (e is Exception && e.toString().contains('NOT_ROCK')) {
+        LoggingService.debug('Re-throwing NOT_ROCK exception', tag: 'ImageProcessingService');
         rethrow;
       }
 
-      LoggingService.error('Unexpected error in AI antique identification', error: e, tag: 'ImageProcessingService');
+      LoggingService.error('Unexpected error in AI rock identification', error: e, tag: 'ImageProcessingService');
       // Provide more specific error messages based on the error type
       if (e.toString().contains('List<Map')) {
         throw Exception('Server returned unexpected data format. Please try again.');

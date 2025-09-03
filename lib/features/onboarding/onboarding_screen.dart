@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:coin_id/core/theme/app_theme.dart';
-import 'package:coin_id/core/widgets/primary_button.dart';
-import 'package:coin_id/services/haptic_service.dart';
+import 'package:rock_id/core/theme/app_theme.dart';
+import 'package:rock_id/core/widgets/primary_button.dart';
+import 'package:rock_id/services/haptic_service.dart';
 import 'dart:math' as math;
 
 class OnboardingScreen extends StatefulWidget {
@@ -869,7 +869,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   String _getTrustText() {
     switch (_step) {
       case 0:
-        return 'Trusted by collectors worldwide';
+        return 'Trusted by geologists worldwide';
       case 1:
         return 'Millions of coins identified';
       case 2:

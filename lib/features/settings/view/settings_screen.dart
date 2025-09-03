@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:coin_id/core/theme/app_theme.dart';
-import 'package:coin_id/locator.dart';
-import 'package:coin_id/services/cache_service.dart';
-import 'package:coin_id/services/haptic_service.dart';
-import 'package:coin_id/services/logging_service.dart';
+import 'package:rock_id/core/theme/app_theme.dart';
+import 'package:rock_id/locator.dart';
+import 'package:rock_id/services/cache_service.dart';
+import 'package:rock_id/services/haptic_service.dart';
+import 'package:rock_id/services/logging_service.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});

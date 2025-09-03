@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // --- Core Palette: Modern, High-Contrast ---
+  // --- Core Palette: Earthy, Natural Tones ---
   static const Color darkCharcoal = Color(0xFF1A1A1A);
-  static const Color metallicGold = Color(0xFFFFD700);
-  static const Color shimmeringSilver = Color(0xFFC0C0C0);
+  static const Color saddleBrown = Color(0xFF8B4513);
+  static const Color slateGray = Color(0xFF708090);
   static const Color nearBlack = Color(0xFF0F0F0F);
-  static Color glassColor = Colors.white.withOpacity(0.1);
+  static Color glassColor = Colors.brown.withOpacity(0.1);
 
   // --- Semantic Colors ---
   static const Color successColor = Color(0xFF28A745);
@@ -65,8 +65,8 @@ class AppTheme {
       brightness: Brightness.dark,
       scaffoldBackgroundColor: nearBlack,
       colorScheme: const ColorScheme.dark(
-        primary: metallicGold,
-        secondary: shimmeringSilver,
+        primary: saddleBrown,
+        secondary: slateGray,
         background: nearBlack,
         surface: darkCharcoal,
         onPrimary: darkCharcoal, // Text on gold buttons
@@ -94,8 +94,8 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: metallicGold,
-          foregroundColor: darkCharcoal,
+          backgroundColor: saddleBrown,
+          foregroundColor: primaryTextColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(buttonBorderRadius),
           ),
@@ -106,15 +106,15 @@ class AppTheme {
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: darkCharcoal.withOpacity(0.8),
         height: 70,
-        indicatorColor: metallicGold,
+        indicatorColor: saddleBrown,
         iconTheme: WidgetStateProperty.resolveWith<IconThemeData>((states) {
           if (states.contains(WidgetState.selected)) {
-            return const IconThemeData(color: darkCharcoal, size: 24.0);
+            return const IconThemeData(color: primaryTextColor, size: 24.0);
           }
           return const IconThemeData(color: secondaryTextColor, size: 24.0);
         }),
         labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
-          final color = states.contains(WidgetState.selected) ? metallicGold : secondaryTextColor;
+          final color = states.contains(WidgetState.selected) ? saddleBrown : secondaryTextColor;
           return TextStyle(
             fontSize: 12.0,
             fontWeight: FontWeight.w500,

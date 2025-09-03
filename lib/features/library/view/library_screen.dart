@@ -1,24 +1,24 @@
-import 'package:coin_id/core/widgets/coin_card.dart';
-import 'package:coin_id/core/widgets/coin_card_placeholder.dart';
-import 'package:coin_id/features/paywall/paywall_screen.dart';
+import 'package:rock_id/core/widgets/rock_card.dart';
+import 'package:rock_id/core/widgets/rock_card_placeholder.dart';
+import 'package:rock_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
-import 'package:coin_id/features/library/view/detail_screen.dart';
+import 'package:rock_id/features/library/view/detail_screen.dart';
 import '../viewmodel/library_viewmodel.dart';
-import 'package:coin_id/data/models/identified_item.dart';
+import 'package:rock_id/data/models/identified_item.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../main.dart' as main;
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:coin_id/app.dart' as app;
-import 'package:coin_id/services/image_processing_service.dart';
-import 'package:coin_id/services/logging_service.dart';
-import 'package:coin_id/locator.dart';
+import 'package:rock_id/app.dart' as app;
+import 'package:rock_id/services/image_processing_service.dart';
+import 'package:rock_id/services/logging_service.dart';
+import 'package:rock_id/locator.dart';
 import 'widgets/fab_menu.dart';
 import 'widgets/loading_dialog.dart';
 import 'widgets/not_antique_dialog.dart';
-import 'package:coin_id/services/haptic_service.dart';
+import 'package:rock_id/services/haptic_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class LibraryScreen extends StatelessWidget {
@@ -164,17 +164,17 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
 
         // Check for NOT_ANTIQUE error with more robust detection
         final errorMessage = e.toString().toLowerCase();
-        if (errorMessage.contains('not_antique') ||
-            errorMessage.contains('does not contain antique') ||
-            errorMessage.contains('not antique') ||
-            errorMessage.contains('no antique') ||
+        if (errorMessage.contains('not_rock') ||
+            errorMessage.contains('does not contain rock') ||
+            errorMessage.contains('not rock') ||
+            errorMessage.contains('no rock') ||
             errorMessage.contains('modern item') ||
             errorMessage.contains('not artifact')) {
-          LoggingService.info('Image identified as not an antique - showing dialog', tag: 'LibraryScreen');
+          LoggingService.info('Image identified as not an rock - showing dialog', tag: 'LibraryScreen');
           showDialog(
             context: context,
             barrierDismissible: true,
-            builder: (context) => const NotCoinDialog(),
+            builder: (context) => const NotRockDialog(),
           );
         } else {
           LoggingService.error('Error processing image', error: e, tag: 'LibraryScreen');
@@ -387,7 +387,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
         itemCount: 6, // Show 6 shimmering placeholders
-        itemBuilder: (context, index) => const CoinCardPlaceholder(),
+        itemBuilder: (context, index) => const RockCardPlaceholder(),
       );
     }
 
@@ -406,7 +406,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         final item = items[index];
         // Note: The 3D flip animation would be implemented here on tap.
         // For now, we use the existing navigation.
-        return CoinCard(
+        return RockCard(
           item: item,
           onTap: () => _onOpenDetail(item),
         );
@@ -480,7 +480,7 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Animated floating coin icon
+            // Animated floating rock icon
             AnimatedBuilder(
               animation: _floatAnimation,
               builder: (context, child) {
@@ -496,26 +496,26 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
                         end: Alignment.bottomRight,
                         colors: widget.isDarkMode
                             ? [
-                                const Color(0xFFFFD700), // Gold
-                                const Color(0xFFFFA500), // Orange
+                                const Color(0xFFC2B280), // Sand
+                                const Color(0xFF8C7853), // Camel
                               ]
                             : [
-                                const Color(0xFFFFD700), // Gold
-                                const Color(0xFFFF8C00), // Dark Orange
+                                const Color(0xFFC2B280), // Sand
+                                const Color(0xFF8C7853), // Camel
                               ],
                       ),
                       boxShadow: [
                         BoxShadow(
                           color: widget.isDarkMode
-                              ? const Color(0xFFFFD700).withValues(alpha: 0.3)
-                              : const Color(0xFFFFD700).withValues(alpha: 0.4),
+                              ? const Color(0xFFC2B280).withValues(alpha: 0.3)
+                              : const Color(0xFFC2B280).withValues(alpha: 0.4),
                           blurRadius: 20,
                           spreadRadius: 5,
                         ),
                       ],
                     ),
                     child: Icon(
-                      Icons.monetization_on_rounded,
+                      Icons.terrain,
                       size: 60,
                       color: Colors.white,
                     ),
@@ -548,7 +548,7 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
 
             // Subtitle with better typography
             Text(
-              'Start building your numismatic collection by identifying coins and artifacts',
+              'Start building your geological collection by identifying rocks and minerals',
               style: TextStyle(
                 fontSize: 16,
                 color: widget.isDarkMode ? Colors.white70 : Colors.black54,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:coin_id/services/haptic_service.dart';
+import 'package:rock_id/services/haptic_service.dart';
 import 'dart:ui';
 
 class FabMenu extends StatelessWidget {
@@ -175,7 +175,7 @@ class _AnimatedFabMenuItemsState extends State<_AnimatedFabMenuItems> with Ticke
           delay: 80,
           child: _ActionButton(
             icon: HugeIcons.strokeRoundedImage02,
-            label: 'Upload Coin Photo',
+            label: 'Upload Rock Photo',
             onTap: () async {
               await HapticService.instance.vibrate();
               widget.onClose();

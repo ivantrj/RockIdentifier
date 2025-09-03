@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:coin_id/data/models/identified_item.dart';
-import 'package:coin_id/services/logging_service.dart';
+import 'package:rock_id/data/models/identified_item.dart';
+import 'package:rock_id/services/logging_service.dart';
 
 class ChatMessage {
   final String id;
@@ -113,117 +113,58 @@ class ChatService {
     }
   }
 
-  /// Determine the coin type based on the item's properties
-  String _determineCoinType(IdentifiedItem item) {
+  /// Determine the rock type based on the item's properties
+  String _determineRockType(IdentifiedItem item) {
     // Check if it's explicitly categorized
-    if (item.category != null) {
-      return item.category!;
+    if (item.classification.category != null) {
+      return item.classification.category;
     }
 
-    // Check the result text for common coin keywords
-    String result = item.result.toLowerCase();
+    // Check the result text for common rock keywords
+    String result = item.name.toLowerCase();
 
-    // Ancient coins
-    if (result.contains('roman') ||
-        result.contains('greek') ||
-        result.contains('byzantine') ||
-        result.contains('ancient') ||
-        result.contains('bc') ||
-        result.contains('ad')) {
-      return 'ancient_coins';
+    // Igneous rocks
+    if (result.contains('granite') ||
+        result.contains('basalt') ||
+        result.contains('pumice') ||
+        result.contains('obsidian')) {
+      return 'igneous_rocks';
     }
 
-    // Medieval coins
-    if (result.contains('medieval') ||
-        result.contains('middle ages') ||
-        result.contains('crusader') ||
-        result.contains('gothic')) {
-      return 'medieval_coins';
+    // Sedimentary rocks
+    if (result.contains('sandstone') ||
+        result.contains('limestone') ||
+        result.contains('shale') ||
+        result.contains('conglomerate')) {
+      return 'sedimentary_rocks';
     }
 
-    // Modern coins (1800s-1900s)
-    if (result.contains('1800') ||
-        result.contains('1900') ||
-        result.contains('victorian') ||
-        result.contains('edwardian') ||
-        result.contains('georgian')) {
-      return 'modern_coins';
+    // Metamorphic rocks
+    if (result.contains('marble') ||
+        result.contains('slate') ||
+        result.contains('gneiss') ||
+        result.contains('schist')) {
+      return 'metamorphic_rocks';
     }
 
-    // Contemporary coins (2000s+)
-    if (result.contains('2000') ||
-        result.contains('2020') ||
-        result.contains('contemporary') ||
-        result.contains('modern')) {
-      return 'contemporary_coins';
+    // Gemstones
+    if (result.contains('diamond') ||
+        result.contains('ruby') ||
+        result.contains('sapphire') ||
+        result.contains('emerald')) {
+      return 'gemstones';
     }
 
-    // Gold coins
-    if (result.contains('gold') ||
-        result.contains('sovereign') ||
-        result.contains('eagle') ||
-        result.contains('krugerrand')) {
-      return 'gold_coins';
+    // Minerals
+    if (result.contains('quartz') ||
+        result.contains('feldspar') ||
+        result.contains('mica') ||
+        result.contains('calcite')) {
+      return 'minerals';
     }
 
-    // Silver coins
-    if (result.contains('silver') ||
-        result.contains('morgan') ||
-        result.contains('peace') ||
-        result.contains('walking liberty')) {
-      return 'silver_coins';
-    }
-
-    // Commemorative coins
-    if (result.contains('commemorative') ||
-        result.contains('anniversary') ||
-        result.contains('celebration') ||
-        result.contains('special')) {
-      return 'commemorative_coins';
-    }
-
-    // Error coins
-    if (result.contains('error') ||
-        result.contains('misprint') ||
-        result.contains('double') ||
-        result.contains('off-center')) {
-      return 'error_coins';
-    }
-
-    // Proof coins
-    if (result.contains('proof') || result.contains('mint state') || result.contains('uncirculated')) {
-      return 'proof_coins';
-    }
-
-    // World coins
-    if (result.contains('foreign') || result.contains('international') || result.contains('world')) {
-      return 'world_coins';
-    }
-
-    // US coins
-    if (result.contains('penny') ||
-        result.contains('nickel') ||
-        result.contains('dime') ||
-        result.contains('quarter') ||
-        result.contains('half dollar') ||
-        result.contains('dollar') ||
-        result.contains('us') ||
-        result.contains('american')) {
-      return 'us_coins';
-    }
-
-    // British coins
-    if (result.contains('pound') ||
-        result.contains('shilling') ||
-        result.contains('pence') ||
-        result.contains('farthing') ||
-        result.contains('british') ||
-        result.contains('uk')) {
-      return 'british_coins';
-    }
-
-    // Default to general coin if no specific category is found
-    return 'general_coins';
+    // Default to general rock if no specific category is found
+    return 'general_rocks';
   }
 
   /// Get item by ID (placeholder - implement based on your data storage)

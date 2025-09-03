@@ -1,10 +1,10 @@
 // lib/app.dart
 library;
 
-import 'package:coin_id/features/paywall/paywall_screen.dart';
+import 'package:rock_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:coin_id/features/library/view/library_screen.dart';
+import 'package:rock_id/features/library/view/library_screen.dart';
 import 'core/navigation/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'services/theme_service.dart';

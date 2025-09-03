@@ -1,13 +1,13 @@
 import 'dart:io';
-import 'package:coin_id/data/models/identified_item.dart';
+import 'package:rock_id/data/models/identified_item.dart';
 import 'package:flutter/material.dart';
-import 'package:coin_id/core/theme/app_theme.dart';
+import 'package:rock_id/core/theme/app_theme.dart';
 
-class CoinCard extends StatelessWidget {
+class RockCard extends StatelessWidget {
   final IdentifiedItem item;
   final VoidCallback? onTap;
 
-  const CoinCard({super.key, required this.item, this.onTap});
+  const RockCard({super.key, required this.item, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class CoinCard extends StatelessWidget {
           children: [
             // Hero image for smooth transition
             Hero(
-              tag: 'coin_image_${item.id}',
+              tag: 'rock_image_${item.id}',
               child: AspectRatio(
                 aspectRatio: 1.0,
                 child: ClipRRect(
@@ -38,21 +38,21 @@ class CoinCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Coin details
+            // Rock details
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item.result, // e.g., "Morgan Dollar"
+                    item.result, // e.g., "Quartz"
                     style: textTheme.titleMedium,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    item.subtitle, // e.g., "1887, USA"
+                    item.subtitle, // e.g., "USA"
                     style: textTheme.bodyMedium?.copyWith(color: AppTheme.secondaryTextColor),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:ui'; // Required for ImageFilter
 import 'package:flutter/material.dart';
-import 'package:coin_id/core/theme/app_theme.dart';
+import 'package:rock_id/core/theme/app_theme.dart';
 
 class LoadingDialog extends StatefulWidget {
   const LoadingDialog({super.key});
@@ -12,21 +12,21 @@ class LoadingDialog extends StatefulWidget {
 
 class _LoadingDialogState extends State<LoadingDialog> {
   static final List<String> _funTexts = [
-    'Scanning coin surface...',
-    'Analyzing mint marks...',
-    'Checking for die cracks...',
-    'Consulting numismatic databases...',
-    'Measuring diameter and weight...',
+    'Scanning rock surface...',
+    'Analyzing mineral composition...',
+    'Checking for crystalline structures...',
+    'Consulting geological databases...',
+    'Measuring hardness and specific gravity...',
     'Comparing against catalogs...',
     'Identifying key features...',
-    'Analyzing metal composition...',
+    'Analyzing chemical composition...',
     'Verifying authenticity...',
-    'Cross-referencing dates...',
-    'Matching edge lettering...',
-    'Evaluating strike quality...',
+    'Cross-referencing locations...',
+    'Matching texture...',
+    'Evaluating clarity and color...',
     'Researching provenance...',
-    'Identifying engraver marks...',
-    'Analyzing design elements...',
+    'Identifying trace elements...',
+    'Analyzing formation process...',
     'Checking overall condition...'
   ];
 

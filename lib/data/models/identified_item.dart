@@ -1,12 +1,22 @@
 class IdentifiedItem {
   final String id;
   final String imagePath;
-  final String result;
-  final String subtitle;
-  final double confidence;
-  final Map<String, dynamic> details;
+  final String name;
+  final String commonName;
+  final String confidence;
+  final Classification classification;
+  final Characteristics characteristics;
+  final String composition;
+  final String formation;
+  final String age;
+  final String location;
+  final String uses;
+  final Value value;
+  final String careAndStorage;
+  final String safety;
+  final String interestingFacts;
+  final String? wikiLink;
   final DateTime dateTime;
-  final String? category;
   final String? collection;
   final List<String> tags;
   final bool isFavorite;
@@ -15,12 +25,22 @@ class IdentifiedItem {
   IdentifiedItem({
     required this.id,
     required this.imagePath,
-    required this.result,
-    required this.subtitle,
+    required this.name,
+    required this.commonName,
     required this.confidence,
-    required this.details,
+    required this.classification,
+    required this.characteristics,
+    required this.composition,
+    required this.formation,
+    required this.age,
+    required this.location,
+    required this.uses,
+    required this.value,
+    required this.careAndStorage,
+    required this.safety,
+    required this.interestingFacts,
+    this.wikiLink,
     required this.dateTime,
-    this.category,
     this.collection,
     this.tags = const [],
     this.isFavorite = false,
@@ -30,12 +50,22 @@ class IdentifiedItem {
   factory IdentifiedItem.fromJson(Map<String, dynamic> json) => IdentifiedItem(
         id: json['id'] as String,
         imagePath: json['imagePath'] as String,
-        result: json['result'] as String,
-        subtitle: json['subtitle'] as String,
-        confidence: (json['confidence'] as num).toDouble(),
-        details: Map<String, dynamic>.from(json['details'] as Map),
+        name: json['name'] as String,
+        commonName: json['commonName'] as String,
+        confidence: json['confidence'] as String,
+        classification: Classification.fromJson(json['classification'] as Map<String, dynamic>),
+        characteristics: Characteristics.fromJson(json['characteristics'] as Map<String, dynamic>),
+        composition: json['composition'] as String,
+        formation: json['formation'] as String,
+        age: json['age'] as String,
+        location: json['location'] as String,
+        uses: json['uses'] as String,
+        value: Value.fromJson(json['value'] as Map<String, dynamic>),
+        careAndStorage: json['careAndStorage'] as String,
+        safety: json['safety'] as String,
+        interestingFacts: json['interestingFacts'] as String,
+        wikiLink: json['wikiLink'] as String?,
         dateTime: DateTime.parse(json['dateTime'] as String),
-        category: json['category'] as String?,
         collection: json['collection'] as String?,
         tags: (json['tags'] as List<dynamic>?)?.cast<String>() ?? [],
         isFavorite: json['isFavorite'] as bool? ?? false,
@@ -45,28 +75,47 @@ class IdentifiedItem {
   Map<String, dynamic> toJson() => {
         'id': id,
         'imagePath': imagePath,
-        'result': result,
-        'subtitle': subtitle,
+        'name': name,
+        'commonName': commonName,
         'confidence': confidence,
-        'details': details,
+        'classification': classification.toJson(),
+        'characteristics': characteristics.toJson(),
+        'composition': composition,
+        'formation': formation,
+        'age': age,
+        'location': location,
+        'uses': uses,
+        'value': value.toJson(),
+        'careAndStorage': careAndStorage,
+        'safety': safety,
+        'interestingFacts': interestingFacts,
+        'wikiLink': wikiLink,
         'dateTime': dateTime.toIso8601String(),
-        'category': category,
         'collection': collection,
         'tags': tags,
         'isFavorite': isFavorite,
         'notes': notes,
       };
 
-  /// Create a copy of this item with updated fields
   IdentifiedItem copyWith({
     String? id,
     String? imagePath,
-    String? result,
-    String? subtitle,
-    double? confidence,
-    Map<String, dynamic>? details,
+    String? name,
+    String? commonName,
+    String? confidence,
+    Classification? classification,
+    Characteristics? characteristics,
+    String? composition,
+    String? formation,
+    String? age,
+    String? location,
+    String? uses,
+    Value? value,
+    String? careAndStorage,
+    String? safety,
+    String? interestingFacts,
+    String? wikiLink,
     DateTime? dateTime,
-    String? category,
     String? collection,
     List<String>? tags,
     bool? isFavorite,
@@ -75,105 +124,110 @@ class IdentifiedItem {
     return IdentifiedItem(
       id: id ?? this.id,
       imagePath: imagePath ?? this.imagePath,
-      result: result ?? this.result,
-      subtitle: subtitle ?? this.subtitle,
+      name: name ?? this.name,
+      commonName: commonName ?? this.commonName,
       confidence: confidence ?? this.confidence,
-      details: details ?? this.details,
+      classification: classification ?? this.classification,
+      characteristics: characteristics ?? this.characteristics,
+      composition: composition ?? this.composition,
+      formation: formation ?? this.formation,
+      age: age ?? this.age,
+      location: location ?? this.location,
+      uses: uses ?? this.uses,
+      value: value ?? this.value,
+      careAndStorage: careAndStorage ?? this.careAndStorage,
+      safety: safety ?? this.safety,
+      interestingFacts: interestingFacts ?? this.interestingFacts,
+      wikiLink: wikiLink ?? this.wikiLink,
       dateTime: dateTime ?? this.dateTime,
-      category: category ?? this.category,
       collection: collection ?? this.collection,
       tags: tags ?? this.tags,
       isFavorite: isFavorite ?? this.isFavorite,
       notes: notes ?? this.notes,
     );
   }
+}
 
-  // Coin-specific getters based on the new API response
-  /// Get coin type from details
-  String? get coinType => details['coinType'] as String?;
+class Classification {
+  final String type;
+  final String category;
+  final String group;
 
-  /// Get specific denomination from details
-  String? get denomination => details['denomination'] as String?;
+  Classification({
+    required this.type,
+    required this.category,
+    required this.group,
+  });
 
-  /// Get mint year from details
-  String? get mintYear => details['mintYear'] as String?;
+  factory Classification.fromJson(Map<String, dynamic> json) => Classification(
+        type: json['type'] as String,
+        category: json['category'] as String,
+        group: json['group'] as String,
+      );
 
-  /// Get country of origin from details
-  String? get country => details['country'] as String?;
+  Map<String, dynamic> toJson() => {
+        'type': type,
+        'category': category,
+        'group': group,
+      };
+}
 
-  /// Get mint mark from details
-  String? get mintMark => details['mintMark'] as String?;
+class Characteristics {
+  final String color;
+  final String texture;
+  final String hardness;
+  final String luster;
+  final String transparency;
+  final String crystalForm;
 
-  /// Get metal composition from details
-  String? get metalComposition => details['metalComposition'] as String?;
+  Characteristics({
+    required this.color,
+    required this.texture,
+    required this.hardness,
+    required this.luster,
+    required this.transparency,
+    required this.crystalForm,
+  });
 
-  /// Get weight from details
-  String? get weight => details['weight'] as String?;
+  factory Characteristics.fromJson(Map<String, dynamic> json) => Characteristics(
+        color: json['color'] as String,
+        texture: json['texture'] as String,
+        hardness: json['hardness'] as String,
+        luster: json['luster'] as String,
+        transparency: json['transparency'] as String,
+        crystalForm: json['crystalForm'] as String,
+      );
 
-  /// Get diameter from details
-  String? get diameter => details['diameter'] as String?;
+  Map<String, dynamic> toJson() => {
+        'color': color,
+        'texture': texture,
+        'hardness': hardness,
+        'luster': luster,
+        'transparency': transparency,
+        'crystalForm': crystalForm,
+      };
+}
 
-  /// Get condition from details
-  String? get condition => details['condition'] as String?;
+class Value {
+  final String estimatedValue;
+  final String rarity;
+  final String factors;
 
-  /// Get authenticity from details
-  String? get authenticity => details['authenticity'] as String?;
+  Value({
+    required this.estimatedValue,
+    required this.rarity,
+    required this.factors,
+  });
 
-  /// Get rarity from details
-  String? get rarity => details['rarity'] as String?;
+  factory Value.fromJson(Map<String, dynamic> json) => Value(
+        estimatedValue: json['estimatedValue'] as String,
+        rarity: json['rarity'] as String,
+        factors: json['factors'] as String,
+      );
 
-  /// Get estimated value from details
-  String? get estimatedValue => details['estimatedValue'] as String?;
-
-  /// Get historical context from details
-  String? get historicalContext => details['historicalContext'] as String?;
-
-  /// Get design description from details
-  String? get designDescription => details['designDescription'] as String?;
-
-  /// Get edge type from details
-  String? get edgeType => details['edgeType'] as String?;
-
-  /// Get designer from details
-  String? get designer => details['designer'] as String?;
-
-  /// Get mintage from details
-  String? get mintage => details['mintage'] as String?;
-
-  /// Get current market demand from details
-  String? get marketDemand => details['marketDemand'] as String?;
-
-  /// Get investment potential from details
-  String? get investmentPotential => details['investmentPotential'] as String?;
-
-  /// Get storage recommendations from details
-  String? get storageRecommendations => details['storageRecommendations'] as String?;
-
-  /// Get cleaning instructions from details
-  String? get cleaningInstructions => details['cleaningInstructions'] as String?;
-
-  /// Get similar coins from details
-  String? get similarCoins => details['similarCoins'] as String?;
-
-  /// Get insurance value from details
-  String? get insuranceValue => details['insuranceValue'] as String?;
-
-  /// Get wiki link from details
-  String? get wikiLink => details['wikiLink'] as String?;
-
-  /// Get common name from details
-  String? get commonName => details['commonName'] as String?;
-
-  /// Get era/period from details (alias for mintYear)
-  String? get era => mintYear;
-
-  /// Get coin category from details (alias for coinType)
-  String? get coinCategory => coinType;
-
-  // Legacy getters for backward compatibility
-  String? get species => denomination;
-  String? get family => coinType;
-  String? get order => designDescription;
-  String? get habitat => country;
-  String? get dangerLevel => condition;
+  Map<String, dynamic> toJson() => {
+        'estimatedValue': estimatedValue,
+        'rarity': rarity,
+        'factors': factors,
+      };
 }

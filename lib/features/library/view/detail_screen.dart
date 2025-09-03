@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'dart:ui';
-import 'package:coin_id/data/models/identified_item.dart';
-import 'package:coin_id/features/chat/view/chat_screen.dart';
-import 'package:coin_id/services/haptic_service.dart';
+import 'package:rock_id/data/models/identified_item.dart';
+import 'package:rock_id/features/chat/view/chat_screen.dart';
+import 'package:rock_id/services/haptic_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:coin_id/core/theme/app_theme.dart';
+import 'package:rock_id/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -69,7 +69,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       child: Row(
         children: [
           _buildSegment(context, 'Details', 0),
-          _buildSegment(context, 'History', 1),
+          _buildSegment(context, 'Geology', 1),
         ],
       ),
     );
@@ -118,8 +118,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         centerTitle: true,
         title: Text(widget.item.result, style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
         background: Hero(
-          tag: 'coin_image_${widget.item.id}',
-          child: _buildCoinImage(widget.item.imagePath),
+          tag: 'rock_image_${widget.item.id}',
+          child: _buildRockImage(widget.item.imagePath),
         ),
       ),
     );
@@ -135,46 +135,46 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           const SizedBox(height: 16),
 
           _buildDetailCard(context, 'Identification', {
-            'Coin Name': widget.item.result,
-            'Type': widget.item.details['coinType'] ?? 'N/A',
-            'Denomination': widget.item.details['denomination'] ?? 'N/A',
+            'Rock Name': widget.item.result,
+            'Type': widget.item.details['rockType'] ?? 'N/A',
+            'Classification': widget.item.details['classification'] ?? 'N/A',
             'Origin': widget.item.subtitle,
             'Country': widget.item.details['country'] ?? 'N/A',
-            'Mint Year': widget.item.details['mintYear'] ?? 'N/A',
-            'Mint Mark': widget.item.details['mintMark'] ?? 'N/A',
+            'Formation Period': widget.item.details['formationPeriod'] ?? 'N/A',
+            'Location Found': widget.item.details['locationFound'] ?? 'N/A',
             'Confidence': '${(widget.item.confidence * 100).toStringAsFixed(0)}%',
           }),
           const SizedBox(height: 16),
 
           _buildDetailCard(context, 'Specifications', {
-            'Designer': widget.item.details['designer'] ?? widget.item.details['Designer'] ?? 'N/A',
-            'Composition': widget.item.details['metalComposition'] ?? widget.item.details['Composition'] ?? 'N/A',
-            'Edge': widget.item.details['edgeType'] ?? widget.item.details['Edge'] ?? 'N/A',
+            'Discoverer': widget.item.details['discoverer'] ?? widget.item.details['Discoverer'] ?? 'N/A',
+            'Composition': widget.item.details['mineralComposition'] ?? widget.item.details['Composition'] ?? 'N/A',
+            'Texture': widget.item.details['texture'] ?? widget.item.details['Texture'] ?? 'N/A',
             'Diameter': widget.item.details['diameter'] ?? widget.item.details['Diameter'] ?? 'N/A',
             'Weight': widget.item.details['weight'] ?? widget.item.details['Weight'] ?? 'N/A',
           }),
           const SizedBox(height: 16),
 
-          _buildDetailCard(context, 'Market & Investment', {
-            'Grade': widget.item.details['condition'] ?? widget.item.details['Grade'] ?? 'N/A',
+          _buildDetailCard(context, 'Market & Value', {
+            'Hardness': widget.item.details['hardness'] ?? widget.item.details['Hardness'] ?? 'N/A',
             'Rarity': widget.item.details['rarity'] ?? 'N/A',
-            'Mintage': widget.item.details['mintage'] ?? widget.item.details['Mintage'] ?? 'N/A',
-            'Market Demand': widget.item.details['marketDemand'] ?? 'N/A',
-            'Investment Potential': widget.item.details['investmentPotential'] ?? 'N/A',
+            'Rarity Score': widget.item.details['rarityScore'] ?? widget.item.details['rarityScore'] ?? 'N/A',
+            'Collector Demand': widget.item.details['collectorDemand'] ?? 'N/A',
+            'Scientific Value': widget.item.details['scientificValue'] ?? 'N/A',
             'Authenticity': widget.item.details['authenticity'] ?? 'N/A',
           }),
           const SizedBox(height: 16),
 
           _buildDetailCard(context, 'Additional Details', {
-            'Storage Recommendations': widget.item.details['storageRecommendations'] ?? 'N/A',
-            'Cleaning Instructions': widget.item.details['cleaningInstructions'] ?? 'N/A',
-            'Similar Coins': widget.item.details['similarCoins'] ?? 'N/A',
+            'Handling Recommendations': widget.item.details['handlingRecommendations'] ?? 'N/A',
+            'Preservation Tips': widget.item.details['preservationTips'] ?? 'N/A',
+            'Similar Rocks': widget.item.details['similarRocks'] ?? 'N/A',
           }),
 
           // Wiki Link Button
-          if (widget.item.details['wikiLink'] != null) ...[
+          if (widget.item.details['geologyComLink'] != null) ...[
             const SizedBox(height: 16),
-            _buildWikiButton(context, widget.item.details['wikiLink']!),
+            _buildWikiButton(context, widget.item.details['geologyComLink']!),
           ],
         ],
       ),
@@ -183,10 +183,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
 
   Widget _buildValueCard(BuildContext context) {
     final theme = Theme.of(context);
-    final estimatedValue = widget.item.details['estimatedValue'];
+    final marketValue = widget.item.details['marketValue'];
     final rarity = widget.item.details['rarity'];
-    final condition = widget.item.details['condition'];
-    final mintage = widget.item.details['mintage'];
+    final hardness = widget.item.details['hardness'];
+    final rarityScore = widget.item.details['rarityScore'];
 
     return Container(
       padding: const EdgeInsets.all(20.0),
@@ -202,9 +202,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Estimated Value - Large and prominent
-          if (estimatedValue != null) ...[
+          if (marketValue != null) ...[
             Text(
-              'Estimated Value',
+              'Market Value',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: AppTheme.secondaryTextColor,
                 fontSize: 14,
@@ -212,7 +212,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              estimatedValue,
+              marketValue,
               style: theme.textTheme.headlineMedium?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -321,16 +321,16 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             const SizedBox(height: 20),
           ],
 
-          // Condition and Mintage
+          // Hardness and Rarity Score
           Row(
             children: [
-              if (condition != null) ...[
+              if (hardness != null) ...[
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Condition',
+                        'Hardness',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: AppTheme.secondaryTextColor,
                           fontSize: 14,
@@ -338,7 +338,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        condition,
+                        hardness,
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -348,14 +348,14 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   ),
                 ),
               ],
-              if (mintage != null) ...[
-                if (condition != null) const SizedBox(width: 24),
+              if (rarityScore != null) ...[
+                if (hardness != null) const SizedBox(width: 24),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Mintage',
+                        'Rarity Score',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: AppTheme.secondaryTextColor,
                           fontSize: 14,
@@ -363,7 +363,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        mintage,
+                        rarityScore,
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -392,7 +392,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         return Colors.amber;
       case 'common':
       case 'very common':
-        return Colors.orange;
+        return Colors.green;
       default:
         return Colors.grey;
     }
@@ -422,15 +422,15 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     switch (rarity.toLowerCase()) {
       case 'very rare':
       case 'ultra rare':
-        return 'Extremely difficult to find. These coins are highly sought after by collectors.';
+        return 'Extremely difficult to find. These rocks are highly sought after by collectors.';
       case 'rare':
-        return 'Hard to find. These coins have significant collector value.';
+        return 'Hard to find. These rocks have significant collector value.';
       case 'scarce':
-        return 'Limited availability. These coins are moderately valuable.';
+        return 'Limited availability. These rocks are moderately valuable.';
       case 'common':
-        return 'Readily available. These coins are easily found in circulation.';
+        return 'Readily available. These rocks are easily found.';
       case 'very common':
-        return 'Widely available. These coins are frequently encountered.';
+        return 'Widely available. These rocks are frequently encountered.';
       default:
         return 'Rarity level information not available.';
     }
@@ -461,7 +461,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           color: AppTheme.metallicGold,
         ),
         label: Text(
-          'View on Wikipedia',
+          'View on Geology.com',
           style: theme.textTheme.titleMedium?.copyWith(
             color: Colors.white,
             fontWeight: FontWeight.w600,
@@ -480,7 +480,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Could not open Wikipedia link'),
+              content: Text('Could not open link'),
               duration: Duration(seconds: 2),
             ),
           );
@@ -490,7 +490,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Error opening Wikipedia link'),
+            content: Text('Error opening link'),
             duration: Duration(seconds: 2),
           ),
         );
@@ -498,9 +498,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     }
   }
 
-  Widget _buildCoinImage(String imagePath) {
+  Widget _buildRockImage(String imagePath) {
     // Debug logging
-    print('Building coin image with path: $imagePath');
+    print('Building rock image with path: $imagePath');
     print('Path type: ${imagePath.startsWith('/') ? 'File' : 'Asset'}');
 
     // Check if it's a file path (starts with /) or an asset path
@@ -622,7 +622,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
         ),
         child: Text(
-          widget.item.details['historicalContext'] ?? widget.item.details['Description'] ?? 'No history available.',
+          widget.item.details['geologicalContext'] ?? widget.item.details['Description'] ?? 'No geological context available.',
           style: theme.textTheme.bodyLarge?.copyWith(height: 1.6, color: AppTheme.secondaryTextColor),
         ),
       ),
@@ -701,9 +701,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     showCupertinoDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
-        title: const Text('Delete Coin'),
+        title: const Text('Delete Rock'),
         content:
-            const Text('Are you sure you want to delete this coin from your collection? This action cannot be undone.'),
+            const Text('Are you sure you want to delete this rock from your collection? This action cannot be undone.'),
         actions: [
           CupertinoDialogAction(
             child: const Text('Cancel'),

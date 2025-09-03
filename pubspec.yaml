@@ -1,5 +1,5 @@
-name: coin_id
-description: "A professional AI-powered artifact identification app that helps you identify and learn about antiques, artifacts, and collectibles."
+name: rock_id
+description: "A professional AI-powered rock identification app that helps you identify and learn about rocks, gems, and minerals."
 publish_to: "none"
 version: 0.1.0
 
@@ -44,7 +44,7 @@ flutter:
   assets:
     - assets/icon/icon.png
     - assets/images/pro.png
-    - assets/images/coin.jpg
+    - assets/images/rock.jpg
     - assets/images/testimonial-face.jpeg
     - assets/onboarding/onboarding_1.svg
     - assets/onboarding/onboarding_2.svg

@@ -1,10 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:coin_id/core/theme/app_theme.dart';
+import 'package:rock_id/core/theme/app_theme.dart';
 
-class CoinCardPlaceholder extends StatelessWidget {
-  const CoinCardPlaceholder({super.key});
+class RockCardPlaceholder extends StatelessWidget {
+  const RockCardPlaceholder({super.key});
 
   @override
   Widget build(BuildContext context) {
