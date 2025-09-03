@@ -119,28 +119,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         title: Text(widget.item.result, style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
         background: Hero(
           tag: 'coin_image_${widget.item.id}',
-          child: Image.asset(
-            widget.item.imagePath,
-            fit: BoxFit.cover,
-            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-              return Stack(
-                fit: StackFit.expand,
-                children: [
-                  child,
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Colors.black.withOpacity(0.6), Colors.transparent, Colors.black.withOpacity(0.8)],
-                        stops: const [0.0, 0.4, 1.0],
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
+          child: _buildCoinImage(widget.item.imagePath),
         ),
       ),
     );
@@ -516,6 +495,119 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           ),
         );
       }
+    }
+  }
+
+  Widget _buildCoinImage(String imagePath) {
+    // Debug logging
+    print('Building coin image with path: $imagePath');
+    print('Path type: ${imagePath.startsWith('/') ? 'File' : 'Asset'}');
+
+    // Check if it's a file path (starts with /) or an asset path
+    if (imagePath.startsWith('/')) {
+      // It's a file path - use Image.file
+      final file = File(imagePath);
+      final exists = file.existsSync();
+      print('File exists: $exists');
+
+      if (!exists) {
+        print('File does not exist: $imagePath');
+        return Container(
+          color: AppTheme.darkCharcoal,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.image_not_supported,
+                color: AppTheme.secondaryTextColor,
+                size: 48,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Image not found',
+                style: TextStyle(color: AppTheme.secondaryTextColor),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Path: ${imagePath.split('/').last}',
+                style: TextStyle(
+                  color: AppTheme.secondaryTextColor,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+
+      return Image.file(
+        file,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          print('Error loading file image: $error');
+          return Container(
+            color: AppTheme.darkCharcoal,
+            child: Icon(
+              Icons.image_not_supported,
+              color: AppTheme.secondaryTextColor,
+              size: 48,
+            ),
+          );
+        },
+        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              child,
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.black.withOpacity(0.6), Colors.transparent, Colors.black.withOpacity(0.8)],
+                    stops: const [0.0, 0.4, 1.0],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // It's an asset path - use Image.asset
+      return Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          print('Error loading asset image: $error');
+          return Container(
+            color: AppTheme.darkCharcoal,
+            child: Icon(
+              Icons.image_not_supported,
+              color: AppTheme.secondaryTextColor,
+              size: 48,
+            ),
+          );
+        },
+        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              child,
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.black.withOpacity(0.6), Colors.transparent, Colors.black.withOpacity(0.8)],
+                    stops: const [0.0, 0.4, 1.0],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 

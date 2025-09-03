@@ -310,7 +310,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           valueListenable: isSubscribedNotifier,
           builder: (context, isSubscribed, _) {
             return Container(
-              margin: const EdgeInsets.only(right: 8),
+              margin: const EdgeInsets.only(right: 2),
               child: IconButton(
                 icon: Container(
                   padding: const EdgeInsets.all(8),
@@ -319,7 +319,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(
-                    isSubscribed ? Icons.emoji_events_rounded : Icons.star_border_rounded,
+                    isSubscribed ? Icons.emoji_events_rounded : Icons.card_giftcard,
                     size: 22,
                     color: isSubscribed ? Theme.of(context).colorScheme.primary : Colors.amber,
                   ),

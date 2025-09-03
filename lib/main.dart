@@ -39,7 +39,7 @@ class RevenueCatService {
   static Future<void> init() async {
     LoggingService.purchaseOperation('Initializing RevenueCat');
     await Purchases.setLogLevel(LogLevel.debug);
-    await Purchases.configure(PurchasesConfiguration('appl_uCCWdgJkaJVjrfkqFidqKTTnqwQ'));
+    await Purchases.configure(PurchasesConfiguration('appl_lOkdeBdIKCdATLKjbhlIRaWcaib'));
     try {
       final purchaserInfo = await Purchases.getCustomerInfo();
       isSubscribed = purchaserInfo.entitlements.active.isNotEmpty;
