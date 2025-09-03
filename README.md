@@ -69,3 +69,4 @@ lib/
 
 - **Consistent UI Design System:** A comprehensive set of reusable UI components with consistent styling across light and dark modes.
 - **Theme Management:** Light/Dark mode switching via `ThemeService` (extends `ChangeNotifier`), persisted using `PreferencesService`. The `
+# RockIdentifier
