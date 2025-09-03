@@ -45,7 +45,11 @@ flutter:
     - assets/icon/icon.png
     - assets/images/pro.png
     - assets/images/coin.jpg
-    - assets/images/testimonial-face.jpeg
+    - assets/images/testimonial1.jpeg
+    - assets/images/testimonial2.jpeg
+    - assets/images/testimonial3.jpeg
+    - assets/images/testimonial4.jpeg
+    - assets/images/testimonial5.jpeg
     - assets/onboarding/onboarding_1.svg
     - assets/onboarding/onboarding_2.svg
     - assets/onboarding/onboarding_3.svg

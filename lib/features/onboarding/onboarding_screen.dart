@@ -21,6 +21,42 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   late AnimationController _photoAnimationController;
   late AnimationController _aiAnimationController;
 
+  // Testimonial data
+  final List<Map<String, dynamic>> _testimonials = [
+    {
+      'image': 'assets/images/testimonial1.jpeg',
+      'quote': 'Great app for collectors',
+      'author': 'Professional Collector',
+      'rating': 5,
+    },
+    {
+      'image': 'assets/images/testimonial2.jpeg',
+      'quote': 'Accurate identification every time',
+      'author': 'Coin Dealer',
+      'rating': 5,
+    },
+    {
+      'image': 'assets/images/testimonial3.jpeg',
+      'quote': 'Essential tool for numismatists',
+      'author': 'Museum Curator',
+      'rating': 5,
+    },
+    {
+      'image': 'assets/images/testimonial4.jpeg',
+      'quote': 'Best coin app I\'ve ever used',
+      'author': 'Antique Shop Owner',
+      'rating': 5,
+    },
+    {
+      'image': 'assets/images/testimonial5.jpeg',
+      'quote': 'Incredible AI technology',
+      'author': 'Coin Enthusiast',
+      'rating': 5,
+    },
+  ];
+
+  int _currentTestimonialIndex = 0;
+
   late Animation<double> _testimonialOpacity;
   late Animation<double> _testimonialScale;
   late Animation<double> _testimonialBlur;
@@ -104,7 +140,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
       if (mounted) {
         _testimonialController.reverse();
         Future.delayed(const Duration(milliseconds: 400), () {
-          if (mounted) _startTestimonialAnimation();
+          if (mounted) {
+            // Move to next testimonial
+            setState(() {
+              _currentTestimonialIndex = (_currentTestimonialIndex + 1) % _testimonials.length;
+            });
+            _startTestimonialAnimation();
+          }
         });
       }
     });
@@ -540,6 +582,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   }
 
   Widget _buildTestimonial() {
+    final currentTestimonial = _testimonials[_currentTestimonialIndex];
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Container(
@@ -592,7 +636,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                             ),
                             child: ClipOval(
                               child: Image.asset(
-                                'assets/images/testimonial-face.jpeg',
+                                currentTestimonial['image'],
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -607,9 +651,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Great app for collectors',
+                        currentTestimonial['quote'],
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontStyle: FontStyle.italic,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '- ${currentTestimonial['author']}',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.white.withValues(alpha: 0.7),
+                              fontWeight: FontWeight.w500,
                             ),
                         textAlign: TextAlign.center,
                       ),
@@ -617,11 +670,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: List.generate(
-                          5,
+                          currentTestimonial['rating'],
                           (index) => Icon(
                             Icons.star,
                             color: Colors.yellow,
                             size: 20,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      // Testimonial indicator dots
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          _testimonials.length,
+                          (index) => Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: index == _currentTestimonialIndex
+                                  ? AppTheme.metallicGold
+                                  : Colors.white.withValues(alpha: 0.3),
+                            ),
                           ),
                         ),
                       ),
