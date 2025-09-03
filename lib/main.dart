@@ -38,15 +38,38 @@ class RevenueCatService {
 
   static Future<void> init() async {
     LoggingService.purchaseOperation('Initializing RevenueCat');
-    await Purchases.setLogLevel(LogLevel.debug);
-    await Purchases.configure(PurchasesConfiguration('appl_lOkdeBdIKCdATLKjbhlIRaWcaib'));
+
     try {
+      // Set debug logging
+      await Purchases.setLogLevel(LogLevel.debug);
+      LoggingService.debug('RevenueCat log level set to debug', tag: 'RevenueCatService');
+
+      // Configure RevenueCat
+      await Purchases.configure(PurchasesConfiguration('appl_lOkdeBdIKCdATLKjbhlIRaWcaib'));
+      LoggingService.debug('RevenueCat configured successfully', tag: 'RevenueCatService');
+
+      // Test connection by getting customer info
       final purchaserInfo = await Purchases.getCustomerInfo();
       isSubscribed = purchaserInfo.entitlements.active.isNotEmpty;
       LoggingService.purchaseOperation('Subscription status checked', details: 'isSubscribed: $isSubscribed');
+      LoggingService.debug('Customer info retrieved successfully', tag: 'RevenueCatService');
+
+      // Test offerings fetch
+      try {
+        final offerings = await Purchases.getOfferings();
+        LoggingService.debug('Offerings test successful: ${offerings.current?.identifier ?? 'No current offering'}',
+            tag: 'RevenueCatService');
+        if (offerings.current != null) {
+          LoggingService.debug('Available packages: ${offerings.current!.availablePackages.length}',
+              tag: 'RevenueCatService');
+        }
+      } catch (e) {
+        LoggingService.warning('Offerings test failed: ${e.toString()}', tag: 'RevenueCatService');
+      }
     } catch (e) {
       isSubscribed = false;
-      LoggingService.error('Failed to get customer info', error: e);
+      LoggingService.error('RevenueCat initialization failed', error: e, tag: 'RevenueCatService');
+      LoggingService.debug('Error details: ${e.toString()}', tag: 'RevenueCatService');
     }
   }
 }

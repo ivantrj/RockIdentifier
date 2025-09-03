@@ -31,23 +31,56 @@ class _PaywallScreenState extends State<PaywallScreen> {
       _loading = true;
       _error = null;
     });
+
     try {
+      LoggingService.debug('Fetching RevenueCat offerings...', tag: 'PaywallScreen');
+
       final offerings = await Purchases.getOfferings();
-      if (offerings.current != null && offerings.current!.availablePackages.isNotEmpty) {
-        setState(() {
-          _offerings = offerings;
-          _selectedPackage = offerings.current!.availablePackages.first;
-          _loading = false;
-        });
+      LoggingService.debug('Offerings received: ${offerings.toString()}', tag: 'PaywallScreen');
+
+      if (offerings.current != null) {
+        LoggingService.debug('Current offering: ${offerings.current!.identifier}', tag: 'PaywallScreen');
+        LoggingService.debug('Available packages: ${offerings.current!.availablePackages.length}',
+            tag: 'PaywallScreen');
+
+        if (offerings.current!.availablePackages.isNotEmpty) {
+          setState(() {
+            _offerings = offerings;
+            _selectedPackage = offerings.current!.availablePackages.first;
+            _loading = false;
+          });
+          LoggingService.debug('Paywall loaded successfully', tag: 'PaywallScreen');
+        } else {
+          LoggingService.warning('No available packages in current offering', tag: 'PaywallScreen');
+          setState(() {
+            _error = 'No subscription packages available. Please try again later.';
+            _loading = false;
+          });
+        }
       } else {
+        LoggingService.warning('No current offering available', tag: 'PaywallScreen');
         setState(() {
-          _error = 'No available packages.';
+          _error = 'No subscription offerings available. Please try again later.';
           _loading = false;
         });
       }
     } catch (e) {
+      LoggingService.error('Failed to fetch RevenueCat offerings', error: e, tag: 'PaywallScreen');
+      LoggingService.debug('Error details: ${e.toString()}', tag: 'PaywallScreen');
+
+      String errorMessage = 'Failed to load paywall.';
+
+      // Provide more specific error messages
+      if (e.toString().contains('network')) {
+        errorMessage = 'Network error. Please check your internet connection.';
+      } else if (e.toString().contains('configuration')) {
+        errorMessage = 'RevenueCat configuration error. Please contact support.';
+      } else if (e.toString().contains('timeout')) {
+        errorMessage = 'Request timeout. Please try again.';
+      }
+
       setState(() {
-        _error = 'Failed to load paywall.';
+        _error = errorMessage;
         _loading = false;
       });
     }
@@ -81,6 +114,57 @@ class _PaywallScreenState extends State<PaywallScreen> {
       // Error is silently ignored as it's not critical
       LoggingService.urlLaunchError(urlString, tag: 'PaywallScreen');
     }
+  }
+
+  Widget _buildErrorScreen(ThemeData theme) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: theme.colorScheme.error,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Unable to Load Paywall',
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.colorScheme.error,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              _error ?? 'An unexpected error occurred',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: _fetchOfferings,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.colorScheme.primary,
+                foregroundColor: theme.colorScheme.onPrimary,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+              icon: const Icon(Icons.refresh),
+              label: const Text('Retry'),
+            ),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> _restorePurchases() async {
@@ -126,7 +210,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
             : _loading
                 ? const Center(child: CircularProgressIndicator())
                 : _error != null
-                    ? Center(child: Text(_error!, style: TextStyle(color: theme.colorScheme.error)))
+                    ? _buildErrorScreen(theme)
                     : Stack(
                         children: [
                           Padding(
