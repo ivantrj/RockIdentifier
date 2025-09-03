@@ -423,7 +423,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                 child: Column(
                   children: [
                     Text(
-                      'Welcome to Coin Identifier',
+                      'Welcome to Rock Identifier',
                       style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
@@ -432,7 +432,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'The most accurate way to identify coins and discover their stories. Used by collectors worldwide.',
+                      'The most accurate way to identify rocks and minerals and discover their geological stories. Used by geologists worldwide.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white.withValues(alpha: 0.8),
                           ),
@@ -466,7 +466,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                 child: Column(
                   children: [
                     Text(
-                      'Snap a Photo to Identify Coins',
+                      'Snap a Photo to Identify Rocks',
                       style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
@@ -475,7 +475,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'Quickly identify coins with detailed information, market values, and historical context.',
+                      'Quickly identify rocks and minerals with detailed information, geological data, and scientific context.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white.withValues(alpha: 0.8),
                           ),
@@ -518,7 +518,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'Advanced AI technology trained on millions of coins for accurate identification and detailed information.',
+                      'Advanced AI technology trained on millions of rocks and minerals for accurate identification and detailed geological information.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white.withValues(alpha: 0.8),
                           ),
@@ -607,7 +607,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Great app for collectors',
+                        'Great app for geologists',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontStyle: FontStyle.italic,
                             ),
@@ -664,7 +664,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       ),
                       child: ClipOval(
                         child: Image.asset(
-                          'assets/images/coin.jpg',
+                          'assets/images/rock.jpg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -871,9 +871,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
       case 0:
         return 'Trusted by geologists worldwide';
       case 1:
-        return 'Millions of coins identified';
+        return 'Millions of rocks identified';
       case 2:
-        return 'Trained on extensive coin database';
+        return 'Trained on extensive geological database';
       default:
         return 'Professional-grade technology';
     }
