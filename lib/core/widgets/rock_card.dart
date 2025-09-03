@@ -45,14 +45,14 @@ class RockCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item.result, // e.g., "Quartz"
+                    item.name, // e.g., "Quartz"
                     style: textTheme.titleMedium,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    item.subtitle, // e.g., "USA"
+                    item.commonName, // e.g., "Common Name"
                     style: textTheme.bodyMedium?.copyWith(color: AppTheme.secondaryTextColor),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

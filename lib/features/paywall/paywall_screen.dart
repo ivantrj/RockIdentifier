@@ -363,8 +363,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'You're now subscribed to Rock Identifier Pro',
-              style: TextStyle(fontSize: 18, color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7)),
+              "You're now subscribed to Rock Identifier Pro",
+              style: TextStyle(fontSize: 18, color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7)),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),

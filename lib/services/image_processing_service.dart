@@ -23,7 +23,7 @@ class ImageProcessingService {
       // Create a more reliable filename format
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final extension = p.extension(imagePath);
-      final safeFileName = 'coin_$timestamp$extension';
+      final safeFileName = 'rock_$timestamp$extension';
       final savedPath = p.join(appDir.path, safeFileName);
 
       // Copy the file
@@ -42,10 +42,10 @@ class ImageProcessingService {
     }
   }
 
-  /// Process image and identify coin using AI
+  /// Process image and identify rock using AI
   Future<IdentifiedItem?> processImage(String imagePath) async {
     try {
-      LoggingService.debug('Processing image for coin identification', tag: 'ImageProcessingService');
+      LoggingService.debug('Processing image for rock identification', tag: 'ImageProcessingService');
 
       // Save image to app directory
       final savedPath = await saveImageToAppDir(imagePath);
@@ -67,11 +67,11 @@ class ImageProcessingService {
         }
 
         // Call AI API
-        LoggingService.apiOperation('Calling AI coin identification API', tag: 'ImageProcessingService');
-        aiResult = await _identifyCoinWithAI(File(savedPath));
+        LoggingService.apiOperation('Calling AI rock identification API', tag: 'ImageProcessingService');
+        aiResult = await _identifyRockWithAI(File(savedPath));
 
         if (aiResult != null) {
-          LoggingService.apiOperation('AI coin identification successful', tag: 'ImageProcessingService');
+          LoggingService.apiOperation('AI rock identification successful', tag: 'ImageProcessingService');
           // Cache the result for future use
           await cacheService.cacheAnalysisResult(savedPath, aiResult);
         }
@@ -83,7 +83,7 @@ class ImageProcessingService {
         LoggingService.debug('Creating identified item from AI result', tag: 'ImageProcessingService');
         final item = _createIdentifiedItem(aiResult, savedPath);
         LoggingService.debug(
-            'Identified item created successfully - id: ${item.id}, result: ${item.result}, subtitle: ${item.subtitle}',
+            'Identified item created successfully - id: ${item.id}, name: ${item.name}, commonName: ${item.commonName}',
             tag: 'ImageProcessingService');
         return item;
       }
@@ -107,41 +107,49 @@ class ImageProcessingService {
     LoggingService.debug('AI details object: $aiDetails', tag: 'ImageProcessingService');
     LoggingService.debug('AI details keys: ${aiDetails.keys.toList()}', tag: 'ImageProcessingService');
 
-    final details = <String, dynamic>{
-      if (aiDetails['coinType'] != null) 'coinType': aiDetails['coinType'],
-      if (aiDetails['denomination'] != null) 'denomination': aiDetails['denomination'],
-      if (aiDetails['confidence'] != null) 'confidence': aiDetails['confidence'],
-      if (aiDetails['mintYear'] != null) 'mintYear': aiDetails['mintYear'],
-      if (aiDetails['country'] != null) 'country': aiDetails['country'],
-      if (aiDetails['mintMark'] != null) 'mintMark': aiDetails['mintMark'],
-      if (aiDetails['metalComposition'] != null) 'metalComposition': aiDetails['metalComposition'],
-      if (aiDetails['weight'] != null) 'weight': aiDetails['weight'],
-      if (aiDetails['diameter'] != null) 'diameter': aiDetails['diameter'],
-      if (aiDetails['condition'] != null) 'condition': aiDetails['condition'],
-      if (aiDetails['authenticity'] != null) 'authenticity': aiDetails['authenticity'],
-      if (aiDetails['rarity'] != null) 'rarity': aiDetails['rarity'],
-      if (aiDetails['estimatedValue'] != null) 'estimatedValue': aiDetails['estimatedValue'],
-      if (aiDetails['historicalContext'] != null) 'historicalContext': aiDetails['historicalContext'],
-      if (aiDetails['designDescription'] != null) 'designDescription': aiDetails['designDescription'],
-      if (aiDetails['edgeType'] != null) 'edgeType': aiDetails['edgeType'],
-      if (aiDetails['designer'] != null) 'designer': aiDetails['designer'],
-      if (aiDetails['mintage'] != null) 'mintage': aiDetails['mintage'],
-      if (aiDetails['marketDemand'] != null) 'marketDemand': aiDetails['marketDemand'],
-      if (aiDetails['investmentPotential'] != null) 'investmentPotential': aiDetails['investmentPotential'],
-      if (aiDetails['storageRecommendations'] != null) 'storageRecommendations': aiDetails['storageRecommendations'],
-      if (aiDetails['cleaningInstructions'] != null) 'cleaningInstructions': aiDetails['cleaningInstructions'],
-      if (aiDetails['similarCoins'] != null) 'similarCoins': aiDetails['similarCoins'],
-      if (aiDetails['insuranceValue'] != null) 'insuranceValue': aiDetails['insuranceValue'],
-      if (aiDetails['wikiLink'] != null) 'wikiLink': aiDetails['wikiLink'],
-    };
+    // Create Classification object
+    final classification = Classification(
+      type: aiDetails['rockType'] ?? aiDetails['type'] ?? 'Unknown',
+      category: aiDetails['classification'] ?? aiDetails['category'] ?? 'Unknown',
+      group: aiDetails['group'] ?? 'Unknown',
+    );
+
+    // Create Characteristics object
+    final characteristics = Characteristics(
+      color: aiDetails['color'] ?? 'Unknown',
+      texture: aiDetails['texture'] ?? 'Unknown',
+      hardness: aiDetails['hardness'] ?? 'Unknown',
+      luster: aiDetails['luster'] ?? 'Unknown',
+      transparency: aiDetails['transparency'] ?? 'Unknown',
+      crystalForm: aiDetails['crystalForm'] ?? 'Unknown',
+    );
+
+    // Create Value object
+    final value = Value(
+      estimatedValue: aiDetails['estimatedValue'] ?? aiDetails['marketValue'] ?? 'Unknown',
+      rarity: aiDetails['rarity'] ?? 'Unknown',
+      factors: aiDetails['rarityScore'] ?? aiDetails['factors'] ?? 'Unknown',
+    );
 
     return IdentifiedItem(
       id: aiResult['id'] ?? DateTime.now().millisecondsSinceEpoch.toString(),
       imagePath: imagePath,
-      result: aiResult['result'] ?? aiResult['denomination'] ?? aiResult['coinType'] ?? 'Unknown Coin',
-      subtitle: aiResult['subtitle'] ?? aiResult['mintYear'] ?? aiResult['country'] ?? '',
-      confidence: _parseConfidence(aiResult['confidence']),
-      details: details,
+      name: aiResult['result'] ?? aiResult['rockName'] ?? aiResult['name'] ?? 'Unknown Rock',
+      commonName: aiResult['subtitle'] ?? aiResult['commonName'] ?? aiResult['type'] ?? '',
+      confidence: _parseConfidence(aiResult['confidence']).toString(),
+      classification: classification,
+      characteristics: characteristics,
+      composition: aiDetails['mineralComposition'] ?? aiDetails['composition'] ?? 'Unknown',
+      formation: aiDetails['formation'] ?? aiDetails['formationProcess'] ?? 'Unknown',
+      age: aiDetails['age'] ?? aiDetails['formationPeriod'] ?? 'Unknown',
+      location: aiDetails['location'] ?? aiDetails['country'] ?? aiDetails['locationFound'] ?? 'Unknown',
+      uses: aiDetails['uses'] ?? aiDetails['similarRocks'] ?? 'Unknown',
+      value: value,
+      careAndStorage: aiDetails['careInstructions'] ?? aiDetails['handlingRecommendations'] ?? 'Unknown',
+      safety: aiDetails['safety'] ?? aiDetails['preservationTips'] ?? 'Unknown',
+      interestingFacts:
+          aiDetails['geologicalContext'] ?? aiDetails['interestingFacts'] ?? 'No geological context available.',
+      wikiLink: aiDetails['wikiLink'] ?? aiDetails['geologyComLink'],
       dateTime: DateTime.now(),
     );
   }
@@ -169,13 +177,13 @@ class ImageProcessingService {
     return 0.0;
   }
 
-  /// Identify coin using AI API
-  Future<Map<String, dynamic>?> _identifyCoinWithAI(File imageFile) async {
+  /// Identify rock using AI API
+  Future<Map<String, dynamic>?> _identifyRockWithAI(File imageFile) async {
     try {
-      LoggingService.apiOperation('Starting AI coin identification',
+      LoggingService.apiOperation('Starting AI rock identification',
           details: 'image: ${imageFile.path}', tag: 'ImageProcessingService');
 
-      final uri = Uri.parse('$_baseUrl/identify-coin');
+      final uri = Uri.parse('$_baseUrl/identify-rock');
       final request = http.MultipartRequest('POST', uri)
         ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
 
@@ -193,7 +201,7 @@ class ImageProcessingService {
         final data = json.decode(response.body);
         if (data['success'] == true && data['result'] != null) {
           final result = data['result'];
-          LoggingService.apiOperation('AI antique identification successful',
+          LoggingService.apiOperation('AI rock identification successful',
               details: 'response type: ${result.runtimeType}', tag: 'ImageProcessingService');
 
           // Handle different response types
@@ -210,21 +218,21 @@ class ImageProcessingService {
             throw Exception('Invalid response format: unexpected data type');
           }
         } else if (data['success'] == false && data['error'] != null) {
-          // Check if the error indicates it's not an antique
+          // Check if the error indicates it's not a rock
           final error = data['error'].toString().toLowerCase();
           LoggingService.debug('AI error message: $error', tag: 'ImageProcessingService');
 
-          if (error.contains('does not contain antique') ||
-              error.contains('not antique') ||
-              error.contains('no antique') ||
+          if (error.contains('does not contain rock') ||
+              error.contains('not rock') ||
+              error.contains('no rock') ||
               error.contains('modern item') ||
-              error.contains('not artifact')) {
-            LoggingService.info('AI determined image is not an antique - throwing NOT_ANTIQUE exception',
+              error.contains('not mineral')) {
+            LoggingService.info('AI determined image is not a rock - throwing NOT_ROCK exception',
                 tag: 'ImageProcessingService');
-            throw Exception('NOT_ANTIQUE');
+            throw Exception('NOT_ROCK');
           }
           // For other errors, throw the actual error message
-          LoggingService.error('AI antique identification failed',
+          LoggingService.error('AI rock identification failed',
               error: Exception(data['error'].toString()), tag: 'ImageProcessingService');
           throw Exception(data['error'].toString());
         } else {
@@ -241,7 +249,7 @@ class ImageProcessingService {
       } else {
         LoggingService.error('Unexpected response status',
             error: Exception('Status: ${response.statusCode}'), tag: 'ImageProcessingService');
-        throw Exception('Failed to identify antique. Please try again.');
+        throw Exception('Failed to identify rock. Please try again.');
       }
     } on FormatException {
       LoggingService.error('Format exception in AI response', tag: 'ImageProcessingService');

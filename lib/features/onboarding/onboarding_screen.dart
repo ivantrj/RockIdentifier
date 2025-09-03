@@ -225,7 +225,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   height: 200,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.metallicGold.withValues(alpha: 0.03),
+                    color: AppTheme.saddleBrown.withValues(alpha: 0.03),
                   ),
                 ),
               ),
@@ -237,7 +237,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   height: 250,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.metallicGold.withValues(alpha: 0.02),
+                    color: AppTheme.saddleBrown.withValues(alpha: 0.02),
                   ),
                 ),
               ),
@@ -249,7 +249,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   height: 100,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.metallicGold.withValues(alpha: 0.02),
+                    color: AppTheme.saddleBrown.withValues(alpha: 0.02),
                   ),
                 ),
               ),
@@ -293,12 +293,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
         color: Colors.black.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppTheme.metallicGold.withValues(alpha: 0.2),
+          color: AppTheme.saddleBrown.withValues(alpha: 0.2),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.metallicGold.withValues(alpha: 0.1),
+            color: AppTheme.saddleBrown.withValues(alpha: 0.1),
             blurRadius: 20,
             spreadRadius: 0,
           ),
@@ -316,12 +316,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               height: 3,
               margin: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: _animatedStep > 0 ? AppTheme.metallicGold : Colors.white.withValues(alpha: 0.1),
+                color: _animatedStep > 0 ? AppTheme.saddleBrown : Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(2),
                 boxShadow: _animatedStep > 0
                     ? [
                         BoxShadow(
-                          color: AppTheme.metallicGold.withValues(alpha: 0.3),
+                          color: AppTheme.saddleBrown.withValues(alpha: 0.3),
                           blurRadius: 8,
                           spreadRadius: 0,
                         ),
@@ -340,12 +340,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               height: 3,
               margin: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: _animatedStep > 1 ? AppTheme.metallicGold : Colors.white.withValues(alpha: 0.1),
+                color: _animatedStep > 1 ? AppTheme.saddleBrown : Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(2),
                 boxShadow: _animatedStep > 1
                     ? [
                         BoxShadow(
-                          color: AppTheme.metallicGold.withValues(alpha: 0.3),
+                          color: AppTheme.saddleBrown.withValues(alpha: 0.3),
                           blurRadius: 8,
                           spreadRadius: 0,
                         ),
@@ -373,15 +373,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
         height: 32,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: isActive ? AppTheme.metallicGold : Colors.white.withValues(alpha: 0.2),
+          color: isActive ? AppTheme.saddleBrown : Colors.white.withValues(alpha: 0.2),
           border: Border.all(
-            color: isActive ? AppTheme.metallicGold.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.1),
+            color: isActive ? AppTheme.saddleBrown.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.1),
             width: 1.5,
           ),
           boxShadow: isActive
               ? [
                   BoxShadow(
-                    color: AppTheme.metallicGold.withValues(alpha: 0.4),
+                    color: AppTheme.saddleBrown.withValues(alpha: 0.4),
                     blurRadius: 12,
                     spreadRadius: 0,
                   ),
@@ -548,12 +548,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
           color: Colors.black.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: AppTheme.metallicGold.withValues(alpha: 0.15),
+            color: AppTheme.saddleBrown.withValues(alpha: 0.15),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.metallicGold.withValues(alpha: 0.1),
+              color: AppTheme.saddleBrown.withValues(alpha: 0.1),
               blurRadius: 20,
               spreadRadius: 0,
             ),
@@ -575,7 +575,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                         children: [
                           Icon(
                             Icons.emoji_events,
-                            color: AppTheme.metallicGold,
+                            color: AppTheme.saddleBrown,
                             size: 35,
                           ),
                           const SizedBox(width: 15),
@@ -584,9 +584,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                             height: 70,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: AppTheme.metallicGold.withValues(alpha: 0.2),
+                              color: AppTheme.saddleBrown.withValues(alpha: 0.2),
                               border: Border.all(
-                                color: AppTheme.metallicGold.withValues(alpha: 0.3),
+                                color: AppTheme.saddleBrown.withValues(alpha: 0.3),
                                 width: 2,
                               ),
                             ),
@@ -600,7 +600,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                           const SizedBox(width: 15),
                           Icon(
                             Icons.emoji_events,
-                            color: AppTheme.metallicGold,
+                            color: AppTheme.saddleBrown,
                             size: 35,
                           ),
                         ],
@@ -658,7 +658,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: AppTheme.metallicGold.withValues(alpha: 0.5),
+                          color: AppTheme.saddleBrown.withValues(alpha: 0.5),
                           width: 2,
                         ),
                       ),
@@ -685,7 +685,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     child: Icon(
                       Icons.touch_app,
                       size: 70,
-                      color: AppTheme.metallicGold,
+                      color: AppTheme.saddleBrown,
                     ),
                   ),
                 );
@@ -758,7 +758,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   child: Icon(
                     Icons.psychology,
                     size: 60,
-                    color: AppTheme.metallicGold,
+                    color: AppTheme.saddleBrown,
                   ),
                 );
               },
@@ -781,7 +781,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       height: 8,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppTheme.metallicGold.withValues(alpha: opacity),
+                        color: AppTheme.saddleBrown.withValues(alpha: opacity),
                       ),
                     );
                   },
@@ -805,14 +805,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
             child: ElevatedButton(
               onPressed: _nextStep,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.metallicGold,
+                backgroundColor: AppTheme.saddleBrown,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 18),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
                 elevation: 8,
-                shadowColor: AppTheme.metallicGold.withValues(alpha: 0.4),
+                shadowColor: AppTheme.saddleBrown.withOpacity(0.4),
               ),
               child: Text(
                 _step < 2 ? 'Continue' : 'Get Started',
@@ -835,7 +835,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               children: [
                 Icon(
                   _getTrustIcon(),
-                  color: AppTheme.metallicGold,
+                  color: AppTheme.saddleBrown,
                   size: 16,
                 ),
                 const SizedBox(width: 8),

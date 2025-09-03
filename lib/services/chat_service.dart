@@ -46,37 +46,36 @@ class ChatService {
         throw Exception('Item not found');
       }
 
-      // Create item details map with coin-specific properties
+      // Create item details map with rock-specific properties
       final itemDetails = {
-        'coinType': item.coinType ?? 'Unknown',
-        'denomination': item.denomination ?? 'Unknown',
-        'confidence': '${(item.confidence * 100).toStringAsFixed(1)}%',
-        'mintYear': item.mintYear ?? 'Unknown',
-        'country': item.country ?? 'Unknown',
-        'mintMark': item.mintMark ?? 'Unknown',
-        'metalComposition': item.metalComposition ?? 'Unknown',
-        'weight': item.weight ?? 'Unknown',
-        'diameter': item.diameter ?? 'Unknown',
-        'condition': item.condition ?? 'Unknown',
-        'authenticity': item.authenticity ?? 'Unknown',
-        'rarity': item.rarity ?? 'Unknown',
-        'estimatedValue': item.estimatedValue ?? 'Unknown',
-        'historicalContext': item.historicalContext ?? 'Unknown',
-        'designDescription': item.designDescription ?? 'Unknown',
-        'edgeType': item.edgeType ?? 'Unknown',
-        'designer': item.designer ?? 'Unknown',
-        'mintage': item.mintage ?? 'Unknown',
-        'investmentPotential': item.investmentPotential ?? 'Unknown',
-        'marketDemand': item.marketDemand ?? 'Unknown',
-        'storageRecommendations': item.storageRecommendations ?? 'Unknown',
-        'cleaningInstructions': item.cleaningInstructions ?? 'Unknown',
-        'similarCoins': item.similarCoins ?? 'Unknown',
-        'insuranceValue': item.insuranceValue ?? 'Unknown',
+        'name': item.name,
+        'commonName': item.commonName,
+        'confidence': item.confidence,
+        'classification_type': item.classification.type,
+        'classification_category': item.classification.category,
+        'classification_group': item.classification.group,
+        'characteristics_color': item.characteristics.color,
+        'characteristics_texture': item.characteristics.texture,
+        'characteristics_hardness': item.characteristics.hardness,
+        'characteristics_luster': item.characteristics.luster,
+        'characteristics_transparency': item.characteristics.transparency,
+        'characteristics_crystalForm': item.characteristics.crystalForm,
+        'composition': item.composition,
+        'formation': item.formation,
+        'age': item.age,
+        'location': item.location,
+        'uses': item.uses,
+        'value_estimatedValue': item.value.estimatedValue,
+        'value_rarity': item.value.rarity,
+        'value_factors': item.value.factors,
+        'careAndStorage': item.careAndStorage,
+        'safety': item.safety,
+        'interestingFacts': item.interestingFacts,
       };
 
       // Add Wikipedia link if available
       if (item.wikiLink != null) {
-        itemDetails['wikipedia'] = item.wikiLink!;
+        itemDetails['wikiLink'] = item.wikiLink!;
       }
 
       final response = await http.post(

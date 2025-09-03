@@ -30,7 +30,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _messages.add(ChatMessage(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       message:
-          "I'm your AI specialist for this ${widget.item.result.toLowerCase()}. Ask me anything about its history, composition, or details.",
+          "I'm your AI specialist for this ${widget.item.name.toLowerCase()}. Ask me anything about its history, composition, or details.",
       isUser: false,
       timestamp: DateTime.now(),
     ));

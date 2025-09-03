@@ -116,7 +116,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       flexibleSpace: FlexibleSpaceBar(
         stretchModes: const [StretchMode.zoomBackground, StretchMode.fadeTitle],
         centerTitle: true,
-        title: Text(widget.item.result, style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
+        title: Text(widget.item.name, style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
         background: Hero(
           tag: 'rock_image_${widget.item.id}',
           child: _buildRockImage(widget.item.imagePath),
@@ -135,46 +135,46 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           const SizedBox(height: 16),
 
           _buildDetailCard(context, 'Identification', {
-            'Rock Name': widget.item.result,
-            'Type': widget.item.details['rockType'] ?? 'N/A',
-            'Classification': widget.item.details['classification'] ?? 'N/A',
-            'Origin': widget.item.subtitle,
-            'Country': widget.item.details['country'] ?? 'N/A',
-            'Formation Period': widget.item.details['formationPeriod'] ?? 'N/A',
-            'Location Found': widget.item.details['locationFound'] ?? 'N/A',
-            'Confidence': '${(widget.item.confidence * 100).toStringAsFixed(0)}%',
+            'Rock Name': widget.item.name,
+            'Type': widget.item.classification.type,
+            'Classification': widget.item.classification.category,
+            'Origin': widget.item.commonName,
+            'Country': widget.item.location,
+            'Formation Period': widget.item.age,
+            'Location Found': widget.item.location,
+            'Confidence': '${(double.tryParse(widget.item.confidence) ?? 0.0) * 100}%',
           }),
           const SizedBox(height: 16),
 
           _buildDetailCard(context, 'Specifications', {
-            'Discoverer': widget.item.details['discoverer'] ?? widget.item.details['Discoverer'] ?? 'N/A',
-            'Composition': widget.item.details['mineralComposition'] ?? widget.item.details['Composition'] ?? 'N/A',
-            'Texture': widget.item.details['texture'] ?? widget.item.details['Texture'] ?? 'N/A',
-            'Diameter': widget.item.details['diameter'] ?? widget.item.details['Diameter'] ?? 'N/A',
-            'Weight': widget.item.details['weight'] ?? widget.item.details['Weight'] ?? 'N/A',
+            'Discoverer': widget.item.characteristics.crystalForm,
+            'Composition': widget.item.composition,
+            'Texture': widget.item.characteristics.texture,
+            'Diameter': widget.item.characteristics.hardness,
+            'Weight': widget.item.characteristics.luster,
           }),
           const SizedBox(height: 16),
 
           _buildDetailCard(context, 'Market & Value', {
-            'Hardness': widget.item.details['hardness'] ?? widget.item.details['Hardness'] ?? 'N/A',
-            'Rarity': widget.item.details['rarity'] ?? 'N/A',
-            'Rarity Score': widget.item.details['rarityScore'] ?? widget.item.details['rarityScore'] ?? 'N/A',
-            'Collector Demand': widget.item.details['collectorDemand'] ?? 'N/A',
-            'Scientific Value': widget.item.details['scientificValue'] ?? 'N/A',
-            'Authenticity': widget.item.details['authenticity'] ?? 'N/A',
+            'Hardness': widget.item.characteristics.hardness,
+            'Rarity': widget.item.value.rarity,
+            'Rarity Score': widget.item.value.factors,
+            'Collector Demand': widget.item.value.factors,
+            'Scientific Value': widget.item.value.factors,
+            'Authenticity': widget.item.value.factors,
           }),
           const SizedBox(height: 16),
 
           _buildDetailCard(context, 'Additional Details', {
-            'Handling Recommendations': widget.item.details['handlingRecommendations'] ?? 'N/A',
-            'Preservation Tips': widget.item.details['preservationTips'] ?? 'N/A',
-            'Similar Rocks': widget.item.details['similarRocks'] ?? 'N/A',
+            'Handling Recommendations': widget.item.careAndStorage,
+            'Preservation Tips': widget.item.safety,
+            'Similar Rocks': widget.item.uses,
           }),
 
           // Wiki Link Button
-          if (widget.item.details['geologyComLink'] != null) ...[
+          if (widget.item.wikiLink != null) ...[
             const SizedBox(height: 16),
-            _buildWikiButton(context, widget.item.details['geologyComLink']!),
+            _buildWikiButton(context, widget.item.wikiLink!),
           ],
         ],
       ),
@@ -183,10 +183,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
 
   Widget _buildValueCard(BuildContext context) {
     final theme = Theme.of(context);
-    final marketValue = widget.item.details['marketValue'];
-    final rarity = widget.item.details['rarity'];
-    final hardness = widget.item.details['hardness'];
-    final rarityScore = widget.item.details['rarityScore'];
+    final marketValue = widget.item.value.estimatedValue;
+    final rarity = widget.item.value.rarity;
+    final hardness = widget.item.characteristics.hardness;
+    final rarityScore = widget.item.value.factors;
 
     return Container(
       padding: const EdgeInsets.all(20.0),
@@ -458,7 +458,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         icon: Icon(
           Icons.open_in_new,
           size: 20,
-          color: AppTheme.metallicGold,
+          color: AppTheme.saddleBrown,
         ),
         label: Text(
           'View on Geology.com',
@@ -564,7 +564,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.black.withOpacity(0.6), Colors.transparent, Colors.black.withOpacity(0.8)],
+                    colors: [
+                      Colors.black.withValues(alpha: 0.6),
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.8)
+                    ],
                     stops: const [0.0, 0.4, 1.0],
                   ),
                 ),
@@ -599,7 +603,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.black.withOpacity(0.6), Colors.transparent, Colors.black.withOpacity(0.8)],
+                    colors: [
+                      Colors.black.withValues(alpha: 0.6),
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.8)
+                    ],
                     stops: const [0.0, 0.4, 1.0],
                   ),
                 ),
@@ -622,7 +630,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
         ),
         child: Text(
-          widget.item.details['geologicalContext'] ?? widget.item.details['Description'] ?? 'No geological context available.',
+          widget.item.interestingFacts,
           style: theme.textTheme.bodyLarge?.copyWith(height: 1.6, color: AppTheme.secondaryTextColor),
         ),
       ),
@@ -682,9 +690,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Container(
             decoration: BoxDecoration(
-              color: AppTheme.glassColor.withOpacity(0.5),
+              color: AppTheme.glassColor.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
-              border: Border.all(color: AppTheme.subtleBorderColor.withOpacity(0.5)),
+              border: Border.all(color: AppTheme.subtleBorderColor.withValues(alpha: 0.5)),
             ),
             child: IconButton(
               icon: Icon(icon, size: 22, color: AppTheme.primaryTextColor),

@@ -73,7 +73,7 @@ class _LoadingDialogState extends State<LoadingDialog> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 CircularProgressIndicator(
-                  color: AppTheme.metallicGold,
+                  color: AppTheme.saddleBrown,
                   strokeWidth: 3,
                 ),
                 const SizedBox(height: 32),

@@ -17,7 +17,7 @@ import 'package:rock_id/services/logging_service.dart';
 import 'package:rock_id/locator.dart';
 import 'widgets/fab_menu.dart';
 import 'widgets/loading_dialog.dart';
-import 'widgets/not_antique_dialog.dart';
+import 'widgets/not_rock_dialog.dart';
 import 'package:rock_id/services/haptic_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -130,7 +130,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         }
 
         if (item != null) {
-          LoggingService.userAction('Item added to library', details: 'result:  [${item.result}', tag: 'LibraryScreen');
+          LoggingService.userAction('Item added to library', details: 'result:  [${item.name}', tag: 'LibraryScreen');
           try {
             await context.read<LibraryViewModel>().addItem(item);
             LoggingService.debug('Item successfully added to viewmodel', tag: 'LibraryScreen');
@@ -174,7 +174,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           showDialog(
             context: context,
             barrierDismissible: true,
-            builder: (context) => const NotRockDialog(),
+            builder: (context) => NotRockDialog(),
           );
         } else {
           LoggingService.error('Error processing image', error: e, tag: 'LibraryScreen');

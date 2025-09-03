@@ -104,8 +104,8 @@ class _LibraryItemCardState extends State<LibraryItemCard> with SingleTickerProv
               borderRadius: BorderRadius.circular(12),
               child: _buildImage(),
             ),
-            // Price badge
-            if (_shouldShowPriceBadge())
+            // Value badge
+            if (_shouldShowValueBadge())
               Positioned(
                 top: 12,
                 right: 12,
@@ -123,7 +123,7 @@ class _LibraryItemCardState extends State<LibraryItemCard> with SingleTickerProv
                     ],
                   ),
                   child: Text(
-                    _extractPriceRange(widget.item.details['Estimated Price'].toString()),
+                    _extractValueRange(widget.item.value.estimatedValue),
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -164,7 +164,7 @@ class _LibraryItemCardState extends State<LibraryItemCard> with SingleTickerProv
                           children: [
                             Expanded(
                               child: Text(
-                                widget.item.result,
+                                widget.item.name,
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -180,7 +180,7 @@ class _LibraryItemCardState extends State<LibraryItemCard> with SingleTickerProv
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
-                                '${(widget.item.confidence * 100).toStringAsFixed(0)}%',
+                                '${(double.tryParse(widget.item.confidence) ?? 0.0) * 100}%',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -192,7 +192,7 @@ class _LibraryItemCardState extends State<LibraryItemCard> with SingleTickerProv
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          widget.item.subtitle,
+                          widget.item.commonName,
                           style: const TextStyle(
                             color: Colors.white70,
                             fontStyle: FontStyle.italic,
@@ -259,8 +259,8 @@ class _LibraryItemCardState extends State<LibraryItemCard> with SingleTickerProv
   }
 
   bool _shouldShowValueBadge() {
-    final value = widget.item.details['marketValue'];
-    return value != null && value.toString().isNotEmpty && value.toString().toLowerCase() != 'unknown';
+    final value = widget.item.value.estimatedValue;
+    return value.isNotEmpty && value.toLowerCase() != 'unknown';
   }
 
   String _extractValueRange(String valueText) {
@@ -276,7 +276,7 @@ class _LibraryItemCardState extends State<LibraryItemCard> with SingleTickerProv
     final usdMatch = usdRegex.firstMatch(valueText);
     if (usdMatch != null) {
       final numbers = usdMatch.group(1)!;
-      return '\$numbers';
+      return '\$$numbers';
     }
 
     // Try to find any price-like pattern
