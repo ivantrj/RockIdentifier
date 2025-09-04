@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:coin_id/core/theme/app_theme.dart';
 import 'package:coin_id/locator.dart';
@@ -9,8 +10,41 @@ import 'package:coin_id/services/cache_service.dart';
 import 'package:coin_id/services/haptic_service.dart';
 import 'package:coin_id/services/logging_service.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  String _appVersion = 'Loading...';
+  String _buildNumber = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppVersion();
+  }
+
+  Future<void> _loadAppVersion() async {
+    try {
+      final packageInfo = await PackageInfo.fromPlatform();
+      if (mounted) {
+        setState(() {
+          _appVersion = packageInfo.version;
+          _buildNumber = packageInfo.buildNumber;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _appVersion = 'Unknown';
+          _buildNumber = '';
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +110,7 @@ class SettingsScreen extends StatelessWidget {
                 context,
                 icon: Icons.info_rounded,
                 title: 'Version',
-                subtitle: '1.0.0',
+                subtitle: _buildNumber.isNotEmpty ? '$_appVersion+$_buildNumber' : _appVersion,
               ),
             ],
           ),

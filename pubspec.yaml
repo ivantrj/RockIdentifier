@@ -1,7 +1,7 @@
 name: coin_id
 description: "A professional AI-powered artifact identification app that helps you identify and learn about coins, artifacts, and collectibles."
 publish_to: "none"
-version: 0.1.0
+version: 1.0.0+1
 
 environment:
   sdk: ^3.6.2
@@ -33,6 +33,7 @@ dependencies:
   google_fonts: ^6.2.1
   flutter_staggered_grid_view: ^0.7.0
   shimmer: ^3.0.0
+  package_info_plus: ^8.0.2
 
 dev_dependencies:
   flutter_test:
