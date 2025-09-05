@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:coin_id/core/theme/app_theme.dart';
 import 'package:coin_id/main.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
 import 'package:coin_id/services/logging_service.dart';
@@ -44,12 +43,50 @@ class _PaywallScreenState extends State<PaywallScreen> {
             tag: 'PaywallScreen');
 
         if (offerings.current!.availablePackages.isNotEmpty) {
+          // Prioritize package selection: lifetime > yearly > trial/weekly
+          final packages = offerings.current!.availablePackages;
+
+          // Look for lifetime package first
+          final lifetimeList = packages.where(
+            (p) =>
+                p.identifier.toLowerCase().contains('lifetime') ||
+                p.storeProduct.title.toLowerCase().contains('lifetime') ||
+                p.identifier.toLowerCase().contains('forever') ||
+                p.storeProduct.title.toLowerCase().contains('forever'),
+          );
+
+          // Look for yearly package second
+          final yearlyList = packages.where(
+            (p) =>
+                p.identifier.toLowerCase().contains('annual') || p.storeProduct.title.toLowerCase().contains('annual'),
+          );
+
+          // Look for trial/weekly package third
+          final trialWeeklyList = packages.where(
+            (p) =>
+                p.identifier.toLowerCase().contains('week') ||
+                p.storeProduct.title.toLowerCase().contains('week') ||
+                (p.storeProduct.introductoryPrice != null),
+          );
+
+          Package? defaultPackage;
+          if (lifetimeList.isNotEmpty) {
+            defaultPackage = lifetimeList.first;
+          } else if (yearlyList.isNotEmpty) {
+            defaultPackage = yearlyList.first;
+          } else if (trialWeeklyList.isNotEmpty) {
+            defaultPackage = trialWeeklyList.first;
+          } else {
+            defaultPackage = packages.first; // fallback to first available
+          }
+
           setState(() {
             _offerings = offerings;
-            _selectedPackage = offerings.current!.availablePackages.first;
+            _selectedPackage = defaultPackage;
             _loading = false;
           });
-          LoggingService.debug('Paywall loaded successfully', tag: 'PaywallScreen');
+          LoggingService.debug('Paywall loaded successfully with default package: ${defaultPackage.identifier}',
+              tag: 'PaywallScreen');
         } else {
           LoggingService.warning('No available packages in current offering', tag: 'PaywallScreen');
           setState(() {
@@ -214,7 +251,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     : Stack(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 120),
+                            padding: const EdgeInsets.only(bottom: 200),
                             child: SingleChildScrollView(
                               child: Column(
                                 children: [
@@ -254,7 +291,6 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                   ),
                                   const SizedBox(height: 28),
                                   _buildPackages(theme, metallicGold, lightPrimary),
-                                  _buildTrialToggle(metallicGold),
                                   const SizedBox(height: 20),
                                 ],
                               ),
@@ -293,6 +329,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                     ),
                                   ),
                                 ),
+                                const SizedBox(height: 18),
+                                _buildTrialToggle(metallicGold),
                                 const SizedBox(height: 18),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -434,18 +472,39 @@ class _PaywallScreenState extends State<PaywallScreen> {
   Widget _buildTrialToggle(Color metallicGold) {
     final theme = Theme.of(context);
     final packages = _offerings!.current!.availablePackages;
+
+    // Filter for lifetime packages
+    final lifetimeList = packages.where(
+      (p) =>
+          p.identifier.toLowerCase().contains('lifetime') ||
+          p.storeProduct.title.toLowerCase().contains('lifetime') ||
+          p.identifier.toLowerCase().contains('forever') ||
+          p.storeProduct.title.toLowerCase().contains('forever'),
+    );
+
+    // Filter for yearly packages
     final yearlyList = packages.where(
       (p) => p.identifier.toLowerCase().contains('annual') || p.storeProduct.title.toLowerCase().contains('annual'),
     );
+
+    // Filter for trial/weekly packages
     final trialWeeklyList = packages.where(
       (p) =>
           p.identifier.toLowerCase().contains('week') ||
           p.storeProduct.title.toLowerCase().contains('week') ||
           (p.storeProduct.introductoryPrice != null),
     );
+
+    final lifetime = lifetimeList.isNotEmpty ? lifetimeList.first : null;
     final yearly = yearlyList.isNotEmpty ? yearlyList.first : null;
     final trialWeekly = trialWeeklyList.isNotEmpty ? trialWeeklyList.first : null;
     final isTrial = _selectedPackage == trialWeekly;
+
+    // Don't show trial toggle if there's no trial/weekly package available
+    if (trialWeekly == null) {
+      return const SizedBox.shrink();
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -472,19 +531,47 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
   Widget _buildPackages(ThemeData theme, Color metallicGold, Color lightPrimary) {
     final packages = _offerings!.current!.availablePackages;
+
+    // Filter for lifetime packages
+    final lifetimeList = packages.where(
+      (p) =>
+          p.identifier.toLowerCase().contains('lifetime') ||
+          p.storeProduct.title.toLowerCase().contains('lifetime') ||
+          p.identifier.toLowerCase().contains('forever') ||
+          p.storeProduct.title.toLowerCase().contains('forever'),
+    );
+
+    // Filter for yearly packages
     final yearlyList = packages.where(
       (p) => p.identifier.toLowerCase().contains('annual') || p.storeProduct.title.toLowerCase().contains('annual'),
     );
+
+    // Filter for trial/weekly packages
     final trialWeeklyList = packages.where(
       (p) =>
           p.identifier.toLowerCase().contains('week') ||
           p.storeProduct.title.toLowerCase().contains('week') ||
           (p.storeProduct.introductoryPrice != null),
     );
+
+    final lifetime = lifetimeList.isNotEmpty ? lifetimeList.first : null;
     final yearly = yearlyList.isNotEmpty ? yearlyList.first : null;
     final trialWeekly = trialWeeklyList.isNotEmpty ? trialWeeklyList.first : null;
+
     return Column(
       children: [
+        if (lifetime != null)
+          _packageTile(
+            lifetime,
+            metallicGold,
+            lightPrimary,
+            selected: _selectedPackage == lifetime,
+            badge: 'BEST VALUE',
+            badgeColor: Colors.green,
+            onTap: () => setState(() => _selectedPackage = lifetime),
+            customTitle: 'Lifetime Pro',
+            customSubtitle: '${lifetime.storeProduct.priceString} one-time payment',
+          ),
         if (yearly != null)
           _packageTile(
             yearly,
