@@ -12,43 +12,560 @@ import 'package:url_launcher/url_launcher.dart';
 class ItemDetailScreen extends StatefulWidget {
   final IdentifiedItem item;
   final VoidCallback onDelete;
-
   const ItemDetailScreen({required this.item, required this.onDelete, super.key});
 
   @override
   State<ItemDetailScreen> createState() => _ItemDetailScreenState();
 }
 
-class _ItemDetailScreenState extends State<ItemDetailScreen> {
+class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProviderStateMixin {
   int _selectedTabIndex = 0;
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: isDarkMode ? AppTheme.nearBlack : AppTheme.lightBackground,
-      // Add a Floating Action Button for the Chat feature
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: _buildModernFAB(context),
+      body: CustomScrollView(
+        slivers: [
+          _buildModernSliverAppBar(context),
+          SliverToBoxAdapter(
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: Column(
+                children: [
+                  _buildModernSegmentedControl(context),
+                  IndexedStack(
+                    index: _selectedTabIndex,
+                    children: [
+                      _buildModernDetailsTab(context),
+                      _buildModernFactsTab(context),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModernFAB(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16, right: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: FloatingActionButton(
+        elevation: 0,
+        highlightElevation: 0,
+        backgroundColor: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
         onPressed: () {
+          HapticService.instance.vibrate();
           Navigator.of(context).push(CupertinoPageRoute(
             builder: (_) => ChatScreen(item: widget.item),
           ));
         },
-        child: Icon(HugeIcons.strokeRoundedChatBot, color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard),
+        child: Icon(
+          HugeIcons.strokeRoundedChatBot,
+          color: Colors.white,
+          size: 24,
+        ),
       ),
-      body: CustomScrollView(
-        slivers: [
-          _buildSliverAppBar(context),
-          SliverToBoxAdapter(
+    );
+  }
+
+  Widget _buildModernSegmentedControl(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+      height: 56,
+      decoration: BoxDecoration(
+        color: isDarkMode ? AppTheme.darkCharcoal : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          _buildModernSegment(context, 'Details', 0),
+          _buildModernSegment(context, 'Facts', 1),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModernSegment(BuildContext context, String title, int index) {
+    final theme = Theme.of(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final isSelected = _selectedTabIndex == index;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          HapticService.instance.vibrate();
+          setState(() => _selectedTabIndex = index);
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          decoration: BoxDecoration(
+            color: isSelected ? (isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen) : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            title,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.titleMedium?.copyWith(
+              color:
+                  isSelected ? Colors.white : (isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary),
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModernSliverAppBar(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    return SliverAppBar(
+      expandedHeight: 340,
+      pinned: true,
+      stretch: true,
+      backgroundColor: Colors.transparent,
+      leading: _buildModernAppBarButton(context, HugeIcons.strokeRoundedArrowLeft01, () => Navigator.pop(context)),
+      actions: [
+        _buildModernAppBarButton(context, HugeIcons.strokeRoundedDelete02, () => _showDeleteDialog(context)),
+        const SizedBox(width: 16),
+      ],
+      surfaceTintColor: Colors.transparent,
+      flexibleSpace: FlexibleSpaceBar(
+        stretchModes: const [StretchMode.zoomBackground, StretchMode.fadeTitle],
+        centerTitle: true,
+        titlePadding: const EdgeInsets.only(bottom: 16),
+        title: Text(
+          widget.item.result,
+          style: theme.textTheme.headlineSmall?.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            shadows: [
+              Shadow(
+                offset: const Offset(0, 2),
+                blurRadius: 4,
+                color: Colors.black.withOpacity(0.8),
+              ),
+            ],
+          ),
+          textAlign: TextAlign.center,
+        ),
+        background: Stack(
+          fit: StackFit.expand,
+          children: [
+            Hero(
+              tag: 'snake_image_${widget.item.id}',
+              child: _buildSnakeImage(widget.item.imagePath),
+            ),
+            // Gradient overlay for better text readability
+            DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.3),
+                    Colors.black.withOpacity(0.7),
+                  ],
+                  stops: const [0.0, 0.6, 1.0],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModernAppBarButton(BuildContext context, IconData icon, VoidCallback onPressed) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            height: 44,
+            width: 44,
+            decoration: BoxDecoration(
+              color: isDarkMode ? Colors.black.withOpacity(0.5) : Colors.white.withOpacity(0.8),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isDarkMode ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.1),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  HapticService.instance.vibrate();
+                  onPressed();
+                },
+                borderRadius: BorderRadius.circular(12),
+                child: Icon(
+                  icon,
+                  size: 22,
+                  color: isDarkMode ? Colors.white : Colors.black87,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModernDetailsTab(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
+      child: Column(
+        children: [
+          // Safety Card - More prominent and modern
+          _buildModernSafetyCard(context),
+          const SizedBox(height: 24),
+
+          // Information Cards with better visual hierarchy
+          _buildModernInfoCard(
+            context,
+            'Identification',
+            HugeIcons.strokeRoundedIdentification,
+            {
+              'Common Name': widget.item.commonName ?? widget.item.result,
+              'Scientific Name': widget.item.scientificName ?? widget.item.subtitle,
+              'Family': widget.item.family ?? 'N/A',
+              'Genus': widget.item.genus ?? 'N/A',
+              'Confidence': '${(widget.item.confidence * 100).toStringAsFixed(0)}%',
+            },
+          ),
+          const SizedBox(height: 16),
+
+          _buildModernInfoCard(
+            context,
+            'Physical Characteristics',
+            HugeIcons.strokeRoundedRuler,
+            {
+              'Average Length': widget.item.averageLength ?? 'N/A',
+              'Average Weight': widget.item.averageWeight ?? 'N/A',
+              'Behavior': widget.item.behavior ?? 'N/A',
+              'Diet': widget.item.diet ?? 'N/A',
+            },
+          ),
+          const SizedBox(height: 16),
+
+          _buildModernInfoCard(
+            context,
+            'Habitat & Distribution',
+            HugeIcons.strokeRoundedGlobal,
+            {
+              'Habitat': widget.item.habitat ?? 'N/A',
+              'Geographic Range': widget.item.geographicRange ?? 'N/A',
+              'Conservation Status': widget.item.conservationStatus ?? 'N/A',
+            },
+          ),
+          const SizedBox(height: 16),
+
+          _buildModernInfoCard(
+            context,
+            'Additional Information',
+            HugeIcons.strokeRoundedInformationCircle,
+            {
+              'Safety Information': widget.item.safetyInformation ?? 'N/A',
+              'Similar Species': widget.item.similarSpecies ?? 'N/A',
+              'Interesting Facts': widget.item.interestingFacts ?? 'N/A',
+            },
+          ),
+
+          // Wiki Link Button with modern design
+          if (widget.item.details['wikiLink'] != null) ...[
+            const SizedBox(height: 24),
+            _buildModernWikiButton(context, widget.item.details['wikiLink']!),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModernSafetyCard(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final venomousStatus = widget.item.venomousStatus;
+    final safetyInfo = widget.item.safetyInformation;
+    final conservationStatus = widget.item.conservationStatus;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode ? AppTheme.darkCharcoal : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header with gradient
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  _getSafetyColor(venomousStatus),
+                  _getSafetyColor(venomousStatus).withOpacity(0.8),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      _getSafetyIcon(venomousStatus),
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      'Safety Status',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Venomous Status - Large and prominent
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.5),
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    _getVenomousDisplayText(venomousStatus),
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 26,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Safety details
+          Padding(
+            padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                _buildCustomSegmentedControl(context),
-                // Use an IndexedStack to preserve the state of each tab's content
-                IndexedStack(
-                  index: _selectedTabIndex,
+                // Safety Level with visual indicator
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildDetailsTab(context),
-                    _buildFactsTab(context),
+                    Text(
+                      'Safety Level',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: isDarkMode ? Colors.white : Colors.black87,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: _getSafetyColor(venomousStatus).withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        _getSafetyLevel(venomousStatus),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: _getSafetyColor(venomousStatus),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 16),
+
+                // Modern safety indicator
+                Container(
+                  height: 12,
+                  decoration: BoxDecoration(
+                    color: isDarkMode ? const Color(0xFF2D2D2D) : const Color(0xFFE0E0E0),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Stack(
+                    children: [
+                      // Background bar
+                      Container(
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: isDarkMode ? const Color(0xFF2D2D2D) : const Color(0xFFE0E0E0),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                      ),
+                      // Colored progress bar
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 800),
+                        curve: Curves.easeInOut,
+                        height: 12,
+                        width: MediaQuery.of(context).size.width * 0.7 * (_getSafetyValue(venomousStatus) / 100),
+                        decoration: BoxDecoration(
+                          color: _getSafetyColor(venomousStatus),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                      ),
+                      // Safety indicator dot
+                      AnimatedPositioned(
+                        duration: const Duration(milliseconds: 800),
+                        curve: Curves.easeInOut,
+                        left: MediaQuery.of(context).size.width * 0.7 * (_getSafetyValue(venomousStatus) / 100) - 6,
+                        top: 0,
+                        child: Container(
+                          width: 12,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: _getSafetyColor(venomousStatus),
+                              width: 3,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Safety explanation
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Text(
+                    _getSafetyExplanation(venomousStatus),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                      height: 1.5,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Conservation Status and Safety Info
+                Row(
+                  children: [
+                    if (conservationStatus != null) ...[
+                      Expanded(
+                        child: _buildStatusItem(
+                          context,
+                          'Conservation',
+                          conservationStatus,
+                          HugeIcons.strokeRoundedLeaf01,
+                          isDarkMode,
+                        ),
+                      ),
+                    ],
+                    if (safetyInfo != null && safetyInfo.length > 50) ...[
+                      if (conservationStatus != null) const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildStatusItem(
+                          context,
+                          'Safety Info',
+                          'See details',
+                          HugeIcons.strokeRoundedShieldUser,
+                          isDarkMode,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ],
@@ -59,347 +576,402 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     );
   }
 
-  Widget _buildCustomSegmentedControl(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-      padding: const EdgeInsets.all(4.0),
-      decoration: BoxDecoration(
-        color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
-        borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
-      ),
-      child: Row(
-        children: [
-          _buildSegment(context, 'Details', 0),
-          _buildSegment(context, 'Facts', 1),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSegment(BuildContext context, String title, int index) {
+  Widget _buildStatusItem(
+    BuildContext context,
+    String title,
+    String value,
+    IconData icon,
+    bool isDarkMode,
+  ) {
     final theme = Theme.of(context);
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final isSelected = _selectedTabIndex == index;
-
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => setState(() => _selectedTabIndex = index),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          decoration: BoxDecoration(
-            color: isSelected ? theme.colorScheme.primary : Colors.transparent,
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.labelLarge?.copyWith(
-              color: isSelected
-                  ? (isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard)
-                  : (isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  SliverAppBar _buildSliverAppBar(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return SliverAppBar(
-      expandedHeight: 300,
-      pinned: true,
-      stretch: true,
-      backgroundColor: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
-      leading: _buildAppBarButton(context, HugeIcons.strokeRoundedArrowLeft01, () => Navigator.pop(context)),
-      actions: [
-        _buildAppBarButton(context, HugeIcons.strokeRoundedDelete02, () => _showDeleteDialog(context)),
-        const SizedBox(width: 16),
-      ],
-      surfaceTintColor: Colors.transparent,
-      flexibleSpace: FlexibleSpaceBar(
-        stretchModes: const [StretchMode.zoomBackground, StretchMode.fadeTitle],
-        centerTitle: true,
-        title: Text(widget.item.result,
-            style: theme.textTheme.titleLarge?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              shadows: [
-                Shadow(
-                  offset: const Offset(0, 1),
-                  blurRadius: 3,
-                  color: Colors.black.withOpacity(0.8),
-                ),
-              ],
-            ),
-            textAlign: TextAlign.center),
-        background: Hero(
-          tag: 'snake_image_${widget.item.id}',
-          child: _buildSnakeImage(widget.item.imagePath),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDetailsTab(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-      child: Column(
-        children: [
-          // Safety & Conservation Section - Prominently displayed
-          _buildSafetyCard(context),
-          const SizedBox(height: 16),
-
-          _buildDetailCard(context, '🐍 Identification', {
-            'Common Name': widget.item.commonName ?? widget.item.result,
-            'Scientific Name': widget.item.scientificName ?? widget.item.subtitle,
-            'Family': widget.item.family ?? 'N/A',
-            'Genus': widget.item.genus ?? 'N/A',
-            'Confidence': '${(widget.item.confidence * 100).toStringAsFixed(0)}%',
-          }),
-          const SizedBox(height: 16),
-
-          _buildDetailCard(context, '📏 Physical Characteristics', {
-            'Average Length': widget.item.averageLength ?? 'N/A',
-            'Average Weight': widget.item.averageWeight ?? 'N/A',
-            'Behavior': widget.item.behavior ?? 'N/A',
-            'Diet': widget.item.diet ?? 'N/A',
-          }),
-          const SizedBox(height: 16),
-
-          _buildDetailCard(context, '🌍 Habitat & Distribution', {
-            'Habitat': widget.item.habitat ?? 'N/A',
-            'Geographic Range': widget.item.geographicRange ?? 'N/A',
-            'Conservation Status': widget.item.conservationStatus ?? 'N/A',
-          }),
-          const SizedBox(height: 16),
-
-          _buildDetailCard(context, 'ℹ️ Additional Information', {
-            'Safety Information': widget.item.safetyInformation ?? 'N/A',
-            'Similar Species': widget.item.similarSpecies ?? 'N/A',
-            'Interesting Facts': widget.item.interestingFacts ?? 'N/A',
-          }),
-
-          // Wiki Link Button
-          if (widget.item.details['wikiLink'] != null) ...[
-            const SizedBox(height: 16),
-            _buildWikiButton(context, widget.item.details['wikiLink']!),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSafetyCard(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final venomousStatus = widget.item.venomousStatus;
-    final safetyInfo = widget.item.safetyInformation;
-    final conservationStatus = widget.item.conservationStatus;
 
     return Container(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF8F9FA),
-        borderRadius: BorderRadius.circular(16),
+        color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.03),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isDarkMode ? const Color(0xFF2D2D2D) : const Color(0xFFE0E0E0),
+          color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
           width: 1,
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Venomous Status - Large and prominent
-          if (venomousStatus != null) ...[
-            Text(
-              'Venomous Status',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: _getSafetyColor(venomousStatus).withOpacity(0.2),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: _getSafetyColor(venomousStatus),
-                  width: 2,
-                ),
-              ),
-              child: Text(
-                _getVenomousDisplayText(venomousStatus),
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  color: _getSafetyColor(venomousStatus),
-                  fontWeight: FontWeight.w800,
-                  fontSize: 24,
-                  letterSpacing: -0.5,
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-          ],
-
-          // Safety Level with visual indicator
-          if (venomousStatus != null) ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Safety Level',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                    fontSize: 14,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: _getSafetyColor(venomousStatus).withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: _getSafetyColor(venomousStatus).withValues(alpha: 0.4),
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(
-                    _getSafetyLevel(venomousStatus),
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: _getSafetyColor(venomousStatus),
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-
-            // Safety slider with clear labels
-            Container(
-              height: 8,
-              decoration: BoxDecoration(
-                color: isDarkMode ? const Color(0xFF2D2D2D) : const Color(0xFFE0E0E0),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Stack(
-                children: [
-                  // Background bar
-                  Container(
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: isDarkMode ? const Color(0xFF2D2D2D) : const Color(0xFFE0E0E0),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                  // Colored progress bar
-                  Container(
-                    height: 8,
-                    width: MediaQuery.of(context).size.width * 0.6 * (_getSafetyValue(venomousStatus) / 100),
-                    decoration: BoxDecoration(
-                      color: _getSafetyColor(venomousStatus),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                  // Safety indicator dot
-                  Positioned(
-                    left: MediaQuery.of(context).size.width * 0.6 * (_getSafetyValue(venomousStatus) / 100) - 4,
-                    top: 0,
-                    child: Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: _getSafetyColor(venomousStatus),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: isDarkMode ? Colors.white : Colors.black,
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Clear safety explanation
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: Text(
-                _getSafetyExplanation(venomousStatus),
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                  fontSize: 12,
-                  height: 1.4,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const SizedBox(height: 20),
-          ],
-
-          // Conservation Status and Safety Info
           Row(
             children: [
-              if (conservationStatus != null) ...[
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Conservation Status',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        conservationStatus,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: isDarkMode ? Colors.white : Colors.black87,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
+              Icon(
+                icon,
+                size: 18,
+                color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                title,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                  fontWeight: FontWeight.w500,
                 ),
-              ],
-              if (safetyInfo != null && safetyInfo.length > 50) ...[
-                if (conservationStatus != null) const SizedBox(width: 24),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Safety Info',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'See details below',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: isDarkMode ? Colors.white : Colors.black87,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: isDarkMode ? Colors.white : Colors.black87,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),
     );
+  }
+
+  IconData _getSafetyIcon(String? venomousStatus) {
+    if (venomousStatus == null) return HugeIcons.strokeRoundedQuestion;
+    switch (venomousStatus.toLowerCase()) {
+      case 'venomous':
+      case 'highly venomous':
+      case 'extremely venomous':
+        return HugeIcons.strokeRoundedShieldUser;
+      case 'mildly venomous':
+      case 'weakly venomous':
+        return HugeIcons.strokeRoundedAlertCircle;
+      case 'non-venomous':
+      case 'harmless':
+        return HugeIcons.strokeRoundedShieldUser;
+      case 'unknown':
+        return HugeIcons.strokeRoundedQuestion;
+      default:
+        return HugeIcons.strokeRoundedQuestion;
+    }
+  }
+
+  Widget _buildModernInfoCard(
+    BuildContext context,
+    String title,
+    IconData icon,
+    Map<String, String> details,
+  ) {
+    final theme = Theme.of(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode ? AppTheme.darkCharcoal : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header with icon and title
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: isDarkMode ? AppTheme.forestGreen.withOpacity(0.1) : AppTheme.emeraldGreen.withOpacity(0.05),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: isDarkMode ? AppTheme.forestGreen.withOpacity(0.2) : AppTheme.emeraldGreen.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    icon,
+                    size: 24,
+                    color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: isDarkMode ? Colors.white : Colors.black87,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Content
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: details.entries.map((entry) {
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          entry.key,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          entry.value,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: isDarkMode ? Colors.white : Colors.black87,
+                            height: 1.4,
+                          ),
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModernWikiButton(BuildContext context, String wikiUrl) {
+    final theme = Theme.of(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      width: double.infinity,
+      height: 60,
+      child: ElevatedButton(
+        onPressed: () => _openWikiLink(wikiUrl),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isDarkMode ? AppTheme.darkCharcoal : Colors.white,
+          foregroundColor: isDarkMode ? Colors.white : Colors.black87,
+          elevation: 0,
+          shadowColor: Colors.black.withOpacity(0.2),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.1),
+              width: 1,
+            ),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              HugeIcons.strokeRoundedWikipedia,
+              size: 22,
+              color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'View on Wikipedia',
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: isDarkMode ? Colors.white : Colors.black87,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModernFactsTab(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: isDarkMode ? AppTheme.darkCharcoal : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: isDarkMode ? AppTheme.forestGreen.withOpacity(0.2) : AppTheme.emeraldGreen.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    HugeIcons.strokeRoundedLighthouse,
+                    size: 24,
+                    color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Text(
+                  'Interesting Facts',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: isDarkMode ? Colors.white : Colors.black87,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Text(
+              widget.item.interestingFacts ??
+                  widget.item.details['Description'] ??
+                  'No additional information available.',
+              style: theme.textTheme.bodyLarge?.copyWith(
+                height: 1.6,
+                color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Keep the existing methods for _buildSnakeImage, _getSafetyColor, _getSafetyValue, etc.
+  Widget _buildSnakeImage(String imagePath) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    // Debug logging
+    print('Building Snake image with path: $imagePath');
+    print('Path type: ${imagePath.startsWith('/') ? 'File' : 'Asset'}');
+    // Check if it's a file path (starts with /) or an asset path
+    if (imagePath.startsWith('/')) {
+      // It's a file path - use Image.file
+      final file = File(imagePath);
+      final exists = file.existsSync();
+      print('File exists: $exists');
+      if (!exists) {
+        print('File does not exist: $imagePath');
+        return Container(
+          color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.image_not_supported,
+                color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                size: 48,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Image not found',
+                style: TextStyle(color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Path: ${imagePath.split('/').last}',
+                style: TextStyle(
+                  color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+      return Image.file(
+        file,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          print('Error loading file image: $error');
+          return Container(
+            color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
+            child: Icon(
+              Icons.image_not_supported,
+              color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+              size: 48,
+            ),
+          );
+        },
+        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              child,
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.black.withOpacity(0.6), Colors.transparent, Colors.black.withOpacity(0.8)],
+                    stops: const [0.0, 0.4, 1.0],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // It's an asset path - use Image.asset
+      return Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          print('Error loading asset image: $error');
+          return Container(
+            color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
+            child: Icon(
+              Icons.image_not_supported,
+              color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+              size: 48,
+            ),
+          );
+        },
+        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              child,
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.black.withOpacity(0.6), Colors.transparent, Colors.black.withOpacity(0.8)],
+                    stops: const [0.0, 0.4, 1.0],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   Color _getSafetyColor(String? venomousStatus) {
@@ -506,41 +1078,6 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     }
   }
 
-  Widget _buildWikiButton(BuildContext context, String wikiUrl) {
-    final theme = Theme.of(context);
-    return Container(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        onPressed: () => _openWikiLink(wikiUrl),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF2D2D2D),
-          foregroundColor: Colors.white,
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: BorderSide(
-              color: const Color(0xFF3D3D3D),
-              width: 1,
-            ),
-          ),
-        ),
-        icon: Icon(
-          Icons.open_in_new,
-          size: 20,
-          color: AppTheme.emeraldGreen,
-        ),
-        label: Text(
-          'View on Wikipedia',
-          style: theme.textTheme.titleMedium?.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-  }
-
   void _openWikiLink(String url) async {
     try {
       final Uri uri = Uri.parse(url);
@@ -566,274 +1103,6 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         );
       }
     }
-  }
-
-  Widget _buildSnakeImage(String imagePath) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-
-    // Debug logging
-    print('Building Snake image with path: $imagePath');
-    print('Path type: ${imagePath.startsWith('/') ? 'File' : 'Asset'}');
-
-    // Check if it's a file path (starts with /) or an asset path
-    if (imagePath.startsWith('/')) {
-      // It's a file path - use Image.file
-      final file = File(imagePath);
-      final exists = file.existsSync();
-      print('File exists: $exists');
-
-      if (!exists) {
-        print('File does not exist: $imagePath');
-        return Container(
-          color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.image_not_supported,
-                color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                size: 48,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Image not found',
-                style: TextStyle(color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Path: ${imagePath.split('/').last}',
-                style: TextStyle(
-                  color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
-        );
-      }
-
-      return Image.file(
-        file,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          print('Error loading file image: $error');
-          return Container(
-            color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
-            child: Icon(
-              Icons.image_not_supported,
-              color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-              size: 48,
-            ),
-          );
-        },
-        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-          return Stack(
-            fit: StackFit.expand,
-            children: [
-              child,
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.black.withOpacity(0.6), Colors.transparent, Colors.black.withOpacity(0.8)],
-                    stops: const [0.0, 0.4, 1.0],
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      // It's an asset path - use Image.asset
-      return Image.asset(
-        imagePath,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          print('Error loading asset image: $error');
-          return Container(
-            color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
-            child: Icon(
-              Icons.image_not_supported,
-              color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-              size: 48,
-            ),
-          );
-        },
-        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-          return Stack(
-            fit: StackFit.expand,
-            children: [
-              child,
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.black.withOpacity(0.6), Colors.transparent, Colors.black.withOpacity(0.8)],
-                    stops: const [0.0, 0.4, 1.0],
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
-
-  Widget _buildFactsTab(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-      child: Container(
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
-          borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
-        ),
-        child: Text(
-          widget.item.interestingFacts ?? widget.item.details['Description'] ?? 'No additional information available.',
-          style: theme.textTheme.bodyLarge
-              ?.copyWith(height: 1.6, color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDetailCard(BuildContext context, String title, Map<String, String> details) {
-    final theme = Theme.of(context);
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isDarkMode ? AppTheme.subtleBorderColor : AppTheme.lightBorder,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header with icon and title
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: isDarkMode ? AppTheme.forestGreen.withOpacity(0.1) : AppTheme.forestGreen.withOpacity(0.05),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
-              ),
-            ),
-            child: Row(
-              children: [
-                Text(
-                  title,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    color: isDarkMode ? Colors.white : Colors.black87,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 18,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Content
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: details.entries.map((entry) {
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.02),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          entry.key,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          entry.value,
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: isDarkMode ? Colors.white : Colors.black87,
-                            height: 1.3,
-                          ),
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAppBarButton(BuildContext context, IconData icon, VoidCallback onPressed) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            decoration: BoxDecoration(
-              color: isDarkMode ? Colors.black.withOpacity(0.7) : Colors.white.withOpacity(0.9),
-              borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
-              border: Border.all(
-                color: isDarkMode ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.1),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: IconButton(
-              icon: Icon(
-                icon,
-                size: 22,
-                color: isDarkMode ? Colors.white : Colors.black87,
-              ),
-              onPressed: onPressed,
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
   void _showDeleteDialog(BuildContext context) {
