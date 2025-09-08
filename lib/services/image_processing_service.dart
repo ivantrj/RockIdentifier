@@ -23,7 +23,7 @@ class ImageProcessingService {
       // Create a more reliable filename format
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final extension = p.extension(imagePath);
-      final safeFileName = 'coin_$timestamp$extension';
+      final safeFileName = 'snake_$timestamp$extension';
       final savedPath = p.join(appDir.path, safeFileName);
 
       // Copy the file
@@ -102,44 +102,41 @@ class ImageProcessingService {
     LoggingService.debug('AI result keys: ${aiResult.keys.toList()}', tag: 'ImageProcessingService');
     LoggingService.debug('AI result: $aiResult', tag: 'ImageProcessingService');
 
-    // Extract details from the nested details object in AI response
-    final aiDetails = aiResult['details'] as Map<String, dynamic>? ?? {};
-    LoggingService.debug('AI details object: $aiDetails', tag: 'ImageProcessingService');
-    LoggingService.debug('AI details keys: ${aiDetails.keys.toList()}', tag: 'ImageProcessingService');
-
+    // The AI result contains snake data directly, not nested in a 'details' object
     final details = <String, dynamic>{
-      if (aiDetails['coinType'] != null) 'coinType': aiDetails['coinType'],
-      if (aiDetails['denomination'] != null) 'denomination': aiDetails['denomination'],
-      if (aiDetails['confidence'] != null) 'confidence': aiDetails['confidence'],
-      if (aiDetails['mintYear'] != null) 'mintYear': aiDetails['mintYear'],
-      if (aiDetails['country'] != null) 'country': aiDetails['country'],
-      if (aiDetails['mintMark'] != null) 'mintMark': aiDetails['mintMark'],
-      if (aiDetails['metalComposition'] != null) 'metalComposition': aiDetails['metalComposition'],
-      if (aiDetails['weight'] != null) 'weight': aiDetails['weight'],
-      if (aiDetails['diameter'] != null) 'diameter': aiDetails['diameter'],
-      if (aiDetails['condition'] != null) 'condition': aiDetails['condition'],
-      if (aiDetails['authenticity'] != null) 'authenticity': aiDetails['authenticity'],
-      if (aiDetails['rarity'] != null) 'rarity': aiDetails['rarity'],
-      if (aiDetails['estimatedValue'] != null) 'estimatedValue': aiDetails['estimatedValue'],
-      if (aiDetails['historicalContext'] != null) 'historicalContext': aiDetails['historicalContext'],
-      if (aiDetails['designDescription'] != null) 'designDescription': aiDetails['designDescription'],
-      if (aiDetails['edgeType'] != null) 'edgeType': aiDetails['edgeType'],
-      if (aiDetails['designer'] != null) 'designer': aiDetails['designer'],
-      if (aiDetails['mintage'] != null) 'mintage': aiDetails['mintage'],
-      if (aiDetails['marketDemand'] != null) 'marketDemand': aiDetails['marketDemand'],
-      if (aiDetails['investmentPotential'] != null) 'investmentPotential': aiDetails['investmentPotential'],
-      if (aiDetails['storageRecommendations'] != null) 'storageRecommendations': aiDetails['storageRecommendations'],
-      if (aiDetails['cleaningInstructions'] != null) 'cleaningInstructions': aiDetails['cleaningInstructions'],
-      if (aiDetails['similarCoins'] != null) 'similarCoins': aiDetails['similarCoins'],
-      if (aiDetails['insuranceValue'] != null) 'insuranceValue': aiDetails['insuranceValue'],
-      if (aiDetails['wikiLink'] != null) 'wikiLink': aiDetails['wikiLink'],
+      // Snake-specific fields
+      if (aiResult['commonName'] != null) 'commonName': aiResult['commonName'],
+      if (aiResult['scientificName'] != null) 'scientificName': aiResult['scientificName'],
+      if (aiResult['family'] != null) 'family': aiResult['family'],
+      if (aiResult['genus'] != null) 'genus': aiResult['genus'],
+      if (aiResult['venomousStatus'] != null) 'venomousStatus': aiResult['venomousStatus'],
+      if (aiResult['habitat'] != null) 'habitat': aiResult['habitat'],
+      if (aiResult['geographicRange'] != null) 'geographicRange': aiResult['geographicRange'],
+      if (aiResult['averageLength'] != null) 'averageLength': aiResult['averageLength'],
+      if (aiResult['averageWeight'] != null) 'averageWeight': aiResult['averageWeight'],
+      if (aiResult['behavior'] != null) 'behavior': aiResult['behavior'],
+      if (aiResult['diet'] != null) 'diet': aiResult['diet'],
+      if (aiResult['conservationStatus'] != null) 'conservationStatus': aiResult['conservationStatus'],
+      if (aiResult['safetyInformation'] != null) 'safetyInformation': aiResult['safetyInformation'],
+      if (aiResult['similarSpecies'] != null) 'similarSpecies': aiResult['similarSpecies'],
+      if (aiResult['interestingFacts'] != null) 'interestingFacts': aiResult['interestingFacts'],
+      if (aiResult['wikiLink'] != null) 'wikiLink': aiResult['wikiLink'],
     };
 
+    // Generate a unique ID
+    final id = DateTime.now().millisecondsSinceEpoch.toString();
+
+    // Use commonName as the main result, fallback to scientificName
+    final result = aiResult['commonName'] ?? aiResult['scientificName'] ?? 'Unknown Snake';
+
+    // Use scientificName as subtitle, fallback to family
+    final subtitle = aiResult['scientificName'] ?? aiResult['family'] ?? '';
+
     return IdentifiedItem(
-      id: aiResult['id'] ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      id: id,
       imagePath: imagePath,
-      result: aiResult['result'] ?? aiResult['denomination'] ?? aiResult['coinType'] ?? 'Unknown Snake',
-      subtitle: aiResult['subtitle'] ?? aiResult['mintYear'] ?? aiResult['country'] ?? '',
+      result: result,
+      subtitle: subtitle,
       confidence: _parseConfidence(aiResult['confidence']),
       details: details,
       dateTime: DateTime.now(),
@@ -211,14 +208,14 @@ class ImageProcessingService {
           final error = data['error'].toString().toLowerCase();
           LoggingService.debug('AI error message: $error', tag: 'ImageProcessingService');
 
-          if (error.contains('does not contain Snake') ||
-              error.contains('not Snake') ||
-              error.contains('no Snake') ||
-              error.contains('modern item') ||
-              error.contains('not artifact')) {
-            LoggingService.info('AI determined image is not an Snake - throwing NOT_coin exception',
+          if (error.contains('does not contain snake') ||
+              error.contains('not snake') ||
+              error.contains('no snake') ||
+              error.contains('not a snake') ||
+              error.contains('not reptile')) {
+            LoggingService.info('AI determined image is not a snake - throwing NOT_SNAKE exception',
                 tag: 'ImageProcessingService');
-            throw Exception('NOT_coin');
+            throw Exception('NOT_SNAKE');
           }
           // For other errors, throw the actual error message
           LoggingService.error('AI Snake identification failed',
@@ -250,9 +247,9 @@ class ImageProcessingService {
       LoggingService.error('Request timeout', error: e, tag: 'ImageProcessingService');
       throw Exception(e.message);
     } catch (e) {
-      // Check if this is a NOT_coin exception and rethrow it directly
-      if (e is Exception && e.toString().contains('NOT_coin')) {
-        LoggingService.debug('Re-throwing NOT_coin exception', tag: 'ImageProcessingService');
+      // Check if this is a NOT_SNAKE exception and rethrow it directly
+      if (e is Exception && e.toString().contains('NOT_SNAKE')) {
+        LoggingService.debug('Re-throwing NOT_SNAKE exception', tag: 'ImageProcessingService');
         rethrow;
       }
 

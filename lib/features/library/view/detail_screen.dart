@@ -24,8 +24,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: AppTheme.nearBlack,
+      backgroundColor: isDarkMode ? AppTheme.nearBlack : AppTheme.lightBackground,
       // Add a Floating Action Button for the Chat feature
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -33,7 +34,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             builder: (_) => ChatScreen(item: widget.item),
           ));
         },
-        child: const Icon(HugeIcons.strokeRoundedChatBot, color: AppTheme.darkCharcoal),
+        child: Icon(HugeIcons.strokeRoundedChatBot, color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard),
       ),
       body: CustomScrollView(
         slivers: [
@@ -47,7 +48,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   index: _selectedTabIndex,
                   children: [
                     _buildDetailsTab(context),
-                    _buildHistoryTab(context),
+                    _buildFactsTab(context),
                   ],
                 ),
               ],
@@ -59,17 +60,18 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
   }
 
   Widget _buildCustomSegmentedControl(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
       padding: const EdgeInsets.all(4.0),
       decoration: BoxDecoration(
-        color: AppTheme.darkCharcoal,
+        color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
         borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
       ),
       child: Row(
         children: [
           _buildSegment(context, 'Details', 0),
-          _buildSegment(context, 'History', 1),
+          _buildSegment(context, 'Facts', 1),
         ],
       ),
     );
@@ -77,6 +79,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
 
   Widget _buildSegment(BuildContext context, String title, int index) {
     final theme = Theme.of(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final isSelected = _selectedTabIndex == index;
 
     return Expanded(
@@ -92,7 +95,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             title,
             textAlign: TextAlign.center,
             style: theme.textTheme.labelLarge?.copyWith(
-              color: isSelected ? AppTheme.darkCharcoal : AppTheme.secondaryTextColor,
+              color: isSelected
+                  ? (isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard)
+                  : (isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary),
             ),
           ),
         ),
@@ -102,11 +107,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
 
   SliverAppBar _buildSliverAppBar(BuildContext context) {
     final theme = Theme.of(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return SliverAppBar(
       expandedHeight: 300,
       pinned: true,
       stretch: true,
-      backgroundColor: AppTheme.darkCharcoal,
+      backgroundColor: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
       leading: _buildAppBarButton(context, HugeIcons.strokeRoundedArrowLeft01, () => Navigator.pop(context)),
       actions: [
         _buildAppBarButton(context, HugeIcons.strokeRoundedDelete02, () => _showDeleteDialog(context)),
@@ -116,10 +122,22 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       flexibleSpace: FlexibleSpaceBar(
         stretchModes: const [StretchMode.zoomBackground, StretchMode.fadeTitle],
         centerTitle: true,
-        title: Text(widget.item.result, style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
+        title: Text(widget.item.result,
+            style: theme.textTheme.titleLarge?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              shadows: [
+                Shadow(
+                  offset: const Offset(0, 1),
+                  blurRadius: 3,
+                  color: Colors.black.withOpacity(0.8),
+                ),
+              ],
+            ),
+            textAlign: TextAlign.center),
         background: Hero(
-          tag: 'coin_image_${widget.item.id}',
-          child: _buildCoinImage(widget.item.imagePath),
+          tag: 'snake_image_${widget.item.id}',
+          child: _buildSnakeImage(widget.item.imagePath),
         ),
       ),
     );
@@ -130,45 +148,38 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Column(
         children: [
-          // Value & Investment Section - Prominently displayed
-          _buildValueCard(context),
+          // Safety & Conservation Section - Prominently displayed
+          _buildSafetyCard(context),
           const SizedBox(height: 16),
 
-          _buildDetailCard(context, 'Identification', {
-            'Snake Name': widget.item.result,
-            'Type': widget.item.details['coinType'] ?? 'N/A',
-            'Denomination': widget.item.details['denomination'] ?? 'N/A',
-            'Origin': widget.item.subtitle,
-            'Country': widget.item.details['country'] ?? 'N/A',
-            'Mint Year': widget.item.details['mintYear'] ?? 'N/A',
-            'Mint Mark': widget.item.details['mintMark'] ?? 'N/A',
+          _buildDetailCard(context, '🐍 Identification', {
+            'Common Name': widget.item.commonName ?? widget.item.result,
+            'Scientific Name': widget.item.scientificName ?? widget.item.subtitle,
+            'Family': widget.item.family ?? 'N/A',
+            'Genus': widget.item.genus ?? 'N/A',
             'Confidence': '${(widget.item.confidence * 100).toStringAsFixed(0)}%',
           }),
           const SizedBox(height: 16),
 
-          _buildDetailCard(context, 'Specifications', {
-            'Designer': widget.item.details['designer'] ?? widget.item.details['Designer'] ?? 'N/A',
-            'Composition': widget.item.details['metalComposition'] ?? widget.item.details['Composition'] ?? 'N/A',
-            'Edge': widget.item.details['edgeType'] ?? widget.item.details['Edge'] ?? 'N/A',
-            'Diameter': widget.item.details['diameter'] ?? widget.item.details['Diameter'] ?? 'N/A',
-            'Weight': widget.item.details['weight'] ?? widget.item.details['Weight'] ?? 'N/A',
+          _buildDetailCard(context, '📏 Physical Characteristics', {
+            'Average Length': widget.item.averageLength ?? 'N/A',
+            'Average Weight': widget.item.averageWeight ?? 'N/A',
+            'Behavior': widget.item.behavior ?? 'N/A',
+            'Diet': widget.item.diet ?? 'N/A',
           }),
           const SizedBox(height: 16),
 
-          _buildDetailCard(context, 'Market & Investment', {
-            'Grade': widget.item.details['condition'] ?? widget.item.details['Grade'] ?? 'N/A',
-            'Rarity': widget.item.details['rarity'] ?? 'N/A',
-            'Mintage': widget.item.details['mintage'] ?? widget.item.details['Mintage'] ?? 'N/A',
-            'Market Demand': widget.item.details['marketDemand'] ?? 'N/A',
-            'Investment Potential': widget.item.details['investmentPotential'] ?? 'N/A',
-            'Authenticity': widget.item.details['authenticity'] ?? 'N/A',
+          _buildDetailCard(context, '🌍 Habitat & Distribution', {
+            'Habitat': widget.item.habitat ?? 'N/A',
+            'Geographic Range': widget.item.geographicRange ?? 'N/A',
+            'Conservation Status': widget.item.conservationStatus ?? 'N/A',
           }),
           const SizedBox(height: 16),
 
-          _buildDetailCard(context, 'Additional Details', {
-            'Storage Recommendations': widget.item.details['storageRecommendations'] ?? 'N/A',
-            'Cleaning Instructions': widget.item.details['cleaningInstructions'] ?? 'N/A',
-            'Similar Coins': widget.item.details['similarCoins'] ?? 'N/A',
+          _buildDetailCard(context, 'ℹ️ Additional Information', {
+            'Safety Information': widget.item.safetyInformation ?? 'N/A',
+            'Similar Species': widget.item.similarSpecies ?? 'N/A',
+            'Interesting Facts': widget.item.interestingFacts ?? 'N/A',
           }),
 
           // Wiki Link Button
@@ -181,74 +192,85 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     );
   }
 
-  Widget _buildValueCard(BuildContext context) {
+  Widget _buildSafetyCard(BuildContext context) {
     final theme = Theme.of(context);
-    final estimatedValue = widget.item.details['estimatedValue'];
-    final rarity = widget.item.details['rarity'];
-    final condition = widget.item.details['condition'];
-    final mintage = widget.item.details['mintage'];
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final venomousStatus = widget.item.venomousStatus;
+    final safetyInfo = widget.item.safetyInformation;
+    final conservationStatus = widget.item.conservationStatus;
 
     return Container(
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A),
+        color: isDarkMode ? const Color(0xFF1A1A1A) : const Color(0xFFF8F9FA),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFF2D2D2D),
+          color: isDarkMode ? const Color(0xFF2D2D2D) : const Color(0xFFE0E0E0),
           width: 1,
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Estimated Value - Large and prominent
-          if (estimatedValue != null) ...[
+          // Venomous Status - Large and prominent
+          if (venomousStatus != null) ...[
             Text(
-              'Estimated Value',
+              'Venomous Status',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: AppTheme.secondaryTextColor,
+                color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
                 fontSize: 14,
               ),
             ),
             const SizedBox(height: 8),
-            Text(
-              estimatedValue,
-              style: theme.textTheme.headlineMedium?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                fontSize: 28,
-                letterSpacing: -0.5,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: _getSafetyColor(venomousStatus).withOpacity(0.2),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: _getSafetyColor(venomousStatus),
+                  width: 2,
+                ),
+              ),
+              child: Text(
+                _getVenomousDisplayText(venomousStatus),
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  color: _getSafetyColor(venomousStatus),
+                  fontWeight: FontWeight.w800,
+                  fontSize: 24,
+                  letterSpacing: -0.5,
+                ),
               ),
             ),
             const SizedBox(height: 24),
           ],
 
-          // Rarity with visual indicator
-          if (rarity != null) ...[
+          // Safety Level with visual indicator
+          if (venomousStatus != null) ...[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Rarity Level',
+                  'Safety Level',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: AppTheme.secondaryTextColor,
+                    color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
                     fontSize: 14,
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: _getRarityColor(rarity).withValues(alpha: 0.2),
+                    color: _getSafetyColor(venomousStatus).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: _getRarityColor(rarity).withValues(alpha: 0.4),
+                      color: _getSafetyColor(venomousStatus).withValues(alpha: 0.4),
                       width: 1,
                     ),
                   ),
                   child: Text(
-                    rarity,
+                    _getSafetyLevel(venomousStatus),
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: _getRarityColor(rarity),
+                      color: _getSafetyColor(venomousStatus),
                       fontWeight: FontWeight.w600,
                       fontSize: 12,
                     ),
@@ -258,11 +280,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             ),
             const SizedBox(height: 12),
 
-            // Rarity slider with clear labels
+            // Safety slider with clear labels
             Container(
               height: 8,
               decoration: BoxDecoration(
-                color: const Color(0xFF2D2D2D),
+                color: isDarkMode ? const Color(0xFF2D2D2D) : const Color(0xFFE0E0E0),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Stack(
@@ -271,31 +293,31 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   Container(
                     height: 8,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF2D2D2D),
+                      color: isDarkMode ? const Color(0xFF2D2D2D) : const Color(0xFFE0E0E0),
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
                   // Colored progress bar
                   Container(
                     height: 8,
-                    width: MediaQuery.of(context).size.width * 0.6 * (_getRarityValue(rarity) / 100),
+                    width: MediaQuery.of(context).size.width * 0.6 * (_getSafetyValue(venomousStatus) / 100),
                     decoration: BoxDecoration(
-                      color: _getRarityColor(rarity),
+                      color: _getSafetyColor(venomousStatus),
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
-                  // Rarity indicator dot
+                  // Safety indicator dot
                   Positioned(
-                    left: MediaQuery.of(context).size.width * 0.6 * (_getRarityValue(rarity) / 100) - 4,
+                    left: MediaQuery.of(context).size.width * 0.6 * (_getSafetyValue(venomousStatus) / 100) - 4,
                     top: 0,
                     child: Container(
                       width: 8,
                       height: 8,
                       decoration: BoxDecoration(
-                        color: _getRarityColor(rarity),
+                        color: _getSafetyColor(venomousStatus),
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Colors.white,
+                          color: isDarkMode ? Colors.white : Colors.black,
                           width: 2,
                         ),
                       ),
@@ -305,13 +327,13 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
               ),
             ),
 
-            // Clear rarity explanation
+            // Clear safety explanation
             Padding(
               padding: const EdgeInsets.only(top: 12),
               child: Text(
-                _getRarityExplanation(rarity),
+                _getSafetyExplanation(venomousStatus),
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: AppTheme.secondaryTextColor,
+                  color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
                   fontSize: 12,
                   height: 1.4,
                 ),
@@ -321,26 +343,26 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             const SizedBox(height: 20),
           ],
 
-          // Condition and Mintage
+          // Conservation Status and Safety Info
           Row(
             children: [
-              if (condition != null) ...[
+              if (conservationStatus != null) ...[
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Condition',
+                        'Conservation Status',
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: AppTheme.secondaryTextColor,
+                          color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
                           fontSize: 14,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        condition,
+                        conservationStatus,
                         style: theme.textTheme.titleMedium?.copyWith(
-                          color: Colors.white,
+                          color: isDarkMode ? Colors.white : Colors.black87,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -348,24 +370,24 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   ),
                 ),
               ],
-              if (mintage != null) ...[
-                if (condition != null) const SizedBox(width: 24),
+              if (safetyInfo != null && safetyInfo.length > 50) ...[
+                if (conservationStatus != null) const SizedBox(width: 24),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Mintage',
+                        'Safety Info',
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: AppTheme.secondaryTextColor,
+                          color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
                           fontSize: 14,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        mintage,
+                        'See details below',
                         style: theme.textTheme.titleMedium?.copyWith(
-                          color: Colors.white,
+                          color: isDarkMode ? Colors.white : Colors.black87,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -380,59 +402,107 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     );
   }
 
-  Color _getRarityColor(String? rarity) {
-    if (rarity == null) return Colors.grey;
-    switch (rarity.toLowerCase()) {
-      case 'very rare':
-      case 'ultra rare':
+  Color _getSafetyColor(String? venomousStatus) {
+    if (venomousStatus == null) return Colors.grey;
+    switch (venomousStatus.toLowerCase()) {
+      case 'venomous':
+      case 'highly venomous':
+      case 'extremely venomous':
         return Colors.red;
-      case 'rare':
+      case 'mildly venomous':
+      case 'weakly venomous':
         return Colors.orange;
-      case 'scarce':
+      case 'non-venomous':
+      case 'harmless':
+        return Colors.green;
+      case 'unknown':
         return Colors.amber;
-      case 'common':
-      case 'very common':
-        return Colors.orange;
       default:
         return Colors.grey;
     }
   }
 
-  int _getRarityValue(String? rarity) {
-    if (rarity == null) return 0;
-    switch (rarity.toLowerCase()) {
-      case 'very rare':
-      case 'ultra rare':
+  int _getSafetyValue(String? venomousStatus) {
+    if (venomousStatus == null) return 0;
+    switch (venomousStatus.toLowerCase()) {
+      case 'venomous':
+      case 'highly venomous':
+      case 'extremely venomous':
         return 90;
-      case 'rare':
-        return 70;
-      case 'scarce':
-        return 50;
-      case 'common':
-        return 30;
-      case 'very common':
+      case 'mildly venomous':
+      case 'weakly venomous':
+        return 60;
+      case 'non-venomous':
+      case 'harmless':
         return 20;
+      case 'unknown':
+        return 50;
       default:
         return 0;
     }
   }
 
-  String _getRarityExplanation(String? rarity) {
-    if (rarity == null) return 'Rarity information not available';
-    switch (rarity.toLowerCase()) {
-      case 'very rare':
-      case 'ultra rare':
-        return 'Extremely difficult to find. These coins are highly sought after by collectors.';
-      case 'rare':
-        return 'Hard to find. These coins have significant collector value.';
-      case 'scarce':
-        return 'Limited availability. These coins are moderately valuable.';
-      case 'common':
-        return 'Readily available. These coins are easily found in circulation.';
-      case 'very common':
-        return 'Widely available. These coins are frequently encountered.';
+  String _getSafetyLevel(String? venomousStatus) {
+    if (venomousStatus == null) return 'Unknown';
+    switch (venomousStatus.toLowerCase()) {
+      case 'venomous':
+      case 'highly venomous':
+      case 'extremely venomous':
+        return 'High Risk';
+      case 'mildly venomous':
+      case 'weakly venomous':
+        return 'Medium Risk';
+      case 'non-venomous':
+      case 'harmless':
+        return 'Low Risk';
+      case 'unknown':
+        return 'Unknown Risk';
       default:
-        return 'Rarity level information not available.';
+        return 'Unknown';
+    }
+  }
+
+  String _getSafetyExplanation(String? venomousStatus) {
+    if (venomousStatus == null) return 'Safety information not available';
+    switch (venomousStatus.toLowerCase()) {
+      case 'venomous':
+      case 'highly venomous':
+      case 'extremely venomous':
+        return 'DANGER: This snake is venomous and can be life-threatening. Keep distance and seek immediate medical attention if bitten.';
+      case 'mildly venomous':
+      case 'weakly venomous':
+        return 'CAUTION: This snake has mild venom. While not typically life-threatening, medical attention is recommended if bitten.';
+      case 'non-venomous':
+      case 'harmless':
+        return 'SAFE: This snake is non-venomous and poses no venom risk to humans.';
+      case 'unknown':
+        return 'UNKNOWN: Venom status is unclear. Exercise caution and avoid handling.';
+      default:
+        return 'Safety information not available.';
+    }
+  }
+
+  String _getVenomousDisplayText(String? venomousStatus) {
+    if (venomousStatus == null) return 'Unknown';
+    switch (venomousStatus.toLowerCase()) {
+      case 'venomous':
+        return '⚠️ VENOMOUS';
+      case 'highly venomous':
+        return '🚨 HIGHLY VENOMOUS';
+      case 'extremely venomous':
+        return '☠️ EXTREMELY VENOMOUS';
+      case 'mildly venomous':
+        return '⚡ MILDY VENOMOUS';
+      case 'weakly venomous':
+        return '⚡ WEAKLY VENOMOUS';
+      case 'non-venomous':
+        return '✅ NON-VENOMOUS';
+      case 'harmless':
+        return '✅ HARMLESS';
+      case 'unknown':
+        return '❓ UNKNOWN';
+      default:
+        return venomousStatus.toUpperCase();
     }
   }
 
@@ -498,7 +568,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     }
   }
 
-  Widget _buildCoinImage(String imagePath) {
+  Widget _buildSnakeImage(String imagePath) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     // Debug logging
     print('Building Snake image with path: $imagePath');
     print('Path type: ${imagePath.startsWith('/') ? 'File' : 'Asset'}');
@@ -513,25 +585,25 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       if (!exists) {
         print('File does not exist: $imagePath');
         return Container(
-          color: AppTheme.darkCharcoal,
+          color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 Icons.image_not_supported,
-                color: AppTheme.secondaryTextColor,
+                color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
                 size: 48,
               ),
               const SizedBox(height: 8),
               Text(
                 'Image not found',
-                style: TextStyle(color: AppTheme.secondaryTextColor),
+                style: TextStyle(color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary),
               ),
               const SizedBox(height: 4),
               Text(
                 'Path: ${imagePath.split('/').last}',
                 style: TextStyle(
-                  color: AppTheme.secondaryTextColor,
+                  color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
                   fontSize: 12,
                 ),
               ),
@@ -546,10 +618,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         errorBuilder: (context, error, stackTrace) {
           print('Error loading file image: $error');
           return Container(
-            color: AppTheme.darkCharcoal,
+            color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
             child: Icon(
               Icons.image_not_supported,
-              color: AppTheme.secondaryTextColor,
+              color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
               size: 48,
             ),
           );
@@ -581,10 +653,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         errorBuilder: (context, error, stackTrace) {
           print('Error loading asset image: $error');
           return Container(
-            color: AppTheme.darkCharcoal,
+            color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
             child: Icon(
               Icons.image_not_supported,
-              color: AppTheme.secondaryTextColor,
+              color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
               size: 48,
             ),
           );
@@ -611,19 +683,21 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     }
   }
 
-  Widget _buildHistoryTab(BuildContext context) {
+  Widget _buildFactsTab(BuildContext context) {
     final theme = Theme.of(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Container(
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: AppTheme.darkCharcoal,
+          color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
           borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
         ),
         child: Text(
-          widget.item.details['historicalContext'] ?? widget.item.details['Description'] ?? 'No history available.',
-          style: theme.textTheme.bodyLarge?.copyWith(height: 1.6, color: AppTheme.secondaryTextColor),
+          widget.item.interestingFacts ?? widget.item.details['Description'] ?? 'No additional information available.',
+          style: theme.textTheme.bodyLarge
+              ?.copyWith(height: 1.6, color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary),
         ),
       ),
     );
@@ -631,63 +705,129 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
 
   Widget _buildDetailCard(BuildContext context, String title, Map<String, String> details) {
     final theme = Theme.of(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: AppTheme.darkCharcoal,
-        borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
+        color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDarkMode ? AppTheme.subtleBorderColor : AppTheme.lightBorder,
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: theme.textTheme.titleLarge),
-          const SizedBox(height: 8),
-          ...details.entries.map((entry) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      entry.key,
-                      style: theme.textTheme.bodyMedium?.copyWith(color: AppTheme.secondaryTextColor),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      entry.value,
-                      style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                ],
+          // Header with icon and title
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: isDarkMode ? AppTheme.forestGreen.withOpacity(0.1) : AppTheme.forestGreen.withOpacity(0.05),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
               ),
-            );
-          }).toList(),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  title,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: isDarkMode ? Colors.white : Colors.black87,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Content
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: details.entries.map((entry) {
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.02),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          entry.key,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          entry.value,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: isDarkMode ? Colors.white : Colors.black87,
+                            height: 1.3,
+                          ),
+                          textAlign: TextAlign.right,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildAppBarButton(BuildContext context, IconData icon, VoidCallback onPressed) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
             decoration: BoxDecoration(
-              color: AppTheme.glassColor.withOpacity(0.5),
+              color: isDarkMode ? Colors.black.withOpacity(0.7) : Colors.white.withOpacity(0.9),
               borderRadius: BorderRadius.circular(AppTheme.buttonBorderRadius),
-              border: Border.all(color: AppTheme.subtleBorderColor.withOpacity(0.5)),
+              border: Border.all(
+                color: isDarkMode ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.1),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: IconButton(
-              icon: Icon(icon, size: 22, color: AppTheme.primaryTextColor),
+              icon: Icon(
+                icon,
+                size: 22,
+                color: isDarkMode ? Colors.white : Colors.black87,
+              ),
               onPressed: onPressed,
             ),
           ),
@@ -703,7 +843,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       builder: (context) => CupertinoAlertDialog(
         title: const Text('Delete Snake'),
         content: const Text(
-            'Are you sure you want to delete this Snake from your collection? This action cannot be undone.'),
+            'Are you sure you want to delete this snake from your collection? This action cannot be undone.'),
         actions: [
           CupertinoDialogAction(
             child: const Text('Cancel'),
