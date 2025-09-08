@@ -172,7 +172,7 @@ class ImageProcessingService {
       LoggingService.apiOperation('Starting AI Snake identification',
           details: 'image: ${imageFile.path}', tag: 'ImageProcessingService');
 
-      final uri = Uri.parse('$_baseUrl/identify-Snake');
+      final uri = Uri.parse('$_baseUrl/identify-snake');
       final request = http.MultipartRequest('POST', uri)
         ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
 
