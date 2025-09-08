@@ -164,16 +164,16 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         // Check for NOT_coin error with more robust detection
         final errorMessage = e.toString().toLowerCase();
         if (errorMessage.contains('not_coin') ||
-            errorMessage.contains('does not contain coin') ||
-            errorMessage.contains('not coin') ||
-            errorMessage.contains('no coin') ||
+            errorMessage.contains('does not contain Snake') ||
+            errorMessage.contains('not Snake') ||
+            errorMessage.contains('no Snake') ||
             errorMessage.contains('modern item') ||
             errorMessage.contains('not artifact')) {
-          LoggingService.info('Image identified as not an coin - showing dialog', tag: 'LibraryScreen');
+          LoggingService.info('Image identified as not a snake - showing dialog', tag: 'LibraryScreen');
           showDialog(
             context: context,
             barrierDismissible: true,
-            builder: (context) => const NotCoinDialog(),
+            builder: (context) => const NotSnakeDialog(),
           );
         } else {
           LoggingService.error('Error processing image', error: e, tag: 'LibraryScreen');
@@ -386,7 +386,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
         itemCount: 6, // Show 6 shimmering placeholders
-        itemBuilder: (context, index) => const CoinCardPlaceholder(),
+        itemBuilder: (context, index) => const SnakeCardPlaceholder(),
       );
     }
 
@@ -405,7 +405,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         final item = items[index];
         // Note: The 3D flip animation would be implemented here on tap.
         // For now, we use the existing navigation.
-        return CoinCard(
+        return SnakeCard(
           item: item,
           onTap: () => _onOpenDetail(item),
         );
@@ -479,7 +479,7 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Animated floating coin icon
+            // Animated floating Snake icon
             AnimatedBuilder(
               animation: _floatAnimation,
               builder: (context, child) {

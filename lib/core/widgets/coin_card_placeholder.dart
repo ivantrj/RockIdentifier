@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:snake_id/core/theme/app_theme.dart';
 
-class CoinCardPlaceholder extends StatelessWidget {
-  const CoinCardPlaceholder({super.key});
+class SnakeCardPlaceholder extends StatelessWidget {
+  const SnakeCardPlaceholder({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Shimmer.fromColors(
-      baseColor: AppTheme.darkCharcoal,
-      highlightColor: AppTheme.darkCharcoal.withOpacity(0.5),
+      baseColor: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
+      highlightColor: isDarkMode ? AppTheme.darkCharcoal.withOpacity(0.5) : AppTheme.lightCard.withOpacity(0.7),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
-          color: AppTheme.darkCharcoal, // Shimmer needs a color to draw on
-          border: Border.all(color: AppTheme.subtleBorderColor),
+          color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
+          border: Border.all(
+            color: isDarkMode ? AppTheme.subtleBorderColor : AppTheme.lightBorder,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -23,12 +26,12 @@ class CoinCardPlaceholder extends StatelessWidget {
             AspectRatio(
               aspectRatio: 1.0,
               child: Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(AppTheme.cardBorderRadius),
                     topRight: Radius.circular(AppTheme.cardBorderRadius),
                   ),
-                  color: Colors.black, // Placeholder color
+                  color: isDarkMode ? Colors.black : Colors.grey[300], // Placeholder color
                 ),
               ),
             ),
@@ -41,13 +44,13 @@ class CoinCardPlaceholder extends StatelessWidget {
                   Container(
                     height: 16,
                     width: double.infinity,
-                    color: Colors.black,
+                    color: isDarkMode ? Colors.black : Colors.grey[300],
                   ),
                   const SizedBox(height: 8),
                   Container(
                     height: 12,
                     width: MediaQuery.of(context).size.width * 0.3,
-                    color: Colors.black,
+                    color: isDarkMode ? Colors.black : Colors.grey[300],
                   ),
                 ],
               ),

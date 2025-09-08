@@ -42,10 +42,10 @@ class ImageProcessingService {
     }
   }
 
-  /// Process image and identify coin using AI
+  /// Process image and identify Snake using AI
   Future<IdentifiedItem?> processImage(String imagePath) async {
     try {
-      LoggingService.debug('Processing image for coin identification', tag: 'ImageProcessingService');
+      LoggingService.debug('Processing image for Snake identification', tag: 'ImageProcessingService');
 
       // Save image to app directory
       final savedPath = await saveImageToAppDir(imagePath);
@@ -67,11 +67,11 @@ class ImageProcessingService {
         }
 
         // Call AI API
-        LoggingService.apiOperation('Calling AI coin identification API', tag: 'ImageProcessingService');
+        LoggingService.apiOperation('Calling AI Snake identification API', tag: 'ImageProcessingService');
         aiResult = await _identifyCoinWithAI(File(savedPath));
 
         if (aiResult != null) {
-          LoggingService.apiOperation('AI coin identification successful', tag: 'ImageProcessingService');
+          LoggingService.apiOperation('AI Snake identification successful', tag: 'ImageProcessingService');
           // Cache the result for future use
           await cacheService.cacheAnalysisResult(savedPath, aiResult);
         }
@@ -138,7 +138,7 @@ class ImageProcessingService {
     return IdentifiedItem(
       id: aiResult['id'] ?? DateTime.now().millisecondsSinceEpoch.toString(),
       imagePath: imagePath,
-      result: aiResult['result'] ?? aiResult['denomination'] ?? aiResult['coinType'] ?? 'Unknown Coin',
+      result: aiResult['result'] ?? aiResult['denomination'] ?? aiResult['coinType'] ?? 'Unknown Snake',
       subtitle: aiResult['subtitle'] ?? aiResult['mintYear'] ?? aiResult['country'] ?? '',
       confidence: _parseConfidence(aiResult['confidence']),
       details: details,
@@ -166,13 +166,13 @@ class ImageProcessingService {
     return 0.0;
   }
 
-  /// Identify coin using AI API
+  /// Identify Snake using AI API
   Future<Map<String, dynamic>?> _identifyCoinWithAI(File imageFile) async {
     try {
-      LoggingService.apiOperation('Starting AI coin identification',
+      LoggingService.apiOperation('Starting AI Snake identification',
           details: 'image: ${imageFile.path}', tag: 'ImageProcessingService');
 
-      final uri = Uri.parse('$_baseUrl/identify-coin');
+      final uri = Uri.parse('$_baseUrl/identify-Snake');
       final request = http.MultipartRequest('POST', uri)
         ..files.add(await http.MultipartFile.fromPath('image', imageFile.path));
 
@@ -190,7 +190,7 @@ class ImageProcessingService {
         final data = json.decode(response.body);
         if (data['success'] == true && data['result'] != null) {
           final result = data['result'];
-          LoggingService.apiOperation('AI coin identification successful',
+          LoggingService.apiOperation('AI Snake identification successful',
               details: 'response type: ${result.runtimeType}', tag: 'ImageProcessingService');
 
           // Handle different response types
@@ -207,21 +207,21 @@ class ImageProcessingService {
             throw Exception('Invalid response format: unexpected data type');
           }
         } else if (data['success'] == false && data['error'] != null) {
-          // Check if the error indicates it's not an coin
+          // Check if the error indicates it's not an Snake
           final error = data['error'].toString().toLowerCase();
           LoggingService.debug('AI error message: $error', tag: 'ImageProcessingService');
 
-          if (error.contains('does not contain coin') ||
-              error.contains('not coin') ||
-              error.contains('no coin') ||
+          if (error.contains('does not contain Snake') ||
+              error.contains('not Snake') ||
+              error.contains('no Snake') ||
               error.contains('modern item') ||
               error.contains('not artifact')) {
-            LoggingService.info('AI determined image is not an coin - throwing NOT_coin exception',
+            LoggingService.info('AI determined image is not an Snake - throwing NOT_coin exception',
                 tag: 'ImageProcessingService');
             throw Exception('NOT_coin');
           }
           // For other errors, throw the actual error message
-          LoggingService.error('AI coin identification failed',
+          LoggingService.error('AI Snake identification failed',
               error: Exception(data['error'].toString()), tag: 'ImageProcessingService');
           throw Exception(data['error'].toString());
         } else {
@@ -238,7 +238,7 @@ class ImageProcessingService {
       } else {
         LoggingService.error('Unexpected response status',
             error: Exception('Status: ${response.statusCode}'), tag: 'ImageProcessingService');
-        throw Exception('Failed to identify coin. Please try again.');
+        throw Exception('Failed to identify Snake. Please try again.');
       }
     } on FormatException {
       LoggingService.error('Format exception in AI response', tag: 'ImageProcessingService');
@@ -256,7 +256,7 @@ class ImageProcessingService {
         rethrow;
       }
 
-      LoggingService.error('Unexpected error in AI coin identification', error: e, tag: 'ImageProcessingService');
+      LoggingService.error('Unexpected error in AI Snake identification', error: e, tag: 'ImageProcessingService');
       // Provide more specific error messages based on the error type
       if (e.toString().contains('List<Map')) {
         throw Exception('Server returned unexpected data format. Please try again.');

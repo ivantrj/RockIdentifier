@@ -281,7 +281,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                     padding: const EdgeInsets.symmetric(horizontal: 32),
                                     child: Column(
                                       children: [
-                                        _featureRow(Icons.camera_alt_rounded, 'Identify unlimited coins', emeraldGreen),
+                                        _featureRow(
+                                            Icons.camera_alt_rounded, 'Identify unlimited snakes', emeraldGreen),
                                         _featureRow(Icons.search_rounded, 'Get detailed analysis', emeraldGreen),
                                         _featureRow(
                                             Icons.menu_book_rounded, 'Access historical information', emeraldGreen),
@@ -400,7 +401,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'You\'re now subscribed to Coin Identifier Pro',
+              'You\'re now subscribed to Snake Identifier Pro',
               style: TextStyle(fontSize: 18, color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7)),
               textAlign: TextAlign.center,
             ),
@@ -409,7 +410,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Column(
                 children: [
-                  _featureRow(Icons.camera_alt_rounded, 'Unlimited artifact identification', emeraldGreen),
+                  _featureRow(Icons.camera_alt_rounded, 'Unlimited snake identification', emeraldGreen),
                   _featureRow(Icons.search_rounded, 'Comprehensive AI analysis', emeraldGreen),
                   _featureRow(Icons.menu_book_rounded, 'Detailed historical context', emeraldGreen),
                   _featureRow(Icons.lock_open_rounded, 'Unrestricted access', emeraldGreen),

@@ -55,7 +55,7 @@ lib/
 ### 2. Library Management
 
 - **Grid View**: Displays identified items in a responsive grid
-- **Detail View**: Comprehensive information about each coin
+- **Detail View**: Comprehensive information about each Snake
 - **Search & Filter**: Find specific items quickly
 - **Delete Functionality**: Remove items from library
 
@@ -361,4 +361,4 @@ locator.registerSingleton<CacheService>(CacheService());
 
 ---
 
-_This documentation is maintained as part of the Coin Identifier app development process. For the latest updates, refer to the source code and commit history._
+_This documentation is maintained as part of the Snake Identifier app development process. For the latest updates, refer to the source code and commit history._

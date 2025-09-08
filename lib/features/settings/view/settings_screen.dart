@@ -125,10 +125,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildSettingsGroup(BuildContext context, {required List<Widget> children}) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
       clipBehavior: Clip.antiAlias, // Ensures children conform to rounded corners
       decoration: BoxDecoration(
-        color: AppTheme.darkCharcoal,
+        color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
         borderRadius: BorderRadius.circular(12), // Slightly less rounded for a tighter look
       ),
       // Using a Column with manually interspersed dividers for precise control
@@ -140,7 +141,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             return Divider(
               height: 1,
               thickness: 1,
-              color: AppTheme.subtleBorderColor,
+              color: isDarkMode ? AppTheme.subtleBorderColor : AppTheme.lightBorder,
               indent: 56,
             );
           }
@@ -152,14 +153,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildSettingsItem(BuildContext context,
       {required IconData icon, required String title, String? subtitle, VoidCallback? onTap}) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return ListTile(
       dense: true, // Makes the ListTile more compact
       contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0), // Reduced vertical padding
       leading: Icon(icon, color: theme.colorScheme.secondary, size: 22), // Slightly smaller icon
       title: Text(title, style: theme.textTheme.bodyLarge),
       subtitle: subtitle != null ? Text(subtitle, style: theme.textTheme.bodyMedium) : null,
-      trailing:
-          onTap != null ? const Icon(Icons.arrow_forward_ios, size: 14, color: AppTheme.secondaryTextColor) : null,
+      trailing: onTap != null
+          ? Icon(
+              Icons.arrow_forward_ios,
+              size: 14,
+              color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+            )
+          : null,
       onTap: onTap,
     );
   }
@@ -288,13 +295,18 @@ class _CacheSettingsItemState extends State<_CacheSettingsItem> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return ListTile(
       dense: true,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
       leading: Icon(Icons.cleaning_services_rounded, color: theme.colorScheme.secondary, size: 22),
       title: Text('Clear Cache', style: theme.textTheme.bodyLarge),
       subtitle: Text(_cacheSize, style: theme.textTheme.bodyMedium),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: AppTheme.secondaryTextColor),
+      trailing: Icon(
+        Icons.arrow_forward_ios,
+        size: 14,
+        color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+      ),
       onTap: () => _showClearCacheDialog(context),
     );
   }
@@ -308,6 +320,7 @@ class _ThemeToggle extends StatelessWidget {
     return Consumer<ThemeService>(
       builder: (context, themeService, child) {
         final theme = Theme.of(context);
+        final isDarkMode = theme.brightness == Brightness.dark;
         return ListTile(
           dense: true,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
@@ -329,7 +342,11 @@ class _ThemeToggle extends StatelessWidget {
                     : 'System',
             style: theme.textTheme.bodyMedium,
           ),
-          trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: AppTheme.secondaryTextColor),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 14,
+            color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+          ),
           onTap: () {
             HapticService.instance.vibrate();
             themeService.toggleTheme();

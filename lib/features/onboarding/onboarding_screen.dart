@@ -274,7 +274,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   height: 200,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.forestGreen.withValues(alpha: 0.03),
+                    color: AppTheme.forestGreen.withValues(alpha: isDarkMode ? 0.03 : 0.05),
                   ),
                 ),
               ),
@@ -286,7 +286,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   height: 250,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.forestGreen.withValues(alpha: 0.02),
+                    color: AppTheme.forestGreen.withValues(alpha: isDarkMode ? 0.02 : 0.04),
                   ),
                 ),
               ),
@@ -298,7 +298,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   height: 100,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.forestGreen.withValues(alpha: 0.02),
+                    color: AppTheme.forestGreen.withValues(alpha: isDarkMode ? 0.02 : 0.04),
                   ),
                 ),
               ),
@@ -723,7 +723,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Coin image
+            // Snake image
             AnimatedBuilder(
               animation: _photoHandOpacity,
               builder: (context, child) {
@@ -743,7 +743,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       ),
                       child: ClipOval(
                         child: Image.asset(
-                          'assets/images/coin.jpg',
+                          'assets/images/Snake.jpg',
                           fit: BoxFit.cover,
                         ),
                       ),

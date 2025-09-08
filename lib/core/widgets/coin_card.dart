@@ -3,30 +3,33 @@ import 'package:snake_id/data/models/identified_item.dart';
 import 'package:flutter/material.dart';
 import 'package:snake_id/core/theme/app_theme.dart';
 
-class CoinCard extends StatelessWidget {
+class SnakeCard extends StatelessWidget {
   final IdentifiedItem item;
   final VoidCallback? onTap;
 
-  const CoinCard({super.key, required this.item, this.onTap});
+  const SnakeCard({super.key, required this.item, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
-          color: AppTheme.darkCharcoal,
-          border: Border.all(color: AppTheme.subtleBorderColor),
+          color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
+          border: Border.all(
+            color: isDarkMode ? AppTheme.subtleBorderColor : AppTheme.lightBorder,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Hero image for smooth transition
             Hero(
-              tag: 'coin_image_${item.id}',
+              tag: 'snake_image_${item.id}',
               child: AspectRatio(
                 aspectRatio: 1.0,
                 child: ClipRRect(
@@ -38,22 +41,24 @@ class CoinCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Coin details
+            // Snake details
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item.result, // e.g., "Morgan Dollar"
+                    item.result, // e.g., "Ball Python"
                     style: textTheme.titleMedium,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    item.subtitle, // e.g., "1887, USA"
-                    style: textTheme.bodyMedium?.copyWith(color: AppTheme.secondaryTextColor),
+                    item.subtitle, // e.g., "Python regius, Africa"
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

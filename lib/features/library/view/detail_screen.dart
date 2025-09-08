@@ -135,7 +135,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           const SizedBox(height: 16),
 
           _buildDetailCard(context, 'Identification', {
-            'Coin Name': widget.item.result,
+            'Snake Name': widget.item.result,
             'Type': widget.item.details['coinType'] ?? 'N/A',
             'Denomination': widget.item.details['denomination'] ?? 'N/A',
             'Origin': widget.item.subtitle,
@@ -500,7 +500,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
 
   Widget _buildCoinImage(String imagePath) {
     // Debug logging
-    print('Building coin image with path: $imagePath');
+    print('Building Snake image with path: $imagePath');
     print('Path type: ${imagePath.startsWith('/') ? 'File' : 'Asset'}');
 
     // Check if it's a file path (starts with /) or an asset path
@@ -701,9 +701,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
     showCupertinoDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
-        title: const Text('Delete Coin'),
-        content:
-            const Text('Are you sure you want to delete this coin from your collection? This action cannot be undone.'),
+        title: const Text('Delete Snake'),
+        content: const Text(
+            'Are you sure you want to delete this Snake from your collection? This action cannot be undone.'),
         actions: [
           CupertinoDialogAction(
             child: const Text('Cancel'),

@@ -46,7 +46,7 @@ class ChatService {
         throw Exception('Item not found');
       }
 
-      // Create item details map with coin-specific properties
+      // Create item details map with Snake-specific properties
       final itemDetails = {
         'coinType': item.coinType ?? 'Unknown',
         'denomination': item.denomination ?? 'Unknown',
@@ -113,14 +113,14 @@ class ChatService {
     }
   }
 
-  /// Determine the coin type based on the item's properties
+  /// Determine the Snake type based on the item's properties
   String _determineCoinType(IdentifiedItem item) {
     // Check if it's explicitly categorized
     if (item.category != null) {
       return item.category!;
     }
 
-    // Check the result text for common coin keywords
+    // Check the result text for common Snake keywords
     String result = item.result.toLowerCase();
 
     // Ancient coins
@@ -222,7 +222,7 @@ class ChatService {
       return 'british_coins';
     }
 
-    // Default to general coin if no specific category is found
+    // Default to general Snake if no specific category is found
     return 'general_coins';
   }
 

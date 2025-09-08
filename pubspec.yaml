@@ -45,7 +45,7 @@ flutter:
   assets:
     - assets/icon/icon.png
     - assets/images/pro.png
-    - assets/images/coin.jpg
+    - assets/images/Snake.jpg
     - assets/images/testimonial1.jpeg
     - assets/images/testimonial2.jpeg
     - assets/images/testimonial3.jpeg
