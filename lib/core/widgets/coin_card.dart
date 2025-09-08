@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:coin_id/data/models/identified_item.dart';
+import 'package:snake_id/data/models/identified_item.dart';
 import 'package:flutter/material.dart';
-import 'package:coin_id/core/theme/app_theme.dart';
+import 'package:snake_id/core/theme/app_theme.dart';
 
 class CoinCard extends StatelessWidget {
   final IdentifiedItem item;

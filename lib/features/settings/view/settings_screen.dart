@@ -4,11 +4,13 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import 'package:coin_id/core/theme/app_theme.dart';
-import 'package:coin_id/locator.dart';
-import 'package:coin_id/services/cache_service.dart';
-import 'package:coin_id/services/haptic_service.dart';
-import 'package:coin_id/services/logging_service.dart';
+import 'package:snake_id/core/theme/app_theme.dart';
+import 'package:snake_id/locator.dart';
+import 'package:snake_id/services/cache_service.dart';
+import 'package:snake_id/services/haptic_service.dart';
+import 'package:snake_id/services/logging_service.dart';
+import 'package:snake_id/services/theme_service.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -59,7 +61,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           _buildSettingsGroup(
             context,
-            children: [const _HapticFeedbackToggle()],
+            children: [
+              const _HapticFeedbackToggle(),
+              const _ThemeToggle(),
+            ],
           ),
           const SizedBox(height: 12), // Reduced space between groups
           _buildSettingsGroup(
@@ -291,6 +296,46 @@ class _CacheSettingsItemState extends State<_CacheSettingsItem> {
       subtitle: Text(_cacheSize, style: theme.textTheme.bodyMedium),
       trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: AppTheme.secondaryTextColor),
       onTap: () => _showClearCacheDialog(context),
+    );
+  }
+}
+
+class _ThemeToggle extends StatelessWidget {
+  const _ThemeToggle();
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ThemeService>(
+      builder: (context, themeService, child) {
+        final theme = Theme.of(context);
+        return ListTile(
+          dense: true,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+          leading: Icon(
+            themeService.isLightMode
+                ? Icons.light_mode_rounded
+                : themeService.isDarkMode
+                    ? Icons.dark_mode_rounded
+                    : Icons.brightness_auto_rounded,
+            color: theme.colorScheme.secondary,
+            size: 22,
+          ),
+          title: Text('Theme', style: theme.textTheme.bodyLarge),
+          subtitle: Text(
+            themeService.isLightMode
+                ? 'Light'
+                : themeService.isDarkMode
+                    ? 'Dark'
+                    : 'System',
+            style: theme.textTheme.bodyMedium,
+          ),
+          trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: AppTheme.secondaryTextColor),
+          onTap: () {
+            HapticService.instance.vibrate();
+            themeService.toggleTheme();
+          },
+        );
+      },
     );
   }
 }

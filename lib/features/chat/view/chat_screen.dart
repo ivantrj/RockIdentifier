@@ -1,6 +1,6 @@
-import 'package:coin_id/data/models/identified_item.dart';
+import 'package:snake_id/data/models/identified_item.dart';
 import 'package:flutter/material.dart';
-import 'package:coin_id/services/chat_service.dart';
+import 'package:snake_id/services/chat_service.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 class ChatScreen extends StatefulWidget {

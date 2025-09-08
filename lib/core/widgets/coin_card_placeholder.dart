@@ -1,7 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:coin_id/core/theme/app_theme.dart';
+import 'package:snake_id/core/theme/app_theme.dart';
 
 class CoinCardPlaceholder extends StatelessWidget {
   const CoinCardPlaceholder({super.key});

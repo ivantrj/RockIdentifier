@@ -1,5 +1,5 @@
-name: coin_id
-description: "A professional AI-powered artifact identification app that helps you identify and learn about coins, artifacts, and collectibles."
+name: snake_id
+description: "A professional AI-powered snake identification app that helps you identify and learn about snakes, their habitats, behavior, and safety information."
 publish_to: "none"
 version: 1.0.0+2
 

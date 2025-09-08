@@ -88,92 +88,86 @@ class IdentifiedItem {
     );
   }
 
-  // Coin-specific getters based on the new API response
-  /// Get coin type from details
-  String? get coinType => details['coinType'] as String?;
+  // Snake-specific getters based on the new API response
+  /// Get common name from details
+  String? get commonName => details['commonName'] as String?;
 
-  /// Get specific denomination from details
-  String? get denomination => details['denomination'] as String?;
+  /// Get scientific name from details
+  String? get scientificName => details['scientificName'] as String?;
 
-  /// Get mint year from details
-  String? get mintYear => details['mintYear'] as String?;
+  /// Get family from details
+  String? get family => details['family'] as String?;
 
-  /// Get country of origin from details
-  String? get country => details['country'] as String?;
+  /// Get genus from details
+  String? get genus => details['genus'] as String?;
 
-  /// Get mint mark from details
-  String? get mintMark => details['mintMark'] as String?;
+  /// Get venomous status from details
+  String? get venomousStatus => details['venomousStatus'] as String?;
 
-  /// Get metal composition from details
-  String? get metalComposition => details['metalComposition'] as String?;
+  /// Get habitat from details
+  String? get habitat => details['habitat'] as String?;
 
-  /// Get weight from details
-  String? get weight => details['weight'] as String?;
+  /// Get geographic range from details
+  String? get geographicRange => details['geographicRange'] as String?;
 
-  /// Get diameter from details
-  String? get diameter => details['diameter'] as String?;
+  /// Get average length from details
+  String? get averageLength => details['averageLength'] as String?;
 
-  /// Get condition from details
-  String? get condition => details['condition'] as String?;
+  /// Get average weight from details
+  String? get averageWeight => details['averageWeight'] as String?;
 
-  /// Get authenticity from details
-  String? get authenticity => details['authenticity'] as String?;
+  /// Get behavior from details
+  String? get behavior => details['behavior'] as String?;
 
-  /// Get rarity from details
-  String? get rarity => details['rarity'] as String?;
+  /// Get diet from details
+  String? get diet => details['diet'] as String?;
 
-  /// Get estimated value from details
-  String? get estimatedValue => details['estimatedValue'] as String?;
+  /// Get conservation status from details
+  String? get conservationStatus => details['conservationStatus'] as String?;
 
-  /// Get historical context from details
-  String? get historicalContext => details['historicalContext'] as String?;
+  /// Get safety information from details
+  String? get safetyInformation => details['safetyInformation'] as String?;
 
-  /// Get design description from details
-  String? get designDescription => details['designDescription'] as String?;
+  /// Get similar species from details
+  String? get similarSpecies => details['similarSpecies'] as String?;
 
-  /// Get edge type from details
-  String? get edgeType => details['edgeType'] as String?;
-
-  /// Get designer from details
-  String? get designer => details['designer'] as String?;
-
-  /// Get mintage from details
-  String? get mintage => details['mintage'] as String?;
-
-  /// Get current market demand from details
-  String? get marketDemand => details['marketDemand'] as String?;
-
-  /// Get investment potential from details
-  String? get investmentPotential => details['investmentPotential'] as String?;
-
-  /// Get storage recommendations from details
-  String? get storageRecommendations => details['storageRecommendations'] as String?;
-
-  /// Get cleaning instructions from details
-  String? get cleaningInstructions => details['cleaningInstructions'] as String?;
-
-  /// Get similar coins from details
-  String? get similarCoins => details['similarCoins'] as String?;
-
-  /// Get insurance value from details
-  String? get insuranceValue => details['insuranceValue'] as String?;
+  /// Get interesting facts from details
+  String? get interestingFacts => details['interestingFacts'] as String?;
 
   /// Get wiki link from details
   String? get wikiLink => details['wikiLink'] as String?;
 
-  /// Get common name from details
-  String? get commonName => details['commonName'] as String?;
+  /// Get danger level from details (alias for venomousStatus)
+  String? get dangerLevel => venomousStatus;
 
-  /// Get era/period from details (alias for mintYear)
-  String? get era => mintYear;
-
-  /// Get coin category from details (alias for coinType)
-  String? get coinCategory => coinType;
+  /// Get species from details (alias for commonName)
+  String? get species => commonName;
 
   // Legacy getters for backward compatibility
-  String? get species => denomination;
-  String? get family => coinType;
-  String? get order => designDescription;
-  String? get habitat => country;
-  String? get dangerLevel => condition;
+  String? get coinType => family;
+  String? get denomination => commonName;
+  String? get mintYear => conservationStatus;
+  String? get country => geographicRange;
+  String? get mintMark => genus;
+  String? get metalComposition => diet;
+  String? get weight => averageWeight;
+  String? get diameter => averageLength;
+  String? get condition => venomousStatus;
+  String? get authenticity => safetyInformation;
+  String? get rarity => conservationStatus;
+  String? get estimatedValue => interestingFacts;
+  String? get historicalContext => interestingFacts;
+  String? get designDescription => behavior;
+  String? get edgeType => habitat;
+  String? get designer => scientificName;
+  String? get mintage => averageLength;
+  String? get marketDemand => conservationStatus;
+  String? get investmentPotential => interestingFacts;
+  String? get storageRecommendations => safetyInformation;
+  String? get cleaningInstructions => safetyInformation;
+  String? get similarCoins => similarSpecies;
+  String? get insuranceValue => safetyInformation;
+  String? get era => conservationStatus;
+  String? get coinCategory => family;
+  String? get order => behavior;
 }

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:crypto/crypto.dart';
-import 'package:coin_id/services/logging_service.dart';
+import 'package:snake_id/services/logging_service.dart';
 
 class CacheService {
   static const String _cacheDirName = 'bug_cache';

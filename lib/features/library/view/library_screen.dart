@@ -1,24 +1,24 @@
-import 'package:coin_id/core/widgets/coin_card.dart';
-import 'package:coin_id/core/widgets/coin_card_placeholder.dart';
-import 'package:coin_id/features/library/view/widgets/not_antique_dialog.dart';
-import 'package:coin_id/features/paywall/paywall_screen.dart';
+import 'package:snake_id/core/widgets/coin_card.dart';
+import 'package:snake_id/core/widgets/coin_card_placeholder.dart';
+import 'package:snake_id/features/library/view/widgets/not_antique_dialog.dart';
+import 'package:snake_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
-import 'package:coin_id/features/library/view/detail_screen.dart';
+import 'package:snake_id/features/library/view/detail_screen.dart';
 import '../viewmodel/library_viewmodel.dart';
-import 'package:coin_id/data/models/identified_item.dart';
+import 'package:snake_id/data/models/identified_item.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../main.dart' as main;
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:coin_id/app.dart' as app;
-import 'package:coin_id/services/image_processing_service.dart';
-import 'package:coin_id/services/logging_service.dart';
-import 'package:coin_id/locator.dart';
+import 'package:snake_id/app.dart' as app;
+import 'package:snake_id/services/image_processing_service.dart';
+import 'package:snake_id/services/logging_service.dart';
+import 'package:snake_id/locator.dart';
 import 'widgets/fab_menu.dart';
 import 'widgets/loading_dialog.dart';
-import 'package:coin_id/services/haptic_service.dart';
+import 'package:snake_id/services/haptic_service.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -531,7 +531,7 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
                 return Transform.scale(
                   scale: _bounceAnimation.value,
                   child: Text(
-                    'Your Collection Awaits',
+                    'Your Snake Collection Awaits',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
@@ -547,7 +547,7 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
 
             // Subtitle with better typography
             Text(
-              'Start building your numismatic collection by identifying coins and artifacts',
+              'Start building your herpetology collection by identifying snakes and learning about their behavior',
               style: TextStyle(
                 fontSize: 16,
                 color: widget.isDarkMode ? Colors.white70 : Colors.black54,

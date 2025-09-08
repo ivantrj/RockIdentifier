@@ -1,4 +1,4 @@
-# Coin Identifier Onboarding Screen
+# Snake Identifier Onboarding Screen
 
 This document describes the new onboarding screen implementation that recreates the SwiftUI design in Flutter.
 
@@ -7,7 +7,7 @@ This document describes the new onboarding screen implementation that recreates 
 ### 🎨 Visual Design
 - **Header/Footer Decorations**: Subtle gradient overlays with auto-awesome icons
 - **Progress Indicator**: Three-step progress with animated icons (bug, camera, sparkles)
-- **Dark Theme**: Consistent with app's dark theme using red accent colors
+- **Dark Theme**: Consistent with app's dark theme using green accent colors
 - **Smooth Transitions**: Fade and slide animations between steps
 
 ### 📱 Three Onboarding Steps
@@ -15,18 +15,18 @@ This document describes the new onboarding screen implementation that recreates 
 #### Step 1: Welcome
 - Welcome message and app description
 - Animated testimonial with user avatar and 5-star rating
-- Trust indicator: "Trusted by 2,536+ Numismatists"
+- Trust indicator: "Trusted by herpetologists worldwide"
 
 #### Step 2: Photo Identification
-- Photo-taking demonstration with coin image
+- Photo-taking demonstration with snake image
 - Hand animation showing touch interaction
 - Flash effect and identification result
-- Trust indicator: "Over 7,634+ Coins Identified"
+- Trust indicator: "Millions of snakes identified"
 
 #### Step 3: AI Power
 - Binary code animation scrolling horizontally
 - AI icon overlay
-- Trust indicator: "Trained on 1,427,523+ Coin Species"
+- Trust indicator: "Trained on extensive snake database"
 
 ### ✨ Animations
 - **Testimonial**: Scale, rotation, and blur effects
@@ -38,12 +38,12 @@ This document describes the new onboarding screen implementation that recreates 
 ## Customization
 
 ### Colors
-- Primary accent: `Colors.red`
+- Primary accent: `AppTheme.forestGreen`
 - Background: `AppTheme.nearBlack`
 - Text: `Colors.white` with alpha variations
 
 ### Images
-- **Coin Image**: Uses `assets/images/coin.jpg`
+- **Snake Image**: Uses `assets/images/snake.jpg`
 - **Header/Footer**: Currently uses gradient overlays with icons
 - **Avatar**: Placeholder person icon (can be replaced with actual user images)
 

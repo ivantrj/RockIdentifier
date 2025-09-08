@@ -1,4 +1,4 @@
-# Flutter MVVM Template with Provider & GetIt - Coin Identifier
+# Flutter MVVM Template with Provider & GetIt - Snake Identifier
 
 ## Overview
 

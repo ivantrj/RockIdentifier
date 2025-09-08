@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:coin_id/main.dart';
+import 'package:snake_id/main.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
-import 'package:coin_id/services/logging_service.dart';
+import 'package:snake_id/services/logging_service.dart';
 
 class PaywallScreen extends StatefulWidget {
   const PaywallScreen({super.key});
@@ -233,8 +233,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final metallicGold = theme.colorScheme.primary;
-    final lightPrimary = metallicGold.withValues(alpha: 0.1);
+    final emeraldGreen = theme.colorScheme.primary;
+    final lightPrimary = emeraldGreen.withValues(alpha: 0.1);
 
     // Check real-time subscription status
     final isSubscribed = RevenueCatService.isSubscribed;
@@ -243,7 +243,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: isSubscribed
-            ? _buildThankYouScreen(metallicGold, lightPrimary)
+            ? _buildThankYouScreen(emeraldGreen, lightPrimary)
             : _loading
                 ? const Center(child: CircularProgressIndicator())
                 : _error != null
@@ -281,16 +281,16 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                     padding: const EdgeInsets.symmetric(horizontal: 32),
                                     child: Column(
                                       children: [
-                                        _featureRow(Icons.camera_alt_rounded, 'Identify unlimited coins', metallicGold),
-                                        _featureRow(Icons.search_rounded, 'Get detailed analysis', metallicGold),
+                                        _featureRow(Icons.camera_alt_rounded, 'Identify unlimited coins', emeraldGreen),
+                                        _featureRow(Icons.search_rounded, 'Get detailed analysis', emeraldGreen),
                                         _featureRow(
-                                            Icons.menu_book_rounded, 'Access historical information', metallicGold),
-                                        _featureRow(Icons.lock_open_rounded, 'Remove usage limits', metallicGold),
+                                            Icons.menu_book_rounded, 'Access historical information', emeraldGreen),
+                                        _featureRow(Icons.lock_open_rounded, 'Remove usage limits', emeraldGreen),
                                       ],
                                     ),
                                   ),
                                   const SizedBox(height: 28),
-                                  _buildPackages(theme, metallicGold, lightPrimary),
+                                  _buildPackages(theme, emeraldGreen, lightPrimary),
                                   const SizedBox(height: 20),
                                 ],
                               ),
@@ -310,7 +310,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                     height: 54,
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: metallicGold,
+                                        backgroundColor: emeraldGreen,
                                         foregroundColor: Colors.white,
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                                         textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -330,7 +330,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 18),
-                                _buildTrialToggle(metallicGold),
+                                _buildTrialToggle(emeraldGreen),
                                 const SizedBox(height: 18),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -371,7 +371,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
     );
   }
 
-  Widget _buildThankYouScreen(Color metallicGold, Color lightPrimary) {
+  Widget _buildThankYouScreen(Color emeraldGreen, Color lightPrimary) {
     final theme = Theme.of(context);
     return Stack(
       children: [
@@ -409,10 +409,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Column(
                 children: [
-                  _featureRow(Icons.camera_alt_rounded, 'Unlimited artifact identification', metallicGold),
-                  _featureRow(Icons.search_rounded, 'Comprehensive AI analysis', metallicGold),
-                  _featureRow(Icons.menu_book_rounded, 'Detailed historical context', metallicGold),
-                  _featureRow(Icons.lock_open_rounded, 'Unrestricted access', metallicGold),
+                  _featureRow(Icons.camera_alt_rounded, 'Unlimited artifact identification', emeraldGreen),
+                  _featureRow(Icons.search_rounded, 'Comprehensive AI analysis', emeraldGreen),
+                  _featureRow(Icons.menu_book_rounded, 'Detailed historical context', emeraldGreen),
+                  _featureRow(Icons.lock_open_rounded, 'Unrestricted access', emeraldGreen),
                 ],
               ),
             ),
@@ -424,7 +424,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 height: 54,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: metallicGold,
+                    backgroundColor: emeraldGreen,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -469,7 +469,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
     );
   }
 
-  Widget _buildTrialToggle(Color metallicGold) {
+  Widget _buildTrialToggle(Color emeraldGreen) {
     final theme = Theme.of(context);
     final packages = _offerings!.current!.availablePackages;
 
@@ -521,7 +521,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
               }
             });
           },
-          activeTrackColor: metallicGold,
+          activeTrackColor: emeraldGreen,
           inactiveTrackColor: theme.colorScheme.outline.withValues(alpha: 0.5),
           thumbColor: Colors.white,
         ),
@@ -529,7 +529,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
     );
   }
 
-  Widget _buildPackages(ThemeData theme, Color metallicGold, Color lightPrimary) {
+  Widget _buildPackages(ThemeData theme, Color emeraldGreen, Color lightPrimary) {
     final packages = _offerings!.current!.availablePackages;
 
     // Filter for lifetime packages
@@ -563,7 +563,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         if (lifetime != null)
           _packageTile(
             lifetime,
-            metallicGold,
+            emeraldGreen,
             lightPrimary,
             selected: _selectedPackage == lifetime,
             badge: 'BEST VALUE',
@@ -575,7 +575,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         if (yearly != null)
           _packageTile(
             yearly,
-            metallicGold,
+            emeraldGreen,
             lightPrimary,
             selected: _selectedPackage == yearly,
             badge: 'SAVE 80%',
@@ -587,11 +587,11 @@ class _PaywallScreenState extends State<PaywallScreen> {
         if (trialWeekly != null)
           _packageTile(
             trialWeekly,
-            metallicGold,
+            emeraldGreen,
             lightPrimary,
             selected: _selectedPackage == trialWeekly,
             badge: 'FREE',
-            badgeColor: metallicGold,
+            badgeColor: emeraldGreen,
             onTap: () => setState(() => _selectedPackage = trialWeekly),
             customTitle: '3-Day Trial',
             customSubtitle: 'then ${trialWeekly.storeProduct.priceString} per week',
@@ -602,7 +602,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
   Widget _packageTile(
     Package pkg,
-    Color metallicGold,
+    Color emeraldGreen,
     Color lightPrimary, {
     required bool selected,
     required String badge,
@@ -620,7 +620,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         decoration: BoxDecoration(
           color: selected ? lightPrimary : theme.cardColor,
           border: Border.all(
-              color: selected ? metallicGold : theme.colorScheme.outline.withValues(alpha: 0.3),
+              color: selected ? emeraldGreen : theme.colorScheme.outline.withValues(alpha: 0.3),
               width: selected ? 2 : 1),
           borderRadius: BorderRadius.circular(16),
         ),
@@ -630,7 +630,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
               value: pkg,
               groupValue: _selectedPackage,
               onChanged: (_) => onTap(),
-              activeColor: metallicGold,
+              activeColor: emeraldGreen,
             ),
             Expanded(
               child: Column(

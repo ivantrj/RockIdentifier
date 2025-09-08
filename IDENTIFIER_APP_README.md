@@ -1,8 +1,8 @@
-# Coin Identifier App - Technical Documentation
+# Snake Identifier App - Technical Documentation
 
-## 🏺 Overview
+## 🐍 Overview
 
-Coin Identifier is a Flutter application that uses AI to identify coins, artifacts, and collectibles from photos. The app provides detailed information about identified items, including historical period, style, materials, estimated value, and authenticity information.
+Snake Identifier is a Flutter application that uses AI to identify snakes from photos. The app provides detailed information about identified snakes, including species, behavior, habitat, safety information, and conservation status.
 
 ## 🏗️ Architecture
 
@@ -45,10 +45,10 @@ lib/
 
 ## 📱 Key Features
 
-### 1. Image Identification
+### 1. Snake Identification
 
-- **Camera Integration**: Take photos directly in the app
-- **Gallery Selection**: Choose existing photos
+- **Camera Integration**: Take photos of snakes directly in the app
+- **Gallery Selection**: Choose existing snake photos
 - **AI Processing**: Uses custom AI backend for identification
 - **Caching**: Results are cached for offline access
 

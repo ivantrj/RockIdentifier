@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:coin_id/services/haptic_service.dart';
+import 'package:snake_id/services/haptic_service.dart';
 import 'dart:ui';
 
 class FabMenu extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:ui'; // Required for ImageFilter
 import 'package:flutter/material.dart';
-import 'package:coin_id/core/theme/app_theme.dart';
+import 'package:snake_id/core/theme/app_theme.dart';
 
 class LoadingDialog extends StatefulWidget {
   const LoadingDialog({super.key});
@@ -73,7 +73,7 @@ class _LoadingDialogState extends State<LoadingDialog> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 CircularProgressIndicator(
-                  color: AppTheme.metallicGold,
+                  color: AppTheme.emeraldGreen,
                   strokeWidth: 3,
                 ),
                 const SizedBox(height: 32),

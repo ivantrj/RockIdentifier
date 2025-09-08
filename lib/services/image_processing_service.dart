@@ -4,11 +4,11 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'package:coin_id/data/models/identified_item.dart';
-import 'package:coin_id/services/cache_service.dart';
-import 'package:coin_id/services/connectivity_service.dart';
-import 'package:coin_id/services/logging_service.dart';
-import 'package:coin_id/locator.dart';
+import 'package:snake_id/data/models/identified_item.dart';
+import 'package:snake_id/services/cache_service.dart';
+import 'package:snake_id/services/connectivity_service.dart';
+import 'package:snake_id/services/logging_service.dart';
+import 'package:snake_id/locator.dart';
 
 class ImageProcessingService {
   static const String _baseUrl = 'https://own-ai-backend-dev.fly.dev';

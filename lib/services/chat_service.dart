@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:coin_id/data/models/identified_item.dart';
-import 'package:coin_id/services/logging_service.dart';
+import 'package:snake_id/data/models/identified_item.dart';
+import 'package:snake_id/services/logging_service.dart';
 
 class ChatMessage {
   final String id;

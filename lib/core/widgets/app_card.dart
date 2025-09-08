@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:coin_id/services/haptic_service.dart';
+import 'package:snake_id/services/haptic_service.dart';
 
 class AppCard extends StatelessWidget {
   final Widget child;

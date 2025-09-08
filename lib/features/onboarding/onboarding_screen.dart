@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:coin_id/core/theme/app_theme.dart';
-import 'package:coin_id/core/widgets/primary_button.dart';
-import 'package:coin_id/services/haptic_service.dart';
+import 'package:snake_id/core/theme/app_theme.dart';
+import 'package:snake_id/core/widgets/primary_button.dart';
+import 'package:snake_id/services/haptic_service.dart';
 import 'dart:math' as math;
 
 class OnboardingScreen extends StatefulWidget {
@@ -25,32 +25,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   final List<Map<String, dynamic>> _testimonials = [
     {
       'image': 'assets/images/testimonial1.jpeg',
-      'quote': 'Great app for collectors',
-      'author': 'Professional Collector',
+      'quote': 'Perfect for herpetologists',
+      'author': 'Wildlife Biologist',
       'rating': 5,
     },
     {
       'image': 'assets/images/testimonial2.jpeg',
-      'quote': 'Accurate identification every time',
-      'author': 'Coin Dealer',
+      'quote': 'Accurate snake identification',
+      'author': 'Park Ranger',
       'rating': 5,
     },
     {
       'image': 'assets/images/testimonial3.jpeg',
-      'quote': 'Essential tool for numismatists',
-      'author': 'Museum Curator',
+      'quote': 'Essential for field research',
+      'author': 'Herpetologist',
       'rating': 5,
     },
     {
       'image': 'assets/images/testimonial4.jpeg',
-      'quote': 'Best coin app I\'ve ever used',
-      'author': 'Antique Shop Owner',
+      'quote': 'Best snake app available',
+      'author': 'Nature Guide',
       'rating': 5,
     },
     {
       'image': 'assets/images/testimonial5.jpeg',
       'quote': 'Incredible AI technology',
-      'author': 'Coin Enthusiast',
+      'author': 'Snake Enthusiast',
       'rating': 5,
     },
   ];
@@ -240,18 +240,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: AppTheme.nearBlack,
+      backgroundColor: isDarkMode ? AppTheme.nearBlack : AppTheme.lightBackground,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              AppTheme.nearBlack,
-              Color(0xFF1A1A1A),
-              AppTheme.nearBlack,
-            ],
+            colors: isDarkMode
+                ? [
+                    AppTheme.nearBlack,
+                    Color(0xFF1A1A1A),
+                    AppTheme.nearBlack,
+                  ]
+                : [
+                    AppTheme.lightBackground,
+                    AppTheme.lightSurface,
+                    AppTheme.lightBackground,
+                  ],
             stops: [0.0, 0.5, 1.0],
           ),
         ),
@@ -267,7 +274,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   height: 200,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.metallicGold.withValues(alpha: 0.03),
+                    color: AppTheme.forestGreen.withValues(alpha: 0.03),
                   ),
                 ),
               ),
@@ -279,7 +286,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   height: 250,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.metallicGold.withValues(alpha: 0.02),
+                    color: AppTheme.forestGreen.withValues(alpha: 0.02),
                   ),
                 ),
               ),
@@ -291,7 +298,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   height: 100,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.metallicGold.withValues(alpha: 0.02),
+                    color: AppTheme.forestGreen.withValues(alpha: 0.02),
                   ),
                 ),
               ),
@@ -335,12 +342,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
         color: Colors.black.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppTheme.metallicGold.withValues(alpha: 0.2),
+          color: AppTheme.emeraldGreen.withValues(alpha: 0.2),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.metallicGold.withValues(alpha: 0.1),
+            color: AppTheme.emeraldGreen.withValues(alpha: 0.1),
             blurRadius: 20,
             spreadRadius: 0,
           ),
@@ -358,12 +365,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               height: 3,
               margin: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: _animatedStep > 0 ? AppTheme.metallicGold : Colors.white.withValues(alpha: 0.1),
+                color: _animatedStep > 0 ? AppTheme.emeraldGreen : Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(2),
                 boxShadow: _animatedStep > 0
                     ? [
                         BoxShadow(
-                          color: AppTheme.metallicGold.withValues(alpha: 0.3),
+                          color: AppTheme.emeraldGreen.withValues(alpha: 0.3),
                           blurRadius: 8,
                           spreadRadius: 0,
                         ),
@@ -382,12 +389,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               height: 3,
               margin: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: _animatedStep > 1 ? AppTheme.metallicGold : Colors.white.withValues(alpha: 0.1),
+                color: _animatedStep > 1 ? AppTheme.emeraldGreen : Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(2),
                 boxShadow: _animatedStep > 1
                     ? [
                         BoxShadow(
-                          color: AppTheme.metallicGold.withValues(alpha: 0.3),
+                          color: AppTheme.emeraldGreen.withValues(alpha: 0.3),
                           blurRadius: 8,
                           spreadRadius: 0,
                         ),
@@ -415,15 +422,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
         height: 32,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: isActive ? AppTheme.metallicGold : Colors.white.withValues(alpha: 0.2),
+          color: isActive ? AppTheme.emeraldGreen : Colors.white.withValues(alpha: 0.2),
           border: Border.all(
-            color: isActive ? AppTheme.metallicGold.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.1),
+            color: isActive ? AppTheme.emeraldGreen.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.1),
             width: 1.5,
           ),
           boxShadow: isActive
               ? [
                   BoxShadow(
-                    color: AppTheme.metallicGold.withValues(alpha: 0.4),
+                    color: AppTheme.emeraldGreen.withValues(alpha: 0.4),
                     blurRadius: 12,
                     spreadRadius: 0,
                   ),
@@ -465,7 +472,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                 child: Column(
                   children: [
                     Text(
-                      'Welcome to Coin Identifier',
+                      'Welcome to Snake Identifier',
                       style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
@@ -474,7 +481,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'The most accurate way to identify coins and discover their stories. Used by collectors worldwide.',
+                      'The most accurate way to identify snakes and learn about their behavior, habitat, and safety information. Used by herpetologists worldwide.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white.withValues(alpha: 0.8),
                           ),
@@ -508,7 +515,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                 child: Column(
                   children: [
                     Text(
-                      'Snap a Photo to Identify Coins',
+                      'Snap a Photo to Identify Snakes',
                       style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
@@ -517,7 +524,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'Quickly identify coins with detailed information, market values, and historical context.',
+                      'Quickly identify snakes with detailed information about species, behavior, habitat, and safety.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white.withValues(alpha: 0.8),
                           ),
@@ -560,7 +567,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'Advanced AI technology trained on millions of coins for accurate identification and detailed information.',
+                      'Advanced AI technology trained on millions of snakes for accurate identification and detailed information.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white.withValues(alpha: 0.8),
                           ),
@@ -592,12 +599,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
           color: Colors.black.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: AppTheme.metallicGold.withValues(alpha: 0.15),
+            color: AppTheme.emeraldGreen.withValues(alpha: 0.15),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.metallicGold.withValues(alpha: 0.1),
+              color: AppTheme.emeraldGreen.withValues(alpha: 0.1),
               blurRadius: 20,
               spreadRadius: 0,
             ),
@@ -619,7 +626,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                         children: [
                           Icon(
                             Icons.emoji_events,
-                            color: AppTheme.metallicGold,
+                            color: AppTheme.emeraldGreen,
                             size: 35,
                           ),
                           const SizedBox(width: 15),
@@ -628,9 +635,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                             height: 70,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: AppTheme.metallicGold.withValues(alpha: 0.2),
+                              color: AppTheme.emeraldGreen.withValues(alpha: 0.2),
                               border: Border.all(
-                                color: AppTheme.metallicGold.withValues(alpha: 0.3),
+                                color: AppTheme.emeraldGreen.withValues(alpha: 0.3),
                                 width: 2,
                               ),
                             ),
@@ -644,7 +651,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                           const SizedBox(width: 15),
                           Icon(
                             Icons.emoji_events,
-                            color: AppTheme.metallicGold,
+                            color: AppTheme.emeraldGreen,
                             size: 35,
                           ),
                         ],
@@ -691,7 +698,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: index == _currentTestimonialIndex
-                                  ? AppTheme.metallicGold
+                                  ? AppTheme.emeraldGreen
                                   : Colors.white.withValues(alpha: 0.3),
                             ),
                           ),
@@ -730,7 +737,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: AppTheme.metallicGold.withValues(alpha: 0.5),
+                          color: AppTheme.emeraldGreen.withValues(alpha: 0.5),
                           width: 2,
                         ),
                       ),
@@ -757,7 +764,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     child: Icon(
                       Icons.touch_app,
                       size: 70,
-                      color: AppTheme.metallicGold,
+                      color: AppTheme.emeraldGreen,
                     ),
                   ),
                 );
@@ -830,7 +837,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   child: Icon(
                     Icons.psychology,
                     size: 60,
-                    color: AppTheme.metallicGold,
+                    color: AppTheme.emeraldGreen,
                   ),
                 );
               },
@@ -853,7 +860,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       height: 8,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppTheme.metallicGold.withValues(alpha: opacity),
+                        color: AppTheme.emeraldGreen.withValues(alpha: opacity),
                       ),
                     );
                   },
@@ -877,14 +884,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
             child: ElevatedButton(
               onPressed: _nextStep,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.metallicGold,
+                backgroundColor: AppTheme.emeraldGreen,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 18),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
                 elevation: 8,
-                shadowColor: AppTheme.metallicGold.withValues(alpha: 0.4),
+                shadowColor: AppTheme.emeraldGreen.withValues(alpha: 0.4),
               ),
               child: Text(
                 _step < 2 ? 'Continue' : 'Get Started',
@@ -907,7 +914,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               children: [
                 Icon(
                   _getTrustIcon(),
-                  color: AppTheme.metallicGold,
+                  color: AppTheme.emeraldGreen,
                   size: 16,
                 ),
                 const SizedBox(width: 8),
@@ -941,11 +948,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   String _getTrustText() {
     switch (_step) {
       case 0:
-        return 'Trusted by collectors worldwide';
+        return 'Trusted by herpetologists worldwide';
       case 1:
-        return 'Millions of coins identified';
+        return 'Millions of snakes identified';
       case 2:
-        return 'Trained on extensive coin database';
+        return 'Trained on extensive snake database';
       default:
         return 'Professional-grade technology';
     }

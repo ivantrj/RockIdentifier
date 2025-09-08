@@ -1,10 +1,10 @@
 // lib/app.dart
 library;
 
-import 'package:coin_id/features/paywall/paywall_screen.dart';
+import 'package:snake_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:coin_id/features/library/view/library_screen.dart';
+import 'package:snake_id/features/library/view/library_screen.dart';
 import 'core/navigation/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'services/theme_service.dart';
@@ -57,9 +57,9 @@ class _AppState extends State<App> {
     }
     return MaterialApp(
       navigatorKey: rootNavKey,
-      title: 'Artifact Identifier',
+      title: 'Snake Identifier',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
+      theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeService.themeMode,
       home: _showOnboarding
