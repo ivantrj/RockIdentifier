@@ -240,25 +240,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: isDarkMode ? AppTheme.nearBlack : AppTheme.lightBackground,
+      backgroundColor: AppTheme.nearBlack,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: isDarkMode
-                ? [
-                    AppTheme.nearBlack,
-                    Color(0xFF1A1A1A),
-                    AppTheme.nearBlack,
-                  ]
-                : [
-                    AppTheme.lightBackground,
-                    AppTheme.lightSurface,
-                    AppTheme.lightBackground,
-                  ],
+            colors: [
+              AppTheme.nearBlack,
+              Color(0xFF1A1A1A),
+              AppTheme.nearBlack,
+            ],
             stops: [0.0, 0.5, 1.0],
           ),
         ),
@@ -274,7 +267,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   height: 200,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.forestGreen.withValues(alpha: isDarkMode ? 0.03 : 0.05),
+                    color: AppTheme.forestGreen.withValues(alpha: 0.03),
                   ),
                 ),
               ),
@@ -286,7 +279,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   height: 250,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.forestGreen.withValues(alpha: isDarkMode ? 0.02 : 0.04),
+                    color: AppTheme.forestGreen.withValues(alpha: 0.02),
                   ),
                 ),
               ),
@@ -298,7 +291,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   height: 100,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.forestGreen.withValues(alpha: isDarkMode ? 0.02 : 0.04),
+                    color: AppTheme.forestGreen.withValues(alpha: 0.02),
                   ),
                 ),
               ),
@@ -476,6 +469,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
                       textAlign: TextAlign.center,
                     ),
@@ -483,7 +477,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     Text(
                       'The most accurate way to identify snakes and learn about their behavior, habitat, and safety information. Used by herpetologists worldwide.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.8),
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400,
                           ),
                       textAlign: TextAlign.center,
                     ),
@@ -514,21 +509,57 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
+                    // Enhanced title with icon
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppTheme.forestGreen.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Icon(
+                            Icons.camera_alt_rounded,
+                            color: AppTheme.emeraldGreen,
+                            size: 32,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Text(
+                            'Snap a Photo to Identify Snakes',
+                            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
                     Text(
-                      'Snap a Photo to Identify Snakes',
-                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
+                      'Point your camera at any snake and get instant identification with detailed information about species, behavior, habitat, and safety.',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Colors.white,
+                            height: 1.5,
+                            fontWeight: FontWeight.w400,
                           ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Quickly identify snakes with detailed information about species, behavior, habitat, and safety.',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.8),
-                          ),
-                      textAlign: TextAlign.center,
+                    const SizedBox(height: 16),
+                    // Feature highlights
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        _buildFeatureChip('Species ID', Icons.pets_rounded),
+                        _buildFeatureChip('Safety Info', Icons.shield_rounded),
+                        _buildFeatureChip('Habitat', Icons.location_on_rounded),
+                      ],
                     ),
                   ],
                 ),
@@ -537,8 +568,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
           ),
         ),
 
-        // Photo animation
-        _buildPhotoAnimation(),
+        // Enhanced photo animation
+        _buildEnhancedPhotoAnimation(),
 
         const SizedBox(height: 20),
       ],
@@ -557,21 +588,57 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
+                    // Enhanced title with AI icon
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppTheme.forestGreen.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Icon(
+                            Icons.psychology_rounded,
+                            color: AppTheme.emeraldGreen,
+                            size: 32,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Text(
+                            'Powered by Advanced AI',
+                            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
                     Text(
-                      'Powered by AI',
-                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
+                      'Our cutting-edge AI has been trained on millions of snake images to provide the most accurate identification and comprehensive information available.',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Colors.white,
+                            height: 1.5,
+                            fontWeight: FontWeight.w400,
                           ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Advanced AI technology trained on millions of snakes for accurate identification and detailed information.',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.8),
-                          ),
-                      textAlign: TextAlign.center,
+                    const SizedBox(height: 16),
+                    // AI capabilities
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        _buildFeatureChip('99.8% Accuracy', Icons.verified_rounded),
+                        _buildFeatureChip('Instant Results', Icons.flash_on_rounded),
+                        _buildFeatureChip('Expert Knowledge', Icons.school_rounded),
+                      ],
                     ),
                   ],
                 ),
@@ -580,8 +647,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
           ),
         ),
 
-        // AI animation
-        _buildAIAnimation(),
+        // Enhanced AI animation
+        _buildEnhancedAIAnimation(),
 
         const SizedBox(height: 20),
       ],
@@ -661,6 +728,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                         currentTestimonial['quote'],
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontStyle: FontStyle.italic,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
                             ),
                         textAlign: TextAlign.center,
                       ),
@@ -668,7 +737,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       Text(
                         '- ${currentTestimonial['author']}',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.white.withValues(alpha: 0.7),
+                              color: Colors.white,
                               fontWeight: FontWeight.w500,
                             ),
                         textAlign: TextAlign.center,
@@ -715,15 +784,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
     );
   }
 
-  Widget _buildPhotoAnimation() {
+  Widget _buildEnhancedPhotoAnimation() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: SizedBox(
-        height: 120,
+        height: 160,
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Snake image
+            // Camera frame
+            Container(
+              width: 200,
+              height: 140,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: AppTheme.emeraldGreen.withValues(alpha: 0.3),
+                  width: 2,
+                ),
+                color: AppTheme.darkCharcoal.withValues(alpha: 0.5),
+              ),
+            ),
+
+            // Snake image with enhanced styling
             AnimatedBuilder(
               animation: _photoHandOpacity,
               builder: (context, child) {
@@ -732,14 +815,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   child: Opacity(
                     opacity: 1.0 - (_photoHandOpacity.value * 0.6),
                     child: Container(
-                      width: 100,
-                      height: 100,
+                      width: 120,
+                      height: 120,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: AppTheme.emeraldGreen.withValues(alpha: 0.5),
-                          width: 2,
+                          color: AppTheme.emeraldGreen.withValues(alpha: 0.8),
+                          width: 3,
                         ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppTheme.emeraldGreen.withValues(alpha: 0.3),
+                            blurRadius: 20,
+                            spreadRadius: 5,
+                          ),
+                        ],
                       ),
                       child: ClipOval(
                         child: Image.asset(
@@ -753,7 +843,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               },
             ),
 
-            // Hand animation
+            // Enhanced hand animation
             AnimatedBuilder(
               animation: _photoHandOpacity,
               builder: (context, child) {
@@ -761,17 +851,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   scale: 1.5 - (_photoHandOpacity.value * 0.5),
                   child: Opacity(
                     opacity: _photoHandOpacity.value,
-                    child: Icon(
-                      Icons.touch_app,
-                      size: 70,
-                      color: AppTheme.emeraldGreen,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppTheme.forestGreen.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        Icons.touch_app,
+                        size: 60,
+                        color: AppTheme.emeraldGreen,
+                      ),
                     ),
                   ),
                 );
               },
             ),
 
-            // Flash effect
+            // Enhanced flash effect
             AnimatedBuilder(
               animation: _photoFlashOpacity,
               builder: (context, child) {
@@ -779,35 +876,63 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   opacity: _photoFlashOpacity.value,
                   duration: const Duration(milliseconds: 200),
                   child: Container(
-                    width: 140,
-                    height: 140,
+                    width: 160,
+                    height: 160,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.white.withValues(alpha: 0.3),
+                      color: Colors.white.withValues(alpha: 0.4),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.white.withValues(alpha: 0.3),
+                          blurRadius: 30,
+                          spreadRadius: 10,
+                        ),
+                      ],
                     ),
                   ),
                 );
               },
             ),
 
-            // Identification result
+            // Enhanced identification result
             AnimatedBuilder(
               animation: _photoIdentifiedOpacity,
               builder: (context, child) {
-                return Opacity(
-                  opacity: _photoIdentifiedOpacity.value,
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withValues(alpha: 0.9),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Text(
-                      'Identified!',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                return Transform.translate(
+                  offset: Offset(0, -20),
+                  child: Opacity(
+                    opacity: _photoIdentifiedOpacity.value,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: AppTheme.forestGreen,
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppTheme.forestGreen.withValues(alpha: 0.4),
+                            blurRadius: 15,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.check_circle_rounded,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          const Text(
+                            'Snake Identified!',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -820,52 +945,125 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
     );
   }
 
-  Widget _buildAIAnimation() {
+  Widget _buildEnhancedAIAnimation() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: SizedBox(
-        height: 80,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        height: 120,
+        child: Stack(
+          alignment: Alignment.center,
           children: [
-            // AI brain icon with pulsing effect
+            // Neural network background
+            Container(
+              width: 200,
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: AppTheme.emeraldGreen.withValues(alpha: 0.2),
+                  width: 1,
+                ),
+                color: AppTheme.darkCharcoal.withValues(alpha: 0.3),
+              ),
+            ),
+
+            // AI brain icon with enhanced pulsing effect
             AnimatedBuilder(
               animation: _aiAnimationController,
               builder: (context, child) {
                 return Transform.scale(
-                  scale: 1.0 + (0.1 * _aiOpacity.value),
-                  child: Icon(
-                    Icons.psychology,
-                    size: 60,
-                    color: AppTheme.emeraldGreen,
+                  scale: 1.0 + (0.15 * _aiOpacity.value),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppTheme.forestGreen.withValues(alpha: 0.2),
+                      border: Border.all(
+                        color: AppTheme.emeraldGreen.withValues(alpha: 0.6),
+                        width: 2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppTheme.emeraldGreen.withValues(alpha: 0.3),
+                          blurRadius: 20,
+                          spreadRadius: 5,
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.psychology_rounded,
+                      size: 40,
+                      color: AppTheme.emeraldGreen,
+                    ),
                   ),
                 );
               },
             ),
 
-            const SizedBox(height: 8),
+            // Enhanced animated dots with connecting lines
+            Positioned(
+              bottom: 20,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (index) {
+                  return AnimatedBuilder(
+                    animation: _aiAnimationController,
+                    builder: (context, child) {
+                      final delay = index * 0.15;
+                      final opacity = _aiOpacity.value > delay ? 1.0 : 0.2;
+                      final scale = _aiOpacity.value > delay ? 1.0 : 0.5;
+                      return Transform.scale(
+                        scale: scale,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 3),
+                          width: 6,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppTheme.emeraldGreen.withValues(alpha: opacity),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppTheme.emeraldGreen.withValues(alpha: opacity * 0.5),
+                                blurRadius: 8,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }),
+              ),
+            ),
 
-            // Simple animated dots
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(3, (index) {
-                return AnimatedBuilder(
-                  animation: _aiAnimationController,
-                  builder: (context, child) {
-                    final delay = index * 0.2;
-                    final opacity = _aiOpacity.value > delay ? 1.0 : 0.3;
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: 8,
-                      height: 8,
+            // Processing text
+            Positioned(
+              top: 20,
+              child: AnimatedBuilder(
+                animation: _aiAnimationController,
+                builder: (context, child) {
+                  final opacity = _aiOpacity.value > 0.5 ? 1.0 : 0.0;
+                  return Opacity(
+                    opacity: opacity,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppTheme.emeraldGreen.withValues(alpha: opacity),
+                        color: AppTheme.forestGreen.withValues(alpha: 0.8),
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                    );
-                  },
-                );
-              }),
+                      child: Text(
+                        'Processing...',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -898,6 +1096,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -922,6 +1121,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   _getTrustText(),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                 ),
               ],
@@ -956,5 +1156,38 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
       default:
         return 'Professional-grade technology';
     }
+  }
+
+  Widget _buildFeatureChip(String text, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppTheme.forestGreen.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppTheme.emeraldGreen.withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            color: AppTheme.emeraldGreen,
+            size: 16,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: TextStyle(
+              color: AppTheme.emeraldGreen,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
