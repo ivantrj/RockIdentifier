@@ -161,14 +161,14 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           LoggingService.warning('Error closing loading dialog in catch block', tag: 'LibraryScreen');
         }
 
-        // Check for NOT_coin error with more robust detection
+        // Check for NOT_SNAKE error with more robust detection
         final errorMessage = e.toString().toLowerCase();
-        if (errorMessage.contains('not_coin') ||
-            errorMessage.contains('does not contain Snake') ||
-            errorMessage.contains('not Snake') ||
-            errorMessage.contains('no Snake') ||
-            errorMessage.contains('modern item') ||
-            errorMessage.contains('not artifact')) {
+        if (errorMessage.contains('not_snake') ||
+            errorMessage.contains('does not contain snake') ||
+            errorMessage.contains('not snake') ||
+            errorMessage.contains('no snake') ||
+            errorMessage.contains('not a snake') ||
+            errorMessage.contains('not reptile')) {
           LoggingService.info('Image identified as not a snake - showing dialog', tag: 'LibraryScreen');
           showDialog(
             context: context,
@@ -495,26 +495,26 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
                         end: Alignment.bottomRight,
                         colors: widget.isDarkMode
                             ? [
-                                const Color(0xFFFFD700), // Gold
-                                const Color(0xFFFFA500), // Orange
+                                const Color(0xFF4CAF50), // Forest Green
+                                const Color(0xFF2E7D32), // Dark Green
                               ]
                             : [
-                                const Color(0xFFFFD700), // Gold
-                                const Color(0xFFFF8C00), // Dark Orange
+                                const Color(0xFF66BB6A), // Light Green
+                                const Color(0xFF388E3C), // Medium Green
                               ],
                       ),
                       boxShadow: [
                         BoxShadow(
                           color: widget.isDarkMode
-                              ? const Color(0xFFFFD700).withValues(alpha: 0.3)
-                              : const Color(0xFFFFD700).withValues(alpha: 0.4),
+                              ? const Color(0xFF4CAF50).withValues(alpha: 0.3)
+                              : const Color(0xFF66BB6A).withValues(alpha: 0.4),
                           blurRadius: 20,
                           spreadRadius: 5,
                         ),
                       ],
                     ),
                     child: Icon(
-                      Icons.monetization_on_rounded,
+                      Icons.pets_rounded,
                       size: 60,
                       color: Colors.white,
                     ),
@@ -531,7 +531,7 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
                 return Transform.scale(
                   scale: _bounceAnimation.value,
                   child: Text(
-                    'Your Snake Collection Awaits',
+                    'Discover Amazing Snakes',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
@@ -547,7 +547,7 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
 
             // Subtitle with better typography
             Text(
-              'Start building your herpetology collection by identifying snakes and learning about their behavior',
+              'Capture photos of snakes to learn about their species, habitat, and safety information. Build your knowledge of these fascinating reptiles!',
               style: TextStyle(
                 fontSize: 16,
                 color: widget.isDarkMode ? Colors.white70 : Colors.black54,
@@ -593,7 +593,7 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Tap the camera to begin',
+                    'Tap the camera to identify snakes',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
