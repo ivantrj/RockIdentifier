@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
 import 'package:snake_id/core/theme/app_theme.dart';
 import 'package:snake_id/locator.dart';
 import 'package:snake_id/services/cache_service.dart';
@@ -50,25 +49,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
+      backgroundColor: isDarkMode ? const Color(0xFF121212) : const Color(0xFFF2F2F7),
       appBar: AppBar(
         title: const Text('Settings'),
+        backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: false,
+        titleTextStyle: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w600,
+          color: isDarkMode ? Colors.white : Colors.black,
+        ),
       ),
       body: ListView(
-        // Reduce overall padding, especially vertical
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
         children: [
           _buildSettingsGroup(
             context,
+            title: 'Account',
             children: [
               const _HapticFeedbackToggle(),
               const _ThemeToggle(),
             ],
           ),
-          const SizedBox(height: 12), // Reduced space between groups
+          const SizedBox(height: 24),
           _buildSettingsGroup(
             context,
+            title: 'Your Account',
             children: [
               _buildSettingsItem(
                 context,
@@ -84,14 +95,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 24),
           _buildSettingsGroup(
             context,
-            children: [const _CacheSettingsItem()],
-          ),
-          const SizedBox(height: 12),
-          _buildSettingsGroup(
-            context,
+            title: 'Support and Legal',
             children: [
               _buildSettingsItem(
                 context,
@@ -107,10 +114,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 24),
           _buildSettingsGroup(
             context,
             children: [
+              _buildSettingsItem(
+                context,
+                icon: Icons.cleaning_services_rounded,
+                title: 'Clear Cache',
+                onTap: () => _showClearCacheDialog(context),
+              ),
               _buildSettingsItem(
                 context,
                 icon: Icons.info_rounded,
@@ -124,28 +137,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildSettingsGroup(BuildContext context, {required List<Widget> children}) {
+  Widget _buildSettingsGroup(BuildContext context, {String? title, required List<Widget> children}) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
-      clipBehavior: Clip.antiAlias, // Ensures children conform to rounded corners
       decoration: BoxDecoration(
-        color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
-        borderRadius: BorderRadius.circular(12), // Slightly less rounded for a tighter look
+        color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      // Using a Column with manually interspersed dividers for precise control
       child: Column(
-        children: List.generate(children.length * 2 - 1, (index) {
-          if (index.isEven) {
-            return children[index ~/ 2];
-          } else {
-            return Divider(
-              height: 1,
-              thickness: 1,
-              color: isDarkMode ? AppTheme.subtleBorderColor : AppTheme.lightBorder,
-              indent: 56,
-            );
-          }
-        }),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (title != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: isDarkMode ? Colors.grey.shade400 : Colors.grey.shade600,
+                ),
+              ),
+            ),
+          Column(
+            children: List.generate(children.length * 2 - 1, (index) {
+              if (index.isEven) {
+                return children[index ~/ 2];
+              } else {
+                return Divider(
+                  height: 1,
+                  thickness: 0.5,
+                  color: isDarkMode ? Colors.grey.shade800 : Colors.grey.shade200,
+                  indent: title != null ? 56 : 16,
+                  endIndent: 16,
+                );
+              }
+            }),
+          ),
+        ],
       ),
     );
   }
@@ -154,17 +191,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
       {required IconData icon, required String title, String? subtitle, VoidCallback? onTap}) {
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
+
     return ListTile(
-      dense: true, // Makes the ListTile more compact
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0), // Reduced vertical padding
-      leading: Icon(icon, color: theme.colorScheme.secondary, size: 22), // Slightly smaller icon
-      title: Text(title, style: theme.textTheme.bodyLarge),
-      subtitle: subtitle != null ? Text(subtitle, style: theme.textTheme.bodyMedium) : null,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+      leading: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: theme.colorScheme.secondary.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(icon, color: theme.colorScheme.secondary, size: 20),
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: isDarkMode ? Colors.white : Colors.black,
+        ),
+      ),
+      subtitle: subtitle != null
+          ? Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 14,
+                color: isDarkMode ? Colors.grey.shade400 : Colors.grey.shade600,
+              ),
+            )
+          : null,
       trailing: onTap != null
           ? Icon(
-              Icons.arrow_forward_ios,
-              size: 14,
-              color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+              Icons.chevron_right,
+              size: 22,
+              color: isDarkMode ? Colors.grey.shade500 : Colors.grey.shade400,
             )
           : null,
       onTap: onTap,
@@ -184,12 +244,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
       await inAppReview.requestReview();
     }
   }
+
+  Future<void> _showClearCacheDialog(BuildContext context) async {
+    final confirmed = await showCupertinoDialog<bool>(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: const Text('Clear Cache'),
+        content: const Text('This will clear all cached AI analysis results. This action cannot be undone.'),
+        actions: [
+          CupertinoDialogAction(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            child: const Text('Clear'),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      await locator<CacheService>().clearCache();
+      // Refresh cache size display
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
 }
 
 // --- Helper Widgets ---
-
 class _HapticFeedbackToggle extends StatefulWidget {
   const _HapticFeedbackToggle();
+
   @override
   State<_HapticFeedbackToggle> createState() => _HapticFeedbackToggleState();
 }
@@ -224,11 +313,27 @@ class _HapticFeedbackToggleState extends State<_HapticFeedbackToggle> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return ListTile(
-      dense: true,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-      leading: Icon(Icons.vibration, color: theme.colorScheme.secondary, size: 22),
-      title: Text('Haptic Feedback', style: theme.textTheme.bodyLarge),
+      leading: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: theme.colorScheme.secondary.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(Icons.vibration, color: theme.colorScheme.secondary, size: 20),
+      ),
+      title: Text(
+        'Haptic Feedback',
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: isDarkMode ? Colors.white : Colors.black,
+        ),
+      ),
       trailing: _loading
           ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
           : CupertinoSwitch(
@@ -237,77 +342,6 @@ class _HapticFeedbackToggleState extends State<_HapticFeedbackToggle> {
               activeColor: theme.colorScheme.primary,
             ),
       onTap: _loading ? null : () => _toggle(!_enabled),
-    );
-  }
-}
-
-class _CacheSettingsItem extends StatefulWidget {
-  const _CacheSettingsItem();
-
-  @override
-  State<_CacheSettingsItem> createState() => _CacheSettingsItemState();
-}
-
-class _CacheSettingsItemState extends State<_CacheSettingsItem> {
-  String _cacheSize = 'Loading...';
-
-  @override
-  void initState() {
-    super.initState();
-    _getCacheSize();
-  }
-
-  Future<void> _getCacheSize() async {
-    final size = await locator<CacheService>().getCacheSize();
-    if (mounted) {
-      setState(() {
-        _cacheSize = locator<CacheService>().formatCacheSize(size);
-      });
-    }
-  }
-
-  Future<void> _showClearCacheDialog(BuildContext context) async {
-    final confirmed = await showCupertinoDialog<bool>(
-      context: context,
-      builder: (context) => CupertinoAlertDialog(
-        title: const Text('Clear Cache'),
-        content: const Text('This will clear all cached AI analysis results. This action cannot be undone.'),
-        actions: [
-          CupertinoDialogAction(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.of(context).pop(false),
-          ),
-          CupertinoDialogAction(
-            isDestructiveAction: true,
-            child: const Text('Clear'),
-            onPressed: () => Navigator.of(context).pop(true),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed == true) {
-      await locator<CacheService>().clearCache();
-      _getCacheSize();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
-    return ListTile(
-      dense: true,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-      leading: Icon(Icons.cleaning_services_rounded, color: theme.colorScheme.secondary, size: 22),
-      title: Text('Clear Cache', style: theme.textTheme.bodyLarge),
-      subtitle: Text(_cacheSize, style: theme.textTheme.bodyMedium),
-      trailing: Icon(
-        Icons.arrow_forward_ios,
-        size: 14,
-        color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-      ),
-      onTap: () => _showClearCacheDialog(context),
     );
   }
 }
@@ -321,31 +355,49 @@ class _ThemeToggle extends StatelessWidget {
       builder: (context, themeService, child) {
         final theme = Theme.of(context);
         final isDarkMode = theme.brightness == Brightness.dark;
+
         return ListTile(
-          dense: true,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-          leading: Icon(
-            themeService.isLightMode
-                ? Icons.light_mode_rounded
-                : themeService.isDarkMode
-                    ? Icons.dark_mode_rounded
-                    : Icons.brightness_auto_rounded,
-            color: theme.colorScheme.secondary,
-            size: 22,
+          leading: Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.secondary.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              themeService.isLightMode
+                  ? Icons.light_mode_rounded
+                  : themeService.isDarkMode
+                      ? Icons.dark_mode_rounded
+                      : Icons.brightness_auto_rounded,
+              color: theme.colorScheme.secondary,
+              size: 20,
+            ),
           ),
-          title: Text('Theme', style: theme.textTheme.bodyLarge),
+          title: Text(
+            'Theme',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: isDarkMode ? Colors.white : Colors.black,
+            ),
+          ),
           subtitle: Text(
             themeService.isLightMode
                 ? 'Light'
                 : themeService.isDarkMode
                     ? 'Dark'
                     : 'System',
-            style: theme.textTheme.bodyMedium,
+            style: TextStyle(
+              fontSize: 14,
+              color: isDarkMode ? Colors.grey.shade400 : Colors.grey.shade600,
+            ),
           ),
           trailing: Icon(
-            Icons.arrow_forward_ios,
-            size: 14,
-            color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+            Icons.chevron_right,
+            size: 22,
+            color: isDarkMode ? Colors.grey.shade500 : Colors.grey.shade400,
           ),
           onTap: () {
             HapticService.instance.vibrate();
