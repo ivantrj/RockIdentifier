@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:snake_id/core/widgets/coin_card.dart';
 import 'package:snake_id/core/widgets/coin_card_placeholder.dart';
 import 'package:snake_id/features/library/view/widgets/not_antique_dialog.dart';
@@ -19,6 +20,7 @@ import 'package:snake_id/locator.dart';
 import 'widgets/fab_menu.dart';
 import 'widgets/loading_dialog.dart';
 import 'package:snake_id/services/haptic_service.dart';
+import 'package:snake_id/core/theme/app_theme.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -39,19 +41,36 @@ class _LibraryScreenBody extends StatefulWidget {
   State<_LibraryScreenBody> createState() => _LibraryScreenBodyState();
 }
 
-class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
+class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProviderStateMixin {
   bool _fabMenuOpen = false;
   bool _isProcessing = false;
   final ImagePicker _picker = ImagePicker();
-  String? _justAddedId; // Track the most recently added item
-
-  // ValueNotifier for subscription state
+  String? _justAddedId;
   final ValueNotifier<bool> isSubscribedNotifier = ValueNotifier(main.RevenueCatService.isSubscribed);
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+    _animationController.forward();
     _listenForSubscriptionChanges();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   void _listenForSubscriptionChanges() {
@@ -67,16 +86,13 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
 
   Future<void> _pickImage(ImageSource source) async {
     LoggingService.userAction('Image picker opened', details: 'source: ${source.name}', tag: 'LibraryScreen');
-
     final items = context.read<LibraryViewModel>().items;
     final isSubscribed = main.RevenueCatService.isSubscribed;
-
     if (!isSubscribed && items.isNotEmpty) {
       LoggingService.userAction('Paywall shown', details: 'reason: subscription required', tag: 'LibraryScreen');
       await _showPaywall();
       return;
     }
-
     final pickedFile = await _picker.pickImage(source: source, imageQuality: 85);
     if (pickedFile != null) {
       LoggingService.userAction('Image selected', details: 'path: ${pickedFile.path}', tag: 'LibraryScreen');
@@ -88,26 +104,30 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) => FractionallySizedBox(
         heightFactor: 0.95,
-        child: PaywallScreen(),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark ? AppTheme.darkCharcoal : Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: PaywallScreen(),
+        ),
       ),
     );
   }
 
   Future<void> _processImage(String imagePath) async {
     LoggingService.debug('Starting image processing - path: $imagePath', tag: 'LibraryScreen');
-
     setState(() {
       _fabMenuOpen = false;
       _isProcessing = true;
     });
 
-    // Show loading dialog
     if (mounted) {
       showDialog(
         context: context,
@@ -121,7 +141,6 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       final item = await locator<ImageProcessingService>().processImage(imagePath);
 
       if (mounted) {
-        // Close loading dialog first
         try {
           Navigator.of(context, rootNavigator: true).pop();
         } catch (e) {
@@ -133,8 +152,6 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           try {
             await context.read<LibraryViewModel>().addItem(item);
             LoggingService.debug('Item successfully added to viewmodel', tag: 'LibraryScreen');
-
-            // Set just added ID for animation
             if (mounted) {
               setState(() {
                 _justAddedId = item.id;
@@ -154,14 +171,12 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       LoggingService.debug('Error message: ${e.toString()}', tag: 'LibraryScreen');
 
       if (mounted) {
-        // Close loading dialog first
         try {
           Navigator.of(context, rootNavigator: true).pop();
         } catch (e) {
           LoggingService.warning('Error closing loading dialog in catch block', tag: 'LibraryScreen');
         }
 
-        // Check for NOT_SNAKE error with more robust detection
         final errorMessage = e.toString().toLowerCase();
         if (errorMessage.contains('not_snake') ||
             errorMessage.contains('does not contain snake') ||
@@ -199,7 +214,12 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   void _showError(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.all(16),
+      ),
     );
   }
 
@@ -243,20 +263,24 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
     final items = context.watch<LibraryViewModel>().items;
 
     return Scaffold(
-      appBar: _buildAppBar(context, isDarkMode),
-      body: Stack(
-        children: [
-          // Main content
-          _buildBody(context, items, isDarkMode),
-          // FAB menu overlay
-          FabMenu(
-            isOpen: _fabMenuOpen,
-            isProcessing: _isProcessing,
-            onOpen: _openFabMenu,
-            onClose: _closeFabMenu,
-            onImagePicked: _pickImage,
-          ),
-        ],
+      backgroundColor: isDarkMode ? AppTheme.nearBlack : AppTheme.lightBackground,
+      appBar: _buildModernAppBar(context, isDarkMode),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Stack(
+          children: [
+            // Main content
+            _buildBody(context, items, isDarkMode),
+            // FAB menu overlay
+            FabMenu(
+              isOpen: _fabMenuOpen,
+              isProcessing: _isProcessing,
+              onOpen: _openFabMenu,
+              onClose: _closeFabMenu,
+              onImagePicked: _pickImage,
+            ),
+          ],
+        ),
       ),
       floatingActionButton: !_fabMenuOpen
           ? AnimatedScale(
@@ -267,6 +291,9 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                 duration: const Duration(milliseconds: 250),
                 child: FloatingActionButton(
                   key: ValueKey(_isProcessing),
+                  elevation: 0,
+                  highlightElevation: 0,
+                  backgroundColor: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
                   onPressed: _isProcessing
                       ? null
                       : () async {
@@ -275,7 +302,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                           _openFabMenu();
                         },
                   child: _isProcessing
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 24,
                           height: 24,
                           child: CircularProgressIndicator(
@@ -283,7 +310,11 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
                             strokeWidth: 2,
                           ),
                         )
-                      : const Icon(HugeIcons.strokeRoundedCameraAi, size: 32),
+                      : Icon(
+                          HugeIcons.strokeRoundedCameraAi,
+                          color: Colors.white,
+                          size: 28,
+                        ),
                 ),
               ),
             )
@@ -291,36 +322,42 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context, bool isDarkMode) {
+  PreferredSizeWidget _buildModernAppBar(BuildContext context, bool isDarkMode) {
     return AppBar(
-      title: const Text(
-        'Collection',
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      systemOverlayStyle:
+          Theme.of(context).brightness == Brightness.dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+      title: Text(
+        'My Collection',
         style: TextStyle(
           fontSize: 24,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.bold,
+          color: isDarkMode ? Colors.white : Colors.black87,
         ),
       ),
-      surfaceTintColor: Colors.transparent,
       centerTitle: false,
-      elevation: 0,
       actions: [
         // Subscription icon
         ValueListenableBuilder<bool>(
           valueListenable: isSubscribedNotifier,
           builder: (context, isSubscribed, _) {
             return Container(
-              margin: const EdgeInsets.only(right: 2),
+              margin: const EdgeInsets.only(right: 8),
               child: IconButton(
                 icon: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: isDarkMode ? const Color(0xFF2A2A36) : const Color(0xFFF5F5F8),
-                    borderRadius: BorderRadius.circular(16),
+                    color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(14),
                   ),
                   child: Icon(
                     isSubscribed ? Icons.emoji_events_rounded : Icons.card_giftcard,
                     size: 22,
-                    color: isSubscribed ? Theme.of(context).colorScheme.primary : Colors.amber,
+                    color: isSubscribed
+                        ? (isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen)
+                        : (isDarkMode ? Colors.amber : Colors.amber.shade700),
                   ),
                 ),
                 tooltip: isSubscribed ? 'Thank you for subscribing!' : 'Unlock Pro',
@@ -334,12 +371,16 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           margin: const EdgeInsets.only(right: 16),
           child: IconButton(
             icon: Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: isDarkMode ? const Color(0xFF2A2A36) : const Color(0xFFF5F5F8),
-                borderRadius: BorderRadius.circular(16),
+                color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(14),
               ),
-              child: const Icon(HugeIcons.strokeRoundedSettings01, size: 22),
+              child: Icon(
+                HugeIcons.strokeRoundedSettings01,
+                size: 22,
+                color: isDarkMode ? Colors.white : Colors.black87,
+              ),
             ),
             onPressed: () async {
               await HapticService.instance.vibrate();
@@ -356,7 +397,6 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       app.paywallOpen = true;
       await _showPaywall();
       app.paywallOpen = false;
-
       // Refresh subscription status after paywall is closed
       try {
         final purchaserInfo = await Purchases.getCustomerInfo();
@@ -385,14 +425,14 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         crossAxisCount: 2,
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
-        itemCount: 6, // Show 6 shimmering placeholders
+        itemCount: 6,
         itemBuilder: (context, index) => const SnakeCardPlaceholder(),
       );
     }
 
     // Show empty state when not loading and no items
     if (items.isEmpty) {
-      return _buildEmptyState(context, isDarkMode);
+      return _buildModernEmptyState(context, isDarkMode);
     }
 
     return MasonryGridView.count(
@@ -403,8 +443,6 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
-        // Note: The 3D flip animation would be implemented here on tap.
-        // For now, we use the existing navigation.
         return SnakeCard(
           item: item,
           onTap: () => _onOpenDetail(item),
@@ -413,20 +451,20 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, bool isDarkMode) {
-    return _BouncyEmptyState(isDarkMode: isDarkMode);
+  Widget _buildModernEmptyState(BuildContext context, bool isDarkMode) {
+    return _ModernEmptyState(isDarkMode: isDarkMode);
   }
 }
 
-class _BouncyEmptyState extends StatefulWidget {
+class _ModernEmptyState extends StatefulWidget {
   final bool isDarkMode;
-  const _BouncyEmptyState({required this.isDarkMode});
+  const _ModernEmptyState({required this.isDarkMode});
 
   @override
-  State<_BouncyEmptyState> createState() => _BouncyEmptyStateState();
+  State<_ModernEmptyState> createState() => _ModernEmptyStateState();
 }
 
-class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProviderStateMixin {
+class _ModernEmptyStateState extends State<_ModernEmptyState> with TickerProviderStateMixin {
   late AnimationController _bounceController;
   late AnimationController _floatController;
   late Animation<double> _bounceAnimation;
@@ -443,7 +481,6 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
       duration: const Duration(seconds: 3),
       vsync: this,
     );
-
     _bounceAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -451,7 +488,6 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
       parent: _bounceController,
       curve: Curves.elasticOut,
     ));
-
     _floatAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -459,7 +495,6 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
       parent: _floatController,
       curve: Curves.easeInOut,
     ));
-
     _bounceController.forward();
     _floatController.repeat(reverse: true);
   }
@@ -495,26 +530,26 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
                         end: Alignment.bottomRight,
                         colors: widget.isDarkMode
                             ? [
-                                const Color(0xFF4CAF50), // Forest Green
-                                const Color(0xFF2E7D32), // Dark Green
+                                AppTheme.forestGreen,
+                                AppTheme.darkCharcoal,
                               ]
                             : [
-                                const Color(0xFF66BB6A), // Light Green
-                                const Color(0xFF388E3C), // Medium Green
+                                AppTheme.emeraldGreen,
+                                AppTheme.forestGreen,
                               ],
                       ),
                       boxShadow: [
                         BoxShadow(
                           color: widget.isDarkMode
-                              ? const Color(0xFF4CAF50).withValues(alpha: 0.3)
-                              : const Color(0xFF66BB6A).withValues(alpha: 0.4),
+                              ? AppTheme.forestGreen.withValues(alpha: 0.3)
+                              : AppTheme.emeraldGreen.withValues(alpha: 0.4),
                           blurRadius: 20,
                           spreadRadius: 5,
                         ),
                       ],
                     ),
                     child: Icon(
-                      Icons.pets_rounded,
+                      HugeIcons.strokeRoundedAbacus,
                       size: 60,
                       color: Colors.white,
                     ),
@@ -523,7 +558,6 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
               },
             ),
             const SizedBox(height: 32),
-
             // Animated title
             AnimatedBuilder(
               animation: _bounceAnimation,
@@ -531,10 +565,10 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
                 return Transform.scale(
                   scale: _bounceAnimation.value,
                   child: Text(
-                    'Discover Amazing Snakes',
+                    'Discover Snakes',
                     style: TextStyle(
                       fontSize: 24,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.bold,
                       color: widget.isDarkMode ? Colors.white : Colors.black87,
                       letterSpacing: -0.5,
                     ),
@@ -544,7 +578,6 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
               },
             ),
             const SizedBox(height: 16),
-
             // Subtitle with better typography
             Text(
               'Capture photos of snakes to learn about their species, habitat, and safety information. Build your knowledge of these fascinating reptiles!',
@@ -556,7 +589,6 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
-
             // Decorative elements
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -569,29 +601,42 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
               ],
             ),
             const SizedBox(height: 40),
-
             // Call to action hint
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               decoration: BoxDecoration(
-                color: widget.isDarkMode
-                    ? const Color(0xFF2A2A36).withValues(alpha: 0.8)
-                    : const Color(0xFFF5F5F8).withValues(alpha: 0.8),
+                color: widget.isDarkMode ? AppTheme.darkCharcoal : Colors.white,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: widget.isDarkMode ? Colors.white24 : Colors.black12,
                   width: 1,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(widget.isDarkMode ? 0.3 : 0.1),
+                    blurRadius: 15,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    HugeIcons.strokeRoundedCameraAi,
-                    size: 20,
-                    color: Theme.of(context).colorScheme.primary,
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: widget.isDarkMode
+                          ? AppTheme.forestGreen.withOpacity(0.2)
+                          : AppTheme.emeraldGreen.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      HugeIcons.strokeRoundedCameraAi,
+                      size: 20,
+                      color: widget.isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+                    ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 12),
                   Text(
                     'Tap the camera to identify snakes',
                     style: TextStyle(
@@ -615,7 +660,6 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
       builder: (context, child) {
         final delay = index * 0.2;
         final animationValue = (_floatController.value + delay) % 1.0;
-
         return Transform.scale(
           scale: 0.8 + 0.2 * animationValue,
           child: Container(
@@ -624,8 +668,8 @@ class _BouncyEmptyStateState extends State<_BouncyEmptyState> with TickerProvide
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isDarkMode
-                  ? Colors.white.withValues(alpha: 0.3 + 0.4 * animationValue)
-                  : Colors.black.withValues(alpha: 0.2 + 0.3 * animationValue),
+                  ? AppTheme.forestGreen.withValues(alpha: 0.3 + 0.4 * animationValue)
+                  : AppTheme.emeraldGreen.withValues(alpha: 0.2 + 0.3 * animationValue),
             ),
           ),
         );

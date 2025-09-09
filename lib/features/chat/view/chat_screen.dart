@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:snake_id/data/models/identified_item.dart';
 import 'package:flutter/material.dart';
@@ -217,7 +218,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
+            color: Colors.black.withValues(alpha: isDarkMode ? 0.3 : 0.1),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -225,18 +226,38 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       ),
       child: Row(
         children: [
-          // Snake image placeholder
+          // Snake image
           Container(
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: isDarkMode ? AppTheme.forestGreen.withOpacity(0.2) : AppTheme.emeraldGreen.withOpacity(0.15),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(
-              HugeIcons.strokeRoundedAbacus,
-              size: 32,
-              color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.file(
+                File(widget.item.imagePath),
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: isDarkMode
+                          ? AppTheme.forestGreen.withValues(alpha: 0.2)
+                          : AppTheme.emeraldGreen.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Icon(
+                      HugeIcons.strokeRoundedAbacus,
+                      size: 32,
+                      color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+                    ),
+                  );
+                },
+              ),
             ),
           ),
           const SizedBox(width: 16),
@@ -254,7 +275,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  widget.item.scientificName ?? widget.item.subtitle ?? 'Snake species',
+                  widget.item.scientificName ?? widget.item.subtitle,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: isDarkMode ? Colors.white70 : Colors.black54,
                   ),
@@ -278,7 +299,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
+            color: Colors.black.withValues(alpha: isDarkMode ? 0.3 : 0.1),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -382,7 +403,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.1),
+                          color: Colors.black.withValues(alpha: isDarkMode ? 0.2 : 0.1),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
@@ -414,7 +435,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 height: 36,
                 margin: const EdgeInsets.only(left: 12, top: 4),
                 decoration: BoxDecoration(
-                  color: isDarkMode ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.05),
+                  color: isDarkMode ? Colors.white.withValues(alpha: 0.2) : Colors.black.withValues(alpha: 0.05),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -430,7 +451,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildModernTypingIndicator() {
-    final theme = Theme.of(context);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
@@ -461,7 +481,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.1),
+                  color: Colors.black.withValues(alpha: isDarkMode ? 0.2 : 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
