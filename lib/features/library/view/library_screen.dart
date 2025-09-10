@@ -45,7 +45,6 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
   bool _fabMenuOpen = false;
   bool _isProcessing = false;
   final ImagePicker _picker = ImagePicker();
-  String? _justAddedId;
   final ValueNotifier<bool> isSubscribedNotifier = ValueNotifier(main.RevenueCatService.isSubscribed);
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -152,11 +151,6 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
           try {
             await context.read<LibraryViewModel>().addItem(item);
             LoggingService.debug('Item successfully added to viewmodel', tag: 'LibraryScreen');
-            if (mounted) {
-              setState(() {
-                _justAddedId = item.id;
-              });
-            }
           } catch (e) {
             LoggingService.error('Error adding item to viewmodel', error: e, tag: 'LibraryScreen');
             _showError('Error saving item to library.');
@@ -263,23 +257,50 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
     final items = context.watch<LibraryViewModel>().items;
 
     return Scaffold(
-      backgroundColor: isDarkMode ? AppTheme.nearBlack : AppTheme.lightBackground,
-      appBar: _buildModernAppBar(context, isDarkMode),
-      body: FadeTransition(
-        opacity: _fadeAnimation,
-        child: Stack(
-          children: [
-            // Main content
-            _buildBody(context, items, isDarkMode),
-            // FAB menu overlay
-            FabMenu(
-              isOpen: _fabMenuOpen,
-              isProcessing: _isProcessing,
-              onOpen: _openFabMenu,
-              onClose: _closeFabMenu,
-              onImagePicked: _pickImage,
-            ),
-          ],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: isDarkMode
+                ? [
+                    AppTheme.nearBlack,
+                    AppTheme.darkCharcoal,
+                    AppTheme.nearBlack,
+                  ]
+                : [
+                    AppTheme.lightBackground,
+                    Color(0xFFF0F8F5),
+                    AppTheme.lightBackground,
+                  ],
+            stops: const [0.0, 0.5, 1.0],
+          ),
+        ),
+        child: FadeTransition(
+          opacity: _fadeAnimation,
+          child: Stack(
+            children: [
+              // Subtle background pattern
+              _buildBackgroundPattern(isDarkMode),
+              // Main content
+              Column(
+                children: [
+                  _buildModernAppBar(context, isDarkMode),
+                  Expanded(
+                    child: _buildBody(context, items, isDarkMode),
+                  ),
+                ],
+              ),
+              // FAB menu overlay
+              FabMenu(
+                isOpen: _fabMenuOpen,
+                isProcessing: _isProcessing,
+                onOpen: _openFabMenu,
+                onClose: _closeFabMenu,
+                onImagePicked: _pickImage,
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: !_fabMenuOpen
@@ -319,6 +340,16 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
               ),
             )
           : null,
+    );
+  }
+
+  Widget _buildBackgroundPattern(bool isDarkMode) {
+    return Positioned.fill(
+      child: CustomPaint(
+        painter: _BackgroundPatternPainter(
+          isDarkMode: isDarkMode,
+        ),
+      ),
     );
   }
 
@@ -676,4 +707,50 @@ class _ModernEmptyStateState extends State<_ModernEmptyState> with TickerProvide
       },
     );
   }
+}
+
+class _BackgroundPatternPainter extends CustomPainter {
+  final bool isDarkMode;
+
+  _BackgroundPatternPainter({required this.isDarkMode});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..style = PaintingStyle.fill
+      ..color =
+          isDarkMode ? AppTheme.forestGreen.withValues(alpha: 0.02) : AppTheme.emeraldGreen.withValues(alpha: 0.03);
+
+    // Draw subtle circular patterns
+    final spacing = 120.0;
+    for (double x = 0; x < size.width + spacing; x += spacing) {
+      for (double y = 0; y < size.height + spacing; y += spacing) {
+        canvas.drawCircle(
+          Offset(x, y),
+          40,
+          paint,
+        );
+      }
+    }
+
+    // Add some subtle lines
+    final linePaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.5
+      ..color =
+          isDarkMode ? AppTheme.forestGreen.withValues(alpha: 0.05) : AppTheme.emeraldGreen.withValues(alpha: 0.08);
+
+    // Draw diagonal lines
+    for (int i = 0; i < 8; i++) {
+      final startY = (size.height / 8) * i;
+      canvas.drawLine(
+        Offset(0, startY),
+        Offset(size.width, startY + size.width * 0.1),
+        linePaint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

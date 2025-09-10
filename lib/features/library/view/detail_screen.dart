@@ -165,7 +165,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
             style: theme.textTheme.titleMedium?.copyWith(
               color:
                   isSelected ? Colors.white : (isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary),
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+              fontSize: 16,
+              letterSpacing: 0.2,
             ),
           ),
         ),
@@ -195,22 +197,25 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
           widget.item.result,
           style: theme.textTheme.headlineSmall?.copyWith(
             color: Colors.white,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w800,
+            fontSize: 24,
+            letterSpacing: -0.5,
+            height: 1.2,
             shadows: [
               Shadow(
-                offset: const Offset(0, 3),
-                blurRadius: 8,
-                color: Colors.black.withValues(alpha: 0.9),
+                offset: const Offset(0, 4),
+                blurRadius: 12,
+                color: Colors.black.withValues(alpha: 0.8),
+              ),
+              Shadow(
+                offset: const Offset(0, 2),
+                blurRadius: 6,
+                color: Colors.black.withValues(alpha: 0.6),
               ),
               Shadow(
                 offset: const Offset(0, 1),
-                blurRadius: 4,
-                color: Colors.black.withValues(alpha: 0.7),
-              ),
-              Shadow(
-                offset: const Offset(0, -1),
-                blurRadius: 2,
-                color: Colors.black.withValues(alpha: 0.5),
+                blurRadius: 3,
+                color: Colors.black.withValues(alpha: 0.4),
               ),
             ],
           ),
@@ -416,7 +421,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                       'Safety Status',
                       style: theme.textTheme.titleLarge?.copyWith(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 20,
+                        letterSpacing: -0.3,
                       ),
                     ),
                   ],
@@ -438,9 +445,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                     _getVenomousDisplayText(venomousStatus),
                     style: theme.textTheme.headlineMedium?.copyWith(
                       color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 26,
-                      letterSpacing: -0.5,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 24,
+                      letterSpacing: -0.8,
+                      height: 1.1,
                     ),
                   ),
                 ),
@@ -733,8 +741,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                       title,
                       style: theme.textTheme.titleLarge?.copyWith(
                         color: isDarkMode ? Colors.white : Colors.black87,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 18,
+                        letterSpacing: -0.2,
                       ),
                     ),
                   ),
@@ -770,7 +779,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                             entry.key,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              letterSpacing: 0.1,
                             ),
                           ),
                         ),
@@ -780,9 +791,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                           child: Text(
                             entry.value,
                             style: theme.textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w500,
                               color: isDarkMode ? Colors.white : Colors.black87,
-                              height: 1.4,
+                              height: 1.5,
+                              fontSize: 15,
+                              letterSpacing: 0.05,
                             ),
                             textAlign: TextAlign.right,
                           ),
@@ -837,6 +850,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
               style: theme.textTheme.titleMedium?.copyWith(
                 color: isDarkMode ? Colors.white : Colors.black87,
                 fontWeight: FontWeight.w600,
+                fontSize: 16,
+                letterSpacing: 0.1,
               ),
             ),
           ],
@@ -888,8 +903,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                   'Interesting Facts',
                   style: theme.textTheme.titleLarge?.copyWith(
                     color: isDarkMode ? Colors.white : Colors.black87,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w800,
                     fontSize: 20,
+                    letterSpacing: -0.3,
                   ),
                 ),
               ],
@@ -900,8 +916,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                   widget.item.details['Description'] ??
                   'No additional information available.',
               style: theme.textTheme.bodyLarge?.copyWith(
-                height: 1.6,
+                height: 1.7,
                 color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                letterSpacing: 0.1,
               ),
             ),
           ],
