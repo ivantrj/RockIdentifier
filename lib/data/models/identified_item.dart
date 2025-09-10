@@ -88,48 +88,48 @@ class IdentifiedItem {
     );
   }
 
-  // Snake-specific getters based on the new API response
+  // Rock-specific getters based on the new API response
   /// Get common name from details
   String? get commonName => details['commonName'] as String?;
 
   /// Get scientific name from details
   String? get scientificName => details['scientificName'] as String?;
 
-  /// Get family from details
-  String? get family => details['family'] as String?;
+  /// Get rock type from details
+  String? get rockType => details['rockType'] as String?;
 
-  /// Get genus from details
-  String? get genus => details['genus'] as String?;
+  /// Get mineral composition from details
+  String? get mineralComposition => details['mineralComposition'] as String?;
 
-  /// Get venomous status from details
-  String? get venomousStatus => details['venomousStatus'] as String?;
+  /// Get hardness from details
+  String? get hardness => details['hardness'] as String?;
 
-  /// Get habitat from details
-  String? get habitat => details['habitat'] as String?;
+  /// Get formation from details
+  String? get formation => details['formation'] as String?;
 
-  /// Get geographic range from details
-  String? get geographicRange => details['geographicRange'] as String?;
+  /// Get geographic location from details
+  String? get geographicLocation => details['geographicLocation'] as String?;
 
-  /// Get average length from details
-  String? get averageLength => details['averageLength'] as String?;
+  /// Get age from details
+  String? get age => details['age'] as String?;
 
-  /// Get average weight from details
-  String? get averageWeight => details['averageWeight'] as String?;
+  /// Get density from details
+  String? get density => details['density'] as String?;
 
-  /// Get behavior from details
-  String? get behavior => details['behavior'] as String?;
+  /// Get crystal structure from details
+  String? get crystalStructure => details['crystalStructure'] as String?;
 
-  /// Get diet from details
-  String? get diet => details['diet'] as String?;
+  /// Get color variations from details
+  String? get colorVariations => details['colorVariations'] as String?;
 
-  /// Get conservation status from details
-  String? get conservationStatus => details['conservationStatus'] as String?;
+  /// Get economic value from details
+  String? get economicValue => details['economicValue'] as String?;
 
-  /// Get safety information from details
-  String? get safetyInformation => details['safetyInformation'] as String?;
+  /// Get usage information from details
+  String? get usageInformation => details['usageInformation'] as String?;
 
-  /// Get similar species from details
-  String? get similarSpecies => details['similarSpecies'] as String?;
+  /// Get similar rocks from details
+  String? get similarRocks => details['similarRocks'] as String?;
 
   /// Get interesting facts from details
   String? get interestingFacts => details['interestingFacts'] as String?;
@@ -137,37 +137,37 @@ class IdentifiedItem {
   /// Get wiki link from details
   String? get wikiLink => details['wikiLink'] as String?;
 
-  /// Get danger level from details (alias for venomousStatus)
-  String? get dangerLevel => venomousStatus;
+  /// Get rarity level from details (alias for economicValue)
+  String? get rarityLevel => economicValue;
 
-  /// Get species from details (alias for commonName)
-  String? get species => commonName;
+  /// Get rock type from details (alias for commonName)
+  String? get rock => commonName;
 
-  // Legacy getters for backward compatibility (mapped to snake properties)
-  String? get coinType => family; // Snake family
-  String? get denomination => commonName; // Snake common name
-  String? get mintYear => conservationStatus; // Conservation status
-  String? get country => geographicRange; // Geographic range
-  String? get mintMark => genus; // Snake genus
-  String? get metalComposition => diet; // Snake diet
-  String? get weight => averageWeight; // Snake weight
-  String? get diameter => averageLength; // Snake length
-  String? get condition => venomousStatus; // Venomous status
-  String? get authenticity => safetyInformation; // Safety information
-  String? get rarity => conservationStatus; // Conservation status
+  // Legacy getters for backward compatibility (mapped to rock properties)
+  String? get coinType => rockType; // Rock type
+  String? get denomination => commonName; // Rock common name
+  String? get mintYear => age; // Rock age
+  String? get country => geographicLocation; // Geographic location
+  String? get mintMark => mineralComposition; // Mineral composition
+  String? get metalComposition => mineralComposition; // Mineral composition
+  String? get weight => density; // Rock density
+  String? get diameter => hardness; // Rock hardness
+  String? get condition => crystalStructure; // Crystal structure
+  String? get authenticity => usageInformation; // Usage information
+  String? get rarity => economicValue; // Economic value
   String? get estimatedValue => interestingFacts; // Interesting facts
-  String? get historicalContext => interestingFacts; // Interesting facts
-  String? get designDescription => behavior; // Snake behavior
-  String? get edgeType => habitat; // Snake habitat
+  String? get historicalContext => formation; // Geological formation
+  String? get designDescription => crystalStructure; // Crystal structure
+  String? get edgeType => formation; // Geological formation
   String? get designer => scientificName; // Scientific name
-  String? get mintage => averageLength; // Snake length
-  String? get marketDemand => conservationStatus; // Conservation status
+  String? get mintage => age; // Rock age
+  String? get marketDemand => economicValue; // Economic value
   String? get investmentPotential => interestingFacts; // Interesting facts
-  String? get storageRecommendations => safetyInformation; // Safety information
-  String? get cleaningInstructions => safetyInformation; // Safety information
-  String? get similarCoins => similarSpecies; // Similar species
-  String? get insuranceValue => safetyInformation; // Safety information
-  String? get era => conservationStatus; // Conservation status
-  String? get coinCategory => family; // Snake family
-  String? get order => behavior; // Snake behavior
+  String? get storageRecommendations => usageInformation; // Usage information
+  String? get cleaningInstructions => usageInformation; // Usage information
+  String? get similarCoins => similarRocks; // Similar rocks
+  String? get insuranceValue => usageInformation; // Usage information
+  String? get era => age; // Rock age
+  String? get coinCategory => rockType; // Rock type
+  String? get order => crystalStructure; // Crystal structure
 }

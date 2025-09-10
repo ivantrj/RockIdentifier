@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:snake_id/data/models/identified_item.dart';
+import 'package:rock_id/data/models/identified_item.dart';
 import 'package:flutter/material.dart';
-import 'package:snake_id/core/theme/app_theme.dart';
+import 'package:rock_id/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 class SnakeCard extends StatelessWidget {
@@ -14,7 +14,7 @@ class SnakeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final venomStatus = item.venomousStatus;
+    final venomStatus = item.mineralComposition;
     final venomColor = _getVenomColor(venomStatus);
     final venomIcon = _getVenomIcon(venomStatus);
 
@@ -23,7 +23,7 @@ class SnakeCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: isDarkMode ? AppTheme.darkCharcoal : Colors.white,
+          color: isDarkMode ? AppTheme.darkStone : Colors.white,
           boxShadow: [
             BoxShadow(
               color: venomColor.withValues(alpha: isDarkMode ? 0.15 : 0.1),

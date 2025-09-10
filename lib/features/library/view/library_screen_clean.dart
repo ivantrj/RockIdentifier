@@ -1,21 +1,21 @@
-import 'package:snake_id/features/library/view/widgets/not_antique_dialog.dart';
-import 'package:snake_id/features/paywall/paywall_screen.dart';
+import 'package:rock_id/features/library/view/widgets/not_antique_dialog.dart';
+import 'package:rock_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
-import 'package:snake_id/features/library/view/detail_screen.dart';
+import 'package:rock_id/features/library/view/detail_screen.dart';
 import '../viewmodel/library_viewmodel.dart';
-import 'package:snake_id/data/models/identified_item.dart';
+import 'package:rock_id/data/models/identified_item.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../main.dart' as main;
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:snake_id/app.dart' as app;
-import 'package:snake_id/services/image_processing_service.dart';
-import 'package:snake_id/services/logging_service.dart';
+import 'package:rock_id/app.dart' as app;
+import 'package:rock_id/services/image_processing_service.dart';
+import 'package:rock_id/services/logging_service.dart';
 import 'widgets/fab_menu.dart';
 import 'widgets/library_item_card.dart';
 import 'widgets/loading_dialog.dart';
-import 'package:snake_id/services/scan_tracking_service.dart';
+import 'package:rock_id/services/scan_tracking_service.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});

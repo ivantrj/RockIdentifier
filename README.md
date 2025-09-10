@@ -1,4 +1,4 @@
-# Flutter MVVM Template with Provider & GetIt - Snake Identifier
+# Flutter MVVM Template with Provider & GetIt - Rock Identifier
 
 ## Overview
 

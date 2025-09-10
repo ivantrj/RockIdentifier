@@ -8,12 +8,12 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:snake_id/core/widgets/app_card.dart';
-import 'package:snake_id/core/widgets/category_card.dart';
-import 'package:snake_id/core/widgets/list_item_card.dart';
-import 'package:snake_id/core/widgets/primary_button.dart';
-import 'package:snake_id/core/widgets/secondary_button.dart';
-import 'package:snake_id/core/widgets/section_header.dart';
+import 'package:rock_id/core/widgets/app_card.dart';
+import 'package:rock_id/core/widgets/category_card.dart';
+import 'package:rock_id/core/widgets/list_item_card.dart';
+import 'package:rock_id/core/widgets/primary_button.dart';
+import 'package:rock_id/core/widgets/secondary_button.dart';
+import 'package:rock_id/core/widgets/section_header.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

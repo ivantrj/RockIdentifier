@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:snake_id/services/logging_service.dart';
+import 'package:rock_id/services/logging_service.dart';
 
 class ScanTrackingService {
   static const String _scanCountKey = 'total_scan_count';

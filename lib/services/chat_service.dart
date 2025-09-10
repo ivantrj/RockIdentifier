@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:snake_id/data/models/identified_item.dart';
-import 'package:snake_id/services/logging_service.dart';
+import 'package:rock_id/data/models/identified_item.dart';
+import 'package:rock_id/services/logging_service.dart';
 
 class ChatMessage {
   final String id;
@@ -50,19 +50,19 @@ class ChatService {
       final itemDetails = {
         'commonName': item.commonName ?? 'Unknown',
         'scientificName': item.scientificName ?? 'Unknown',
-        'family': item.family ?? 'Unknown',
-        'genus': item.genus ?? 'Unknown',
+        'family': item.rockType ?? 'Unknown',
+        'genus': item.scientificName ?? 'Unknown',
         'confidence': '${(item.confidence * 100).toStringAsFixed(1)}%',
-        'venomousStatus': item.venomousStatus ?? 'Unknown',
-        'habitat': item.habitat ?? 'Unknown',
-        'geographicRange': item.geographicRange ?? 'Unknown',
-        'averageLength': item.averageLength ?? 'Unknown',
-        'averageWeight': item.averageWeight ?? 'Unknown',
-        'behavior': item.behavior ?? 'Unknown',
-        'diet': item.diet ?? 'Unknown',
-        'conservationStatus': item.conservationStatus ?? 'Unknown',
-        'safetyInformation': item.safetyInformation ?? 'Unknown',
-        'similarSpecies': item.similarSpecies ?? 'Unknown',
+        'venomousStatus': item.mineralComposition ?? 'Unknown',
+        'habitat': item.formation ?? 'Unknown',
+        'geographicRange': item.geographicLocation ?? 'Unknown',
+        'averageLength': item.density ?? 'Unknown',
+        'averageWeight': item.hardness ?? 'Unknown',
+        'behavior': item.usageInformation ?? 'Unknown',
+        'diet': item.usageInformation ?? 'Unknown',
+        'conservationStatus': item.usageInformation ?? 'Unknown',
+        'safetyInformation': item.usageInformation ?? 'Unknown',
+        'similarSpecies': item.similarRocks ?? 'Unknown',
         'interestingFacts': item.interestingFacts ?? 'Unknown',
       };
 

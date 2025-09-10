@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:snake_id/core/theme/app_theme.dart';
-import 'package:snake_id/core/widgets/primary_button.dart';
-import 'package:snake_id/services/haptic_service.dart';
+import 'package:rock_id/core/theme/app_theme.dart';
+import 'package:rock_id/services/haptic_service.dart';
 import 'dart:math' as math;
 
 class OnboardingScreen extends StatefulWidget {
@@ -25,32 +24,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   final List<Map<String, dynamic>> _testimonials = [
     {
       'image': 'assets/images/testimonial1.jpeg',
-      'quote': 'Perfect for herpetologists',
-      'author': 'Wildlife Biologist',
+      'quote': 'Perfect for geologists',
+      'author': 'Geology Professor',
       'rating': 5,
     },
     {
       'image': 'assets/images/testimonial2.jpeg',
-      'quote': 'Accurate snake identification',
-      'author': 'Park Ranger',
+      'quote': 'Accurate rock identification',
+      'author': 'Mining Engineer',
       'rating': 5,
     },
     {
       'image': 'assets/images/testimonial3.jpeg',
       'quote': 'Essential for field research',
-      'author': 'Herpetologist',
+      'author': 'Petrologist',
       'rating': 5,
     },
     {
       'image': 'assets/images/testimonial4.jpeg',
-      'quote': 'Best snake app available',
-      'author': 'Nature Guide',
+      'quote': 'Best rock app available',
+      'author': 'Geology Guide',
       'rating': 5,
     },
     {
       'image': 'assets/images/testimonial5.jpeg',
       'quote': 'Incredible AI technology',
-      'author': 'Snake Enthusiast',
+      'author': 'Rock Collector',
       'rating': 5,
     },
   ];
@@ -267,7 +266,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   height: 200,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.forestGreen.withValues(alpha: 0.03),
+                    color: AppTheme.sandstone.withValues(alpha: 0.03),
                   ),
                 ),
               ),
@@ -279,7 +278,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   height: 250,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.forestGreen.withValues(alpha: 0.02),
+                    color: AppTheme.sandstone.withValues(alpha: 0.02),
                   ),
                 ),
               ),
@@ -291,7 +290,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   height: 100,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppTheme.forestGreen.withValues(alpha: 0.02),
+                    color: AppTheme.sandstone.withValues(alpha: 0.02),
                   ),
                 ),
               ),
@@ -335,12 +334,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
         color: Colors.black.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppTheme.emeraldGreen.withValues(alpha: 0.2),
+          color: AppTheme.granite.withValues(alpha: 0.2),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.emeraldGreen.withValues(alpha: 0.1),
+            color: AppTheme.granite.withValues(alpha: 0.1),
             blurRadius: 20,
             spreadRadius: 0,
           ),
@@ -349,7 +348,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
       child: Row(
         children: [
           _buildProgressStep(
-            icon: Icons.bug_report,
+            icon: Icons.science,
             isActive: _animatedStep >= 0,
             isCompleted: _animatedStep > 0,
           ),
@@ -358,12 +357,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               height: 3,
               margin: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: _animatedStep > 0 ? AppTheme.emeraldGreen : Colors.white.withValues(alpha: 0.1),
+                color: _animatedStep > 0 ? AppTheme.granite : Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(2),
                 boxShadow: _animatedStep > 0
                     ? [
                         BoxShadow(
-                          color: AppTheme.emeraldGreen.withValues(alpha: 0.3),
+                          color: AppTheme.granite.withValues(alpha: 0.3),
                           blurRadius: 8,
                           spreadRadius: 0,
                         ),
@@ -382,12 +381,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               height: 3,
               margin: const EdgeInsets.symmetric(horizontal: 12),
               decoration: BoxDecoration(
-                color: _animatedStep > 1 ? AppTheme.emeraldGreen : Colors.white.withValues(alpha: 0.1),
+                color: _animatedStep > 1 ? AppTheme.granite : Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(2),
                 boxShadow: _animatedStep > 1
                     ? [
                         BoxShadow(
-                          color: AppTheme.emeraldGreen.withValues(alpha: 0.3),
+                          color: AppTheme.granite.withValues(alpha: 0.3),
                           blurRadius: 8,
                           spreadRadius: 0,
                         ),
@@ -397,7 +396,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
             ),
           ),
           _buildProgressStep(
-            icon: Icons.auto_awesome,
+            icon: Icons.psychology,
             isActive: _animatedStep >= 2,
             isCompleted: false,
           ),
@@ -415,15 +414,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
         height: 32,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: isActive ? AppTheme.emeraldGreen : Colors.white.withValues(alpha: 0.2),
+          color: isActive ? AppTheme.granite : Colors.white.withValues(alpha: 0.2),
           border: Border.all(
-            color: isActive ? AppTheme.emeraldGreen.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.1),
+            color: isActive ? AppTheme.granite.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.1),
             width: 1.5,
           ),
           boxShadow: isActive
               ? [
                   BoxShadow(
-                    color: AppTheme.emeraldGreen.withValues(alpha: 0.4),
+                    color: AppTheme.granite.withValues(alpha: 0.4),
                     blurRadius: 12,
                     spreadRadius: 0,
                   ),
@@ -465,7 +464,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                 child: Column(
                   children: [
                     Text(
-                      'Welcome to Snake Identifier',
+                      'Welcome to Rock Identifier',
                       style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
@@ -475,7 +474,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'The most accurate way to identify snakes and learn about their behavior, habitat, and safety information. Used by herpetologists worldwide.',
+                      'The most accurate way to identify rocks and learn about their geological formations, mineral composition, and historical significance. Used by geologists worldwide.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.w400,
@@ -516,19 +515,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: AppTheme.forestGreen.withValues(alpha: 0.2),
+                            color: AppTheme.sandstone.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Icon(
                             Icons.camera_alt_rounded,
-                            color: AppTheme.emeraldGreen,
+                            color: AppTheme.granite,
                             size: 32,
                           ),
                         ),
                         const SizedBox(width: 16),
                         Expanded(
                           child: Text(
-                            'Snap a Photo to Identify Snakes',
+                            'Snap a Photo to Identify Rocks',
                             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                                   fontSize: 28,
                                   fontWeight: FontWeight.bold,
@@ -541,7 +540,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      'Point your camera at any snake and get instant identification with detailed information about species, behavior, habitat, and safety.',
+                      'Point your camera at any rock and get instant identification with detailed information about mineral composition, geological formation, age, and properties.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white,
                             height: 1.5,
@@ -556,9 +555,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       runSpacing: 8,
                       alignment: WrapAlignment.center,
                       children: [
-                        _buildFeatureChip('Species ID', Icons.pets_rounded),
-                        _buildFeatureChip('Safety Info', Icons.shield_rounded),
-                        _buildFeatureChip('Habitat', Icons.location_on_rounded),
+                        _buildFeatureChip('Mineral ID', Icons.science_rounded),
+                        _buildFeatureChip('Properties', Icons.build_rounded),
+                        _buildFeatureChip('Formation', Icons.terrain_rounded),
                       ],
                     ),
                   ],
@@ -595,12 +594,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: AppTheme.forestGreen.withValues(alpha: 0.2),
+                            color: AppTheme.sandstone.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Icon(
                             Icons.psychology_rounded,
-                            color: AppTheme.emeraldGreen,
+                            color: AppTheme.granite,
                             size: 32,
                           ),
                         ),
@@ -620,7 +619,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      'Our cutting-edge AI has been trained on millions of snake images to provide the most accurate identification and comprehensive information available.',
+                      'Our cutting-edge AI has been trained on millions of rock images to provide the most accurate identification and comprehensive geological information available.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white,
                             height: 1.5,
@@ -637,7 +636,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       children: [
                         _buildFeatureChip('99.8% Accuracy', Icons.verified_rounded),
                         _buildFeatureChip('Instant Results', Icons.flash_on_rounded),
-                        _buildFeatureChip('Expert Knowledge', Icons.school_rounded),
+                        _buildFeatureChip('Geological Database', Icons.explore_rounded),
                       ],
                     ),
                   ],
@@ -666,12 +665,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
           color: Colors.black.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: AppTheme.emeraldGreen.withValues(alpha: 0.15),
+            color: AppTheme.granite.withValues(alpha: 0.15),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.emeraldGreen.withValues(alpha: 0.1),
+              color: AppTheme.granite.withValues(alpha: 0.1),
               blurRadius: 20,
               spreadRadius: 0,
             ),
@@ -693,7 +692,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                         children: [
                           Icon(
                             Icons.emoji_events,
-                            color: AppTheme.emeraldGreen,
+                            color: AppTheme.granite,
                             size: 35,
                           ),
                           const SizedBox(width: 15),
@@ -702,9 +701,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                             height: 70,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: AppTheme.emeraldGreen.withValues(alpha: 0.2),
+                              color: AppTheme.granite.withValues(alpha: 0.2),
                               border: Border.all(
-                                color: AppTheme.emeraldGreen.withValues(alpha: 0.3),
+                                color: AppTheme.granite.withValues(alpha: 0.3),
                                 width: 2,
                               ),
                             ),
@@ -718,7 +717,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                           const SizedBox(width: 15),
                           Icon(
                             Icons.emoji_events,
-                            color: AppTheme.emeraldGreen,
+                            color: AppTheme.granite,
                             size: 35,
                           ),
                         ],
@@ -767,7 +766,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: index == _currentTestimonialIndex
-                                  ? AppTheme.emeraldGreen
+                                  ? AppTheme.granite
                                   : Colors.white.withValues(alpha: 0.3),
                             ),
                           ),
@@ -799,10 +798,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: AppTheme.emeraldGreen.withValues(alpha: 0.3),
+                  color: AppTheme.granite.withValues(alpha: 0.3),
                   width: 2,
                 ),
-                color: AppTheme.darkCharcoal.withValues(alpha: 0.5),
+                color: AppTheme.darkStone.withValues(alpha: 0.5),
               ),
             ),
 
@@ -820,12 +819,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: AppTheme.emeraldGreen.withValues(alpha: 0.8),
+                          color: AppTheme.granite.withValues(alpha: 0.8),
                           width: 3,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppTheme.emeraldGreen.withValues(alpha: 0.3),
+                            color: AppTheme.granite.withValues(alpha: 0.3),
                             blurRadius: 20,
                             spreadRadius: 5,
                           ),
@@ -833,7 +832,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       ),
                       child: ClipOval(
                         child: Image.asset(
-                          'assets/images/Snake.jpg',
+                          'assets/images/Snake.jpg', // TODO: Replace with rock image
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -854,13 +853,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: AppTheme.forestGreen.withValues(alpha: 0.2),
+                        color: AppTheme.sandstone.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
                         Icons.touch_app,
                         size: 60,
-                        color: AppTheme.emeraldGreen,
+                        color: AppTheme.granite,
                       ),
                     ),
                   ),
@@ -905,11 +904,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                       decoration: BoxDecoration(
-                        color: AppTheme.forestGreen,
+                        color: AppTheme.sandstone,
                         borderRadius: BorderRadius.circular(25),
                         boxShadow: [
                           BoxShadow(
-                            color: AppTheme.forestGreen.withValues(alpha: 0.4),
+                            color: AppTheme.sandstone.withValues(alpha: 0.4),
                             blurRadius: 15,
                             spreadRadius: 2,
                           ),
@@ -925,7 +924,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                           ),
                           const SizedBox(width: 8),
                           const Text(
-                            'Snake Identified!',
+                            'Rock Identified!',
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -960,10 +959,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: AppTheme.emeraldGreen.withValues(alpha: 0.2),
+                  color: AppTheme.granite.withValues(alpha: 0.2),
                   width: 1,
                 ),
-                color: AppTheme.darkCharcoal.withValues(alpha: 0.3),
+                color: AppTheme.darkStone.withValues(alpha: 0.3),
               ),
             ),
 
@@ -977,14 +976,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppTheme.forestGreen.withValues(alpha: 0.2),
+                      color: AppTheme.sandstone.withValues(alpha: 0.2),
                       border: Border.all(
-                        color: AppTheme.emeraldGreen.withValues(alpha: 0.6),
+                        color: AppTheme.granite.withValues(alpha: 0.6),
                         width: 2,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppTheme.emeraldGreen.withValues(alpha: 0.3),
+                          color: AppTheme.granite.withValues(alpha: 0.3),
                           blurRadius: 20,
                           spreadRadius: 5,
                         ),
@@ -993,7 +992,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     child: Icon(
                       Icons.psychology_rounded,
                       size: 40,
-                      color: AppTheme.emeraldGreen,
+                      color: AppTheme.granite,
                     ),
                   ),
                 );
@@ -1020,10 +1019,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                           height: 6,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: AppTheme.emeraldGreen.withValues(alpha: opacity),
+                            color: AppTheme.granite.withValues(alpha: opacity),
                             boxShadow: [
                               BoxShadow(
-                                color: AppTheme.emeraldGreen.withValues(alpha: opacity * 0.5),
+                                color: AppTheme.granite.withValues(alpha: opacity * 0.5),
                                 blurRadius: 8,
                                 spreadRadius: 1,
                               ),
@@ -1049,7 +1048,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: AppTheme.forestGreen.withValues(alpha: 0.8),
+                        color: AppTheme.sandstone.withValues(alpha: 0.8),
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Text(
@@ -1082,14 +1081,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
             child: ElevatedButton(
               onPressed: _nextStep,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.emeraldGreen,
+                backgroundColor: AppTheme.granite,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 18),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
                 elevation: 8,
-                shadowColor: AppTheme.emeraldGreen.withValues(alpha: 0.4),
+                shadowColor: AppTheme.granite.withValues(alpha: 0.4),
               ),
               child: Text(
                 _step < 2 ? 'Continue' : 'Get Started',
@@ -1113,7 +1112,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               children: [
                 Icon(
                   _getTrustIcon(),
-                  color: AppTheme.emeraldGreen,
+                  color: AppTheme.granite,
                   size: 16,
                 ),
                 const SizedBox(width: 8),
@@ -1139,7 +1138,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
       case 1:
         return Icons.photo_camera;
       case 2:
-        return Icons.bug_report;
+        return Icons.explore;
       default:
         return Icons.search;
     }
@@ -1148,11 +1147,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   String _getTrustText() {
     switch (_step) {
       case 0:
-        return 'Trusted by herpetologists worldwide';
+        return 'Trusted by geologists worldwide';
       case 1:
-        return 'Millions of snakes identified';
+        return 'Millions of rocks identified';
       case 2:
-        return 'Trained on extensive snake database';
+        return 'Trained on extensive geological database';
       default:
         return 'Professional-grade technology';
     }
@@ -1162,10 +1161,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: AppTheme.forestGreen.withValues(alpha: 0.1),
+        color: AppTheme.sandstone.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppTheme.emeraldGreen.withValues(alpha: 0.3),
+          color: AppTheme.granite.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -1174,14 +1173,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
         children: [
           Icon(
             icon,
-            color: AppTheme.emeraldGreen,
+            color: AppTheme.granite,
             size: 16,
           ),
           const SizedBox(width: 6),
           Text(
             text,
             style: TextStyle(
-              color: AppTheme.emeraldGreen,
+              color: AppTheme.granite,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),

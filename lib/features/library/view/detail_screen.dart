@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'dart:ui';
-import 'package:snake_id/data/models/identified_item.dart';
-import 'package:snake_id/features/chat/view/chat_screen.dart';
-import 'package:snake_id/services/haptic_service.dart';
+import 'package:rock_id/data/models/identified_item.dart';
+import 'package:rock_id/features/chat/view/chat_screen.dart';
+import 'package:rock_id/services/haptic_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:snake_id/core/theme/app_theme.dart';
+import 'package:rock_id/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -100,7 +100,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
         heroTag: null, // Disable hero animation to avoid conflicts
         elevation: 0,
         highlightElevation: 0,
-        backgroundColor: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+        backgroundColor: isDarkMode ? AppTheme.sandstone : AppTheme.sandstone,
         onPressed: () {
           HapticService.instance.vibrate();
           Navigator.of(context).push(CupertinoPageRoute(
@@ -319,8 +319,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
             {
               'Common Name': widget.item.commonName ?? widget.item.result,
               'Scientific Name': widget.item.scientificName ?? widget.item.subtitle,
-              'Family': widget.item.family ?? 'N/A',
-              'Genus': widget.item.genus ?? 'N/A',
+              'Family': widget.item.rockType ?? 'N/A',
+              'Genus': widget.item.scientificName ?? 'N/A',
               'Confidence': '${(widget.item.confidence * 100).toStringAsFixed(0)}%',
             },
           ),
@@ -330,10 +330,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
             'Physical Characteristics',
             HugeIcons.strokeRoundedRuler,
             {
-              'Average Length': widget.item.averageLength ?? 'N/A',
-              'Average Weight': widget.item.averageWeight ?? 'N/A',
-              'Behavior': widget.item.behavior ?? 'N/A',
-              'Diet': widget.item.diet ?? 'N/A',
+              'Average Length': widget.item.density ?? 'N/A',
+              'Average Weight': widget.item.hardness ?? 'N/A',
+              'Behavior': widget.item.usageInformation ?? 'N/A',
+              'Diet': widget.item.usageInformation ?? 'N/A',
             },
           ),
 
@@ -342,8 +342,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
             'Location & Habitat',
             HugeIcons.strokeRoundedGlobal,
             {
-              'Found In': widget.item.geographicRange ?? 'N/A',
-              'Habitat Type': widget.item.habitat ?? 'N/A',
+              'Found In': widget.item.geographicLocation ?? 'N/A',
+              'Habitat Type': widget.item.formation ?? 'N/A',
               'Elevation': widget.item.details['elevationRange'] ?? 'N/A',
             },
           ),
@@ -353,8 +353,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
             'Additional Information',
             HugeIcons.strokeRoundedInformationCircle,
             {
-              'Safety Information': widget.item.safetyInformation ?? 'N/A',
-              'Similar Species': widget.item.similarSpecies ?? 'N/A',
+              'Safety Information': widget.item.usageInformation ?? 'N/A',
+              'Similar Species': widget.item.similarRocks ?? 'N/A',
               'Interesting Facts': widget.item.interestingFacts ?? 'N/A',
             },
           ),
@@ -372,7 +372,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
   Widget _buildModernSafetyCard(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final venomousStatus = widget.item.venomousStatus;
+    final mineralComposition = widget.item.mineralComposition;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -398,12 +398,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: _getSafetyColor(venomousStatus).withValues(alpha: 0.1),
+                        color: _getSafetyColor(mineralComposition).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
-                        _getSafetyIcon(venomousStatus),
-                        color: _getSafetyColor(venomousStatus),
+                        _getSafetyIcon(mineralComposition),
+                        color: _getSafetyColor(mineralComposition),
                         size: 20,
                       ),
                     ),
@@ -425,17 +425,17 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: _getSafetyColor(venomousStatus).withValues(alpha: 0.1),
+                    color: _getSafetyColor(mineralComposition).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: _getSafetyColor(venomousStatus).withValues(alpha: 0.3),
+                      color: _getSafetyColor(mineralComposition).withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
                   child: Text(
-                    _getVenomousDisplayText(venomousStatus),
+                    _getVenomousDisplayText(mineralComposition),
                     style: theme.textTheme.titleLarge?.copyWith(
-                      color: _getSafetyColor(venomousStatus),
+                      color: _getSafetyColor(mineralComposition),
                       fontWeight: FontWeight.w700,
                       fontSize: 18,
                       letterSpacing: -0.3,
@@ -450,7 +450,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
             child: Text(
-              _getSafetyExplanation(venomousStatus),
+              _getSafetyExplanation(mineralComposition),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
                 height: 1.5,
@@ -463,9 +463,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
     );
   }
 
-  IconData _getSafetyIcon(String? venomousStatus) {
-    if (venomousStatus == null) return HugeIcons.strokeRoundedQuestion;
-    switch (venomousStatus.toLowerCase()) {
+  IconData _getSafetyIcon(String? mineralComposition) {
+    if (mineralComposition == null) return HugeIcons.strokeRoundedQuestion;
+    switch (mineralComposition.toLowerCase()) {
       case 'venomous':
       case 'highly venomous':
       case 'extremely venomous':
@@ -526,14 +526,14 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: isDarkMode
-                          ? AppTheme.forestGreen.withValues(alpha: 0.1)
-                          : AppTheme.emeraldGreen.withValues(alpha: 0.1),
+                          ? AppTheme.sandstone.withValues(alpha: 0.1)
+                          : AppTheme.sandstone.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
                       icon,
                       size: 20,
-                      color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+                      color: isDarkMode ? AppTheme.sandstone : AppTheme.sandstone,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -646,7 +646,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
             Icon(
               HugeIcons.strokeRoundedWikipedia,
               size: 20,
-              color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+              color: isDarkMode ? AppTheme.sandstone : AppTheme.sandstone,
             ),
             const SizedBox(width: 12),
             Text(
@@ -689,14 +689,14 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: isDarkMode
-                        ? AppTheme.forestGreen.withValues(alpha: 0.1)
-                        : AppTheme.emeraldGreen.withValues(alpha: 0.1),
+                        ? AppTheme.sandstone.withValues(alpha: 0.1)
+                        : AppTheme.sandstone.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     HugeIcons.strokeRoundedLighthouse,
                     size: 20,
-                    color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+                    color: isDarkMode ? AppTheme.sandstone : AppTheme.sandstone,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -745,7 +745,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
       if (!exists) {
         print('File does not exist: $imagePath');
         return Container(
-          color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
+          color: isDarkMode ? AppTheme.darkStone : AppTheme.lightCard,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -777,7 +777,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
         errorBuilder: (context, error, stackTrace) {
           print('Error loading file image: $error');
           return Container(
-            color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
+            color: isDarkMode ? AppTheme.darkStone : AppTheme.lightCard,
             child: Icon(
               Icons.image_not_supported,
               color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
@@ -816,7 +816,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
         errorBuilder: (context, error, stackTrace) {
           print('Error loading asset image: $error');
           return Container(
-            color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
+            color: isDarkMode ? AppTheme.darkStone : AppTheme.lightCard,
             child: Icon(
               Icons.image_not_supported,
               color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,

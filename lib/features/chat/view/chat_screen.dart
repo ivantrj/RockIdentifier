@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:snake_id/data/models/identified_item.dart';
+import 'package:rock_id/data/models/identified_item.dart';
 import 'package:flutter/material.dart';
-import 'package:snake_id/services/chat_service.dart';
+import 'package:rock_id/services/chat_service.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:snake_id/core/theme/app_theme.dart';
+import 'package:rock_id/core/theme/app_theme.dart';
 
 class ChatScreen extends StatefulWidget {
   final IdentifiedItem item;
@@ -214,7 +214,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDarkMode ? AppTheme.darkCharcoal : Colors.white,
+        color: isDarkMode ? AppTheme.darkStone : Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -246,14 +246,14 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     height: 60,
                     decoration: BoxDecoration(
                       color: isDarkMode
-                          ? AppTheme.forestGreen.withValues(alpha: 0.2)
-                          : AppTheme.emeraldGreen.withValues(alpha: 0.15),
+                          ? AppTheme.sandstone.withValues(alpha: 0.2)
+                          : AppTheme.sandstone.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Icon(
                       HugeIcons.strokeRoundedAbacus,
                       size: 32,
-                      color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+                      color: isDarkMode ? AppTheme.sandstone : AppTheme.sandstone,
                     ),
                   );
                 },
@@ -295,7 +295,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: isDarkMode ? AppTheme.darkCharcoal : Colors.white,
+        color: isDarkMode ? AppTheme.darkStone : Colors.white,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
@@ -331,7 +331,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           // Send button
           Container(
             decoration: BoxDecoration(
-              color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+              color: isDarkMode ? AppTheme.sandstone : AppTheme.sandstone,
               shape: BoxShape.circle,
             ),
             child: IconButton(
@@ -377,7 +377,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 height: 36,
                 margin: const EdgeInsets.only(right: 12, top: 4),
                 decoration: BoxDecoration(
-                  color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+                  color: isDarkMode ? AppTheme.sandstone : AppTheme.sandstone,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -395,8 +395,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                     decoration: BoxDecoration(
                       color: isUser
-                          ? (isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen)
-                          : (isDarkMode ? AppTheme.darkCharcoal : Colors.white),
+                          ? (isDarkMode ? AppTheme.sandstone : AppTheme.sandstone)
+                          : (isDarkMode ? AppTheme.darkStone : Colors.white),
                       borderRadius: BorderRadius.circular(20).copyWith(
                         bottomLeft: isUser ? const Radius.circular(20) : const Radius.circular(4),
                         bottomRight: isUser ? const Radius.circular(4) : const Radius.circular(20),
@@ -463,7 +463,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             height: 36,
             margin: const EdgeInsets.only(right: 12, top: 4),
             decoration: BoxDecoration(
-              color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+              color: isDarkMode ? AppTheme.sandstone : AppTheme.sandstone,
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -475,7 +475,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             decoration: BoxDecoration(
-              color: isDarkMode ? AppTheme.darkCharcoal : Colors.white,
+              color: isDarkMode ? AppTheme.darkStone : Colors.white,
               borderRadius: BorderRadius.circular(20).copyWith(
                 bottomLeft: const Radius.circular(4),
               ),
@@ -516,7 +516,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               width: 8,
               height: 8,
               decoration: BoxDecoration(
-                color: Theme.of(context).brightness == Brightness.dark ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+                color: Theme.of(context).brightness == Brightness.dark ? AppTheme.sandstone : AppTheme.sandstone,
                 shape: BoxShape.circle,
               ),
             ),

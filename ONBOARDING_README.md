@@ -38,7 +38,7 @@ This document describes the new onboarding screen implementation that recreates 
 ## Customization
 
 ### Colors
-- Primary accent: `AppTheme.forestGreen`
+- Primary accent: `AppTheme.sandstone`
 - Background: `AppTheme.nearBlack`
 - Text: `Colors.white` with alpha variations
 

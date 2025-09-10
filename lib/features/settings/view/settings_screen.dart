@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:rock_id/locator.dart';
+import 'package:rock_id/services/cache_service.dart';
+import 'package:rock_id/services/haptic_service.dart';
+import 'package:rock_id/services/logging_service.dart';
+import 'package:rock_id/services/theme_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:snake_id/locator.dart';
-import 'package:snake_id/services/cache_service.dart';
-import 'package:snake_id/services/haptic_service.dart';
-import 'package:snake_id/services/logging_service.dart';
-import 'package:snake_id/services/theme_service.dart';
 import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {

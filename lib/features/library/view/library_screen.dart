@@ -1,28 +1,28 @@
 import 'package:flutter/services.dart';
-import 'package:snake_id/core/widgets/snake_card.dart';
-import 'package:snake_id/core/widgets/snake_card_placeholder.dart';
-import 'package:snake_id/features/library/view/widgets/not_antique_dialog.dart';
-import 'package:snake_id/features/paywall/paywall_screen.dart';
+import 'package:rock_id/core/widgets/snake_card.dart';
+import 'package:rock_id/core/widgets/snake_card_placeholder.dart';
+import 'package:rock_id/features/library/view/widgets/not_antique_dialog.dart';
+import 'package:rock_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:provider/provider.dart';
-import 'package:snake_id/features/library/view/detail_screen.dart';
+import 'package:rock_id/features/library/view/detail_screen.dart';
 import '../viewmodel/library_viewmodel.dart';
-import 'package:snake_id/data/models/identified_item.dart';
+import 'package:rock_id/data/models/identified_item.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../main.dart' as main;
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:snake_id/app.dart' as app;
-import 'package:snake_id/services/image_processing_service.dart';
-import 'package:snake_id/services/logging_service.dart';
-import 'package:snake_id/locator.dart';
+import 'package:rock_id/app.dart' as app;
+import 'package:rock_id/services/image_processing_service.dart';
+import 'package:rock_id/services/logging_service.dart';
+import 'package:rock_id/locator.dart';
 import 'widgets/fab_menu.dart';
 import 'widgets/loading_dialog.dart';
-import 'package:snake_id/services/haptic_service.dart';
-import 'package:snake_id/core/theme/app_theme.dart';
-import 'package:snake_id/features/camera/custom_camera_screen.dart';
-import 'package:snake_id/services/scan_tracking_service.dart';
+import 'package:rock_id/services/haptic_service.dart';
+import 'package:rock_id/core/theme/app_theme.dart';
+import 'package:rock_id/features/camera/custom_camera_screen.dart';
+import 'package:rock_id/services/scan_tracking_service.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -134,7 +134,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
         heightFactor: 0.95,
         child: Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark ? AppTheme.darkCharcoal : Colors.white,
+            color: Theme.of(context).brightness == Brightness.dark ? AppTheme.darkStone : Colors.white,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: PaywallScreen(),
@@ -203,13 +203,13 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
         }
 
         final errorMessage = e.toString().toLowerCase();
-        if (errorMessage.contains('not_snake') ||
-            errorMessage.contains('does not contain snake') ||
-            errorMessage.contains('not snake') ||
-            errorMessage.contains('no snake') ||
-            errorMessage.contains('not a snake') ||
-            errorMessage.contains('not reptile')) {
-          LoggingService.info('Image identified as not a snake - showing dialog', tag: 'LibraryScreen');
+        if (errorMessage.contains('not_rock') ||
+            errorMessage.contains('does not contain rock') ||
+            errorMessage.contains('not rock') ||
+            errorMessage.contains('no rock') ||
+            errorMessage.contains('not a rock') ||
+            errorMessage.contains('not mineral')) {
+          LoggingService.info('Image identified as not a rock - showing dialog', tag: 'LibraryScreen');
           showDialog(
             context: context,
             barrierDismissible: true,
@@ -332,7 +332,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
                   heroTag: null, // Disable hero animation to avoid conflicts
                   elevation: 0,
                   highlightElevation: 0,
-                  backgroundColor: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+                  backgroundColor: isDarkMode ? AppTheme.darkStone : AppTheme.sandstone,
                   onPressed: _isProcessing
                       ? null
                       : () async {
@@ -379,7 +379,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
       systemOverlayStyle:
           Theme.of(context).brightness == Brightness.dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
       title: Text(
-        'Identification History',
+        'Rock Collection',
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
@@ -405,7 +405,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
                     isSubscribed ? Icons.emoji_events_rounded : Icons.card_giftcard,
                     size: 22,
                     color: isSubscribed
-                        ? (isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen)
+                        ? (isDarkMode ? AppTheme.sandstone : AppTheme.granite)
                         : (isDarkMode ? Colors.amber : Colors.amber.shade700),
                   ),
                 ),
@@ -579,19 +579,19 @@ class _ModernEmptyStateState extends State<_ModernEmptyState> with TickerProvide
                         end: Alignment.bottomRight,
                         colors: widget.isDarkMode
                             ? [
-                                AppTheme.forestGreen,
-                                AppTheme.darkCharcoal,
+                                AppTheme.sandstone,
+                                AppTheme.darkStone,
                               ]
                             : [
-                                AppTheme.emeraldGreen,
-                                AppTheme.forestGreen,
+                                AppTheme.granite,
+                                AppTheme.sandstone,
                               ],
                       ),
                       boxShadow: [
                         BoxShadow(
                           color: widget.isDarkMode
-                              ? AppTheme.forestGreen.withValues(alpha: 0.3)
-                              : AppTheme.emeraldGreen.withValues(alpha: 0.4),
+                              ? AppTheme.sandstone.withValues(alpha: 0.3)
+                              : AppTheme.granite.withValues(alpha: 0.4),
                           blurRadius: 20,
                           spreadRadius: 5,
                         ),
@@ -614,7 +614,7 @@ class _ModernEmptyStateState extends State<_ModernEmptyState> with TickerProvide
                 return Transform.scale(
                   scale: _bounceAnimation.value,
                   child: Text(
-                    'Discover Snakes',
+                    'Discover Rocks',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -629,7 +629,7 @@ class _ModernEmptyStateState extends State<_ModernEmptyState> with TickerProvide
             const SizedBox(height: 16),
             // Subtitle with better typography
             Text(
-              'Capture photos of snakes to learn about their species, habitat, and safety information. Build your knowledge of these fascinating reptiles!',
+              'Capture photos of rocks to learn about their geological formations, mineral composition, and historical significance. Build your knowledge of these fascinating geological specimens!',
               style: TextStyle(
                 fontSize: 16,
                 color: widget.isDarkMode ? Colors.white70 : Colors.black54,
@@ -654,7 +654,7 @@ class _ModernEmptyStateState extends State<_ModernEmptyState> with TickerProvide
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               decoration: BoxDecoration(
-                color: widget.isDarkMode ? AppTheme.darkCharcoal : Colors.white,
+                color: widget.isDarkMode ? AppTheme.darkStone : Colors.white,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: widget.isDarkMode ? Colors.white24 : Colors.black12,
@@ -675,19 +675,19 @@ class _ModernEmptyStateState extends State<_ModernEmptyState> with TickerProvide
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: widget.isDarkMode
-                          ? AppTheme.forestGreen.withValues(alpha: 0.2)
-                          : AppTheme.emeraldGreen.withValues(alpha: 0.15),
+                          ? AppTheme.sandstone.withValues(alpha: 0.2)
+                          : AppTheme.granite.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       HugeIcons.strokeRoundedCameraAi,
                       size: 20,
-                      color: widget.isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+                      color: widget.isDarkMode ? AppTheme.sandstone : AppTheme.granite,
                     ),
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    'Tap the camera to identify snakes',
+                    'Tap the camera to identify rocks',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -717,8 +717,8 @@ class _ModernEmptyStateState extends State<_ModernEmptyState> with TickerProvide
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isDarkMode
-                  ? AppTheme.forestGreen.withValues(alpha: 0.3 + 0.4 * animationValue)
-                  : AppTheme.emeraldGreen.withValues(alpha: 0.2 + 0.3 * animationValue),
+                  ? AppTheme.sandstone.withValues(alpha: 0.3 + 0.4 * animationValue)
+                  : AppTheme.granite.withValues(alpha: 0.2 + 0.3 * animationValue),
             ),
           ),
         );

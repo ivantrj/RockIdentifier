@@ -1,5 +1,5 @@
-name: snake_id
-description: "A professional AI-powered snake identification app that helps you identify and learn about snakes, their habitats, behavior, and safety information."
+name: rock_id
+description: "A professional AI-powered rock identification app that helps you identify and learn about rocks, their geological formations, composition, and historical significance."
 publish_to: "none"
 version: 1.0.0+2
 

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:snake_id/data/models/identified_item.dart';
+import 'package:rock_id/data/models/identified_item.dart';
 
 class LibraryItemCard extends StatefulWidget {
   final IdentifiedItem item;

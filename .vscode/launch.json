@@ -5,19 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "snake_id",
+      "name": "rock_id",
       "request": "launch",
       "type": "dart",
       "flutterMode": "debug"
     },
     {
-      "name": "snake_id (profile mode)",
+      "name": "rock_id (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
-      "name": "snake_id (release mode)",
+      "name": "rock_id (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"

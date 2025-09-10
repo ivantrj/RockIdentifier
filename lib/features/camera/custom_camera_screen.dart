@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
-import 'package:snake_id/core/theme/app_theme.dart';
-import 'package:snake_id/services/haptic_service.dart';
-import 'package:snake_id/services/logging_service.dart';
+import 'package:rock_id/core/theme/app_theme.dart';
+import 'package:rock_id/services/haptic_service.dart';
+import 'package:rock_id/services/logging_service.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:image/image.dart' as img;
 
@@ -310,7 +310,7 @@ class _CustomCameraScreenState extends State<CustomCameraScreen> {
                 color: Colors.black.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: AppTheme.forestGreen.withValues(alpha: 0.3),
+                  color: AppTheme.sandstone.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
@@ -320,7 +320,7 @@ class _CustomCameraScreenState extends State<CustomCameraScreen> {
                   Icon(
                     HugeIcons.strokeRoundedTarget01,
                     size: 20,
-                    color: AppTheme.forestGreen,
+                    color: AppTheme.sandstone,
                   ),
                   const SizedBox(width: 8),
                   const Text(
@@ -366,7 +366,7 @@ class _CustomCameraScreenState extends State<CustomCameraScreen> {
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
-                      color: _isCapturing ? Colors.grey : AppTheme.forestGreen,
+                      color: _isCapturing ? Colors.grey : AppTheme.sandstone,
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: Colors.white,
@@ -410,7 +410,7 @@ class FocusOverlayPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     final focusPaint = Paint()
-      ..color = AppTheme.forestGreen
+      ..color = AppTheme.sandstone
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3;
 
@@ -448,7 +448,7 @@ class FocusOverlayPainter extends CustomPainter {
     const cornerThickness = 3.0;
 
     final cornerPaint = Paint()
-      ..color = AppTheme.forestGreen
+      ..color = AppTheme.sandstone
       ..style = PaintingStyle.stroke
       ..strokeWidth = cornerThickness
       ..strokeCap = StrokeCap.round;

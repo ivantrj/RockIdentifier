@@ -8,7 +8,7 @@ Fimber is already configured in `main.dart`:
 
 ```dart
 import 'package:fimber/fimber.dart';
-import 'package:snake_id/services/logging_service.dart';
+import 'package:rock_id/services/logging_service.dart';
 
 Future<void> main() async {
   // Initialize logging
@@ -23,7 +23,7 @@ Future<void> main() async {
 ### Basic Logging Methods
 
 ```dart
-import 'package:snake_id/services/logging_service.dart';
+import 'package:rock_id/services/logging_service.dart';
 
 // Debug logging
 LoggingService.debug('Debug message');

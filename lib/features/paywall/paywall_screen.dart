@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:snake_id/main.dart';
+import 'package:rock_id/main.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl, LaunchMode;
-import 'package:snake_id/services/logging_service.dart';
+import 'package:rock_id/services/logging_service.dart';
 
 class PaywallScreen extends StatefulWidget {
   const PaywallScreen({super.key});
@@ -233,8 +233,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final emeraldGreen = theme.colorScheme.primary;
-    final lightPrimary = emeraldGreen.withValues(alpha: 0.1);
+    final sandstone = theme.colorScheme.primary;
+    final lightPrimary = sandstone.withValues(alpha: 0.1);
 
     // Check real-time subscription status
     final isSubscribed = RevenueCatService.isSubscribed;
@@ -243,7 +243,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: isSubscribed
-            ? _buildThankYouScreen(emeraldGreen, lightPrimary)
+            ? _buildThankYouScreen(sandstone, lightPrimary)
             : _loading
                 ? const Center(child: CircularProgressIndicator())
                 : _error != null
@@ -281,18 +281,16 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                     padding: const EdgeInsets.symmetric(horizontal: 32),
                                     child: Column(
                                       children: [
+                                        _featureRow(Icons.camera_alt_rounded, 'Identify unlimited snakes', sandstone),
+                                        _featureRow(Icons.search_rounded, 'Get detailed species analysis', sandstone),
                                         _featureRow(
-                                            Icons.camera_alt_rounded, 'Identify unlimited snakes', emeraldGreen),
-                                        _featureRow(
-                                            Icons.search_rounded, 'Get detailed species analysis', emeraldGreen),
-                                        _featureRow(Icons.location_on_rounded, 'Learn habitat & geographic range',
-                                            emeraldGreen),
-                                        _featureRow(Icons.lock_open_rounded, 'Remove usage limits', emeraldGreen),
+                                            Icons.location_on_rounded, 'Learn habitat & geographic range', sandstone),
+                                        _featureRow(Icons.lock_open_rounded, 'Remove usage limits', sandstone),
                                       ],
                                     ),
                                   ),
                                   const SizedBox(height: 28),
-                                  _buildPackages(theme, emeraldGreen, lightPrimary),
+                                  _buildPackages(theme, sandstone, lightPrimary),
                                   const SizedBox(height: 20),
                                 ],
                               ),
@@ -312,7 +310,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                     height: 54,
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: emeraldGreen,
+                                        backgroundColor: sandstone,
                                         foregroundColor: Colors.white,
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                                         textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -332,7 +330,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 18),
-                                _buildTrialToggle(emeraldGreen),
+                                _buildTrialToggle(sandstone),
                                 const SizedBox(height: 18),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -373,7 +371,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
     );
   }
 
-  Widget _buildThankYouScreen(Color emeraldGreen, Color lightPrimary) {
+  Widget _buildThankYouScreen(Color sandstone, Color lightPrimary) {
     final theme = Theme.of(context);
     return Stack(
       children: [
@@ -411,10 +409,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Column(
                 children: [
-                  _featureRow(Icons.camera_alt_rounded, 'Unlimited snake identification', emeraldGreen),
-                  _featureRow(Icons.search_rounded, 'Comprehensive species analysis', emeraldGreen),
-                  _featureRow(Icons.location_on_rounded, 'Detailed habitat & location info', emeraldGreen),
-                  _featureRow(Icons.lock_open_rounded, 'Unrestricted access', emeraldGreen),
+                  _featureRow(Icons.camera_alt_rounded, 'Unlimited snake identification', sandstone),
+                  _featureRow(Icons.search_rounded, 'Comprehensive species analysis', sandstone),
+                  _featureRow(Icons.location_on_rounded, 'Detailed habitat & location info', sandstone),
+                  _featureRow(Icons.lock_open_rounded, 'Unrestricted access', sandstone),
                 ],
               ),
             ),
@@ -426,7 +424,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                 height: 54,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: emeraldGreen,
+                    backgroundColor: sandstone,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -471,7 +469,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
     );
   }
 
-  Widget _buildTrialToggle(Color emeraldGreen) {
+  Widget _buildTrialToggle(Color sandstone) {
     final theme = Theme.of(context);
     final packages = _offerings!.current!.availablePackages;
 
@@ -523,7 +521,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
               }
             });
           },
-          activeTrackColor: emeraldGreen,
+          activeTrackColor: sandstone,
           inactiveTrackColor: theme.colorScheme.outline.withValues(alpha: 0.5),
           thumbColor: Colors.white,
         ),
@@ -531,7 +529,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
     );
   }
 
-  Widget _buildPackages(ThemeData theme, Color emeraldGreen, Color lightPrimary) {
+  Widget _buildPackages(ThemeData theme, Color sandstone, Color lightPrimary) {
     final packages = _offerings!.current!.availablePackages;
 
     // Filter for lifetime packages
@@ -565,7 +563,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         if (lifetime != null)
           _packageTile(
             lifetime,
-            emeraldGreen,
+            sandstone,
             lightPrimary,
             selected: _selectedPackage == lifetime,
             badge: 'BEST VALUE',
@@ -577,7 +575,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         if (yearly != null)
           _packageTile(
             yearly,
-            emeraldGreen,
+            sandstone,
             lightPrimary,
             selected: _selectedPackage == yearly,
             badge: 'SAVE 80%',
@@ -589,11 +587,11 @@ class _PaywallScreenState extends State<PaywallScreen> {
         if (trialWeekly != null)
           _packageTile(
             trialWeekly,
-            emeraldGreen,
+            sandstone,
             lightPrimary,
             selected: _selectedPackage == trialWeekly,
             badge: 'FREE',
-            badgeColor: emeraldGreen,
+            badgeColor: sandstone,
             onTap: () => setState(() => _selectedPackage = trialWeekly),
             customTitle: '3-Day Trial',
             customSubtitle: 'then ${trialWeekly.storeProduct.priceString} per week',
@@ -604,7 +602,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
 
   Widget _packageTile(
     Package pkg,
-    Color emeraldGreen,
+    Color sandstone,
     Color lightPrimary, {
     required bool selected,
     required String badge,
@@ -622,8 +620,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
         decoration: BoxDecoration(
           color: selected ? lightPrimary : theme.cardColor,
           border: Border.all(
-              color: selected ? emeraldGreen : theme.colorScheme.outline.withValues(alpha: 0.3),
-              width: selected ? 2 : 1),
+              color: selected ? sandstone : theme.colorScheme.outline.withValues(alpha: 0.3), width: selected ? 2 : 1),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -632,7 +629,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
               value: pkg,
               groupValue: _selectedPackage,
               onChanged: (_) => onTap(),
-              activeColor: emeraldGreen,
+              activeColor: sandstone,
             ),
             Expanded(
               child: Column(

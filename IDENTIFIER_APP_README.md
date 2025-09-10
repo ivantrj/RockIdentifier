@@ -1,8 +1,8 @@
-# Snake Identifier App - Technical Documentation
+# Rock Identifier App - Technical Documentation
 
-## 🐍 Overview
+## 🪨 Overview
 
-Snake Identifier is a Flutter application that uses AI to identify snakes from photos. The app provides detailed information about identified snakes, including species, behavior, habitat, safety information, and conservation status.
+Rock Identifier is a Flutter application that uses AI to identify rocks from photos. The app provides detailed information about identified rocks, including mineral composition, geological formation, age, and properties.
 
 ## 🏗️ Architecture
 
@@ -45,24 +45,24 @@ lib/
 
 ## 📱 Key Features
 
-### 1. Snake Identification
+### 1. Rock Identification
 
-- **Camera Integration**: Take photos of snakes directly in the app
-- **Gallery Selection**: Choose existing snake photos
+- **Camera Integration**: Take photos of rocks directly in the app
+- **Gallery Selection**: Choose existing rock photos
 - **AI Processing**: Uses custom AI backend for identification
 - **Caching**: Results are cached for offline access
 
 ### 2. Library Management
 
 - **Grid View**: Displays identified items in a responsive grid
-- **Detail View**: Comprehensive information about each Snake
+- **Detail View**: Comprehensive information about each Rock
 - **Search & Filter**: Find specific items quickly
 - **Delete Functionality**: Remove items from library
 
 ### 3. AI Chat
 
 - **Contextual Conversations**: Chat about specific identified items
-- **Expert Knowledge**: Get detailed answers about snakes
+- **Expert Knowledge**: Get detailed answers about rocks and geology
 - **History**: Maintain conversation context
 
 ### 4. Subscription System
@@ -107,7 +107,7 @@ class ImageProcessingService {
   Future<String> saveImageToAppDir(String imagePath)
 
   // Calls AI backend for identification
-  Future<Map<String, dynamic>?> _identifySnakeWithAI(File imageFile)
+  Future<Map<String, dynamic>?> _identifyRockWithAI(File imageFile)
 }
 ```
 
@@ -147,7 +147,7 @@ class IdentifiedItem {
   final String id;
   final String imagePath;
   final String result;        // Common name
-  final String subtitle;      // Period/era
+  final String subtitle;      // Geological formation
   final double confidence;    // AI confidence score
   final Map<String, dynamic> details;  // Detailed information
   final DateTime dateTime;    // When identified
@@ -169,7 +169,7 @@ class IdentifiedItem {
 
 - **2-column grid** on mobile devices
 - **Hero animations** for smooth transitions
-- **Safety badges** for venomous snakes
+- **Property badges** for rock characteristics
 - **Confidence indicators** for AI accuracy
 
 #### FAB Menu
@@ -181,21 +181,21 @@ class IdentifiedItem {
 #### Detail Screen
 
 - **Hero image** with parallax effect
-- **Condition status** prominently displayed
-- **Historical information** in organized sections
+- **Geological properties** prominently displayed
+- **Formation information** in organized sections
 - **Chat integration** for questions
 
 ## 🔐 Security & Privacy
 
 ### Permissions
 
-- **Camera**: For taking photos
-- **Photo Library**: For selecting existing images
+- **Camera**: For taking photos of rocks
+- **Photo Library**: For selecting existing rock images
 - **Internet**: For AI processing and chat
 
 ### Data Handling
 
-- **Local Storage**: Images and results stored locally
+- **Local Storage**: Images and geological results stored locally
 - **No Personal Data**: No user accounts or personal information collected
 - **Secure API**: HTTPS communication with backend
 
@@ -224,10 +224,10 @@ class IdentifiedItem {
 
 ### Key Metrics
 
-- **Identification Success Rate**: Track AI accuracy
-- **User Engagement**: Library usage and feature adoption
-- **Error Rates**: Monitor and fix issues quickly
-- **Performance**: App responsiveness and load times
+- **Identification Success Rate**: Track geological AI accuracy
+- **User Engagement**: Rock collection usage and feature adoption
+- **Error Rates**: Monitor and fix identification issues quickly
+- **Performance**: App responsiveness and processing times
 
 ## 🔄 State Management
 
@@ -361,4 +361,4 @@ locator.registerSingleton<CacheService>(CacheService());
 
 ---
 
-_This documentation is maintained as part of the Snake Identifier app development process. For the latest updates, refer to the source code and commit history._
+_This documentation is maintained as part of the Rock Identifier app development process. For the latest updates, refer to the source code and commit history._

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:snake_id/core/theme/app_theme.dart';
+import 'package:rock_id/core/theme/app_theme.dart';
 
 class SnakeCardPlaceholder extends StatelessWidget {
   const SnakeCardPlaceholder({super.key});
@@ -9,13 +9,13 @@ class SnakeCardPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Shimmer.fromColors(
-      baseColor: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
+      baseColor: isDarkMode ? AppTheme.darkStone : AppTheme.lightCard,
       highlightColor:
-          isDarkMode ? AppTheme.darkCharcoal.withValues(alpha: 0.5) : AppTheme.lightCard.withValues(alpha: 0.7),
+          isDarkMode ? AppTheme.darkStone.withValues(alpha: 0.5) : AppTheme.lightCard.withValues(alpha: 0.7),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),
-          color: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
+          color: isDarkMode ? AppTheme.darkStone : AppTheme.lightCard,
           border: Border.all(
             color: isDarkMode ? AppTheme.subtleBorderColor : AppTheme.lightBorder,
           ),

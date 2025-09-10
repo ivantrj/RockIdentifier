@@ -3,31 +3,32 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // --- Core Palette: Modern, Sophisticated Colors ---
-  // Dark theme colors
-  static const Color darkCharcoal = Color(0xFF1C1C1E);
-  static const Color forestGreen = Color(0xFF34C759);
-  static const Color emeraldGreen = Color(0xFF30D158);
+  // --- Core Palette: Geological Rock Theme ---
+  // Dark theme colors - Earthy and Stone tones
+  static const Color darkStone = Color(0xFF2C2C2E);
+  static const Color sandstone = Color(0xFFD2691E); // Warm brown/orange
+  static const Color granite = Color(0xFF708090); // Stone gray
+  static const Color slate = Color(0xFF2F4F4F); // Dark slate
   static const Color nearBlack = Color(0xFF000000);
   static Color glassColor = Colors.white.withValues(alpha: 0.1);
 
-  // Light theme colors
-  static const Color lightBackground = Color(0xFFFFFFFF);
-  static const Color lightSurface = Color(0xFFFFFFFF);
-  static const Color lightCard = Color(0xFFFFFFFF);
-  static const Color lightBorder = Color(0xFFE5E5EA);
-  static const Color lightTextPrimary = Color(0xFF1C1C1E);
-  static const Color lightTextSecondary = Color(0xFF8E8E93);
+  // Light theme colors - Warm geological tones
+  static const Color lightBackground = Color(0xFFFFFBF7); // Warm off-white
+  static const Color lightSurface = Color(0xFFFFFBF7); // Warm off-white
+  static const Color lightCard = Color(0xFFFFFFFF); // Pure white for cards
+  static const Color lightBorder = Color(0xFFE8DCC0); // Warm beige border
+  static const Color lightTextPrimary = Color(0xFF2C2C2E); // Dark stone text
+  static const Color lightTextSecondary = Color(0xFF8B7355); // Warm brown secondary
 
   // --- Semantic Colors ---
-  static const Color successColor = Color(0xFF28A745);
-  static const Color warningColor = Color(0xFFFFC107);
-  static const Color errorColor = Color(0xFFDC3545);
+  static const Color successColor = Color(0xFF8B7355); // Warm brown success
+  static const Color warningColor = Color(0xFFD2691E); // Sandstone warning
+  static const Color errorColor = Color(0xFF8B4513); // Saddle brown error
 
   // --- Text & UI Colors ---
   static const Color primaryTextColor = Color(0xFFF8F9FA);
-  static const Color secondaryTextColor = Color(0xFFADB5BD);
-  static const Color subtleBorderColor = Color(0xFF2D2D2D);
+  static const Color secondaryTextColor = Color(0xFFB0A99F); // Warm stone gray
+  static const Color subtleBorderColor = Color(0xFF4A4A4A); // Dark stone border
 
   // --- Sizing & Spacing ---
   static const double cardBorderRadius = 16.0;
@@ -65,7 +66,7 @@ class AppTheme {
             labelLarge: const TextStyle(
               fontSize: 14.0,
               fontWeight: FontWeight.w600,
-              color: darkCharcoal, // For text on buttons
+              color: darkStone, // For text on buttons
             ),
           ),
     );
@@ -74,12 +75,12 @@ class AppTheme {
       brightness: Brightness.dark,
       scaffoldBackgroundColor: nearBlack,
       colorScheme: const ColorScheme.dark(
-        primary: forestGreen,
-        secondary: emeraldGreen,
+        primary: sandstone,
+        secondary: granite,
         background: nearBlack,
-        surface: darkCharcoal,
-        onPrimary: primaryTextColor, // Text on green buttons
-        onSecondary: nearBlack,
+        surface: darkStone,
+        onPrimary: nearBlack, // Text on sandstone buttons
+        onSecondary: primaryTextColor,
         onBackground: primaryTextColor,
         onSurface: primaryTextColor,
         error: errorColor,
@@ -94,7 +95,7 @@ class AppTheme {
         systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       cardTheme: CardThemeData(
-        color: darkCharcoal,
+        color: darkStone,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(cardBorderRadius),
@@ -103,8 +104,8 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: forestGreen,
-          foregroundColor: primaryTextColor,
+          backgroundColor: sandstone,
+          foregroundColor: nearBlack,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(buttonBorderRadius),
           ),
@@ -113,17 +114,17 @@ class AppTheme {
         ),
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: darkCharcoal.withValues(alpha: 0.8),
+        backgroundColor: darkStone.withValues(alpha: 0.8),
         height: 70,
-        indicatorColor: forestGreen,
+        indicatorColor: sandstone,
         iconTheme: WidgetStateProperty.resolveWith<IconThemeData>((states) {
           if (states.contains(WidgetState.selected)) {
-            return const IconThemeData(color: darkCharcoal, size: 24.0);
+            return const IconThemeData(color: nearBlack, size: 24.0);
           }
           return const IconThemeData(color: secondaryTextColor, size: 24.0);
         }),
         labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
-          final color = states.contains(WidgetState.selected) ? emeraldGreen : secondaryTextColor;
+          final color = states.contains(WidgetState.selected) ? sandstone : secondaryTextColor;
           return TextStyle(
             fontSize: 12.0,
             fontWeight: FontWeight.w500,
@@ -179,11 +180,11 @@ class AppTheme {
       brightness: Brightness.light,
       scaffoldBackgroundColor: lightBackground,
       colorScheme: const ColorScheme.light(
-        primary: forestGreen,
-        secondary: emeraldGreen,
+        primary: sandstone,
+        secondary: granite,
         background: lightBackground,
         surface: lightSurface,
-        onPrimary: Colors.white, // Text on green buttons
+        onPrimary: Colors.white, // Text on sandstone buttons
         onSecondary: Colors.white,
         onBackground: lightTextPrimary,
         onSurface: lightTextPrimary,
@@ -201,7 +202,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         color: lightCard,
         elevation: 2,
-        shadowColor: forestGreen.withValues(alpha: 0.1),
+        shadowColor: sandstone.withValues(alpha: 0.1),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(cardBorderRadius),
           side: BorderSide(color: lightBorder, width: 1),
@@ -209,7 +210,7 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: forestGreen,
+          backgroundColor: sandstone,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(buttonBorderRadius),
@@ -217,13 +218,13 @@ class AppTheme {
           textStyle: textTheme.labelLarge,
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
           elevation: 3,
-          shadowColor: forestGreen.withValues(alpha: 0.3),
+          shadowColor: sandstone.withValues(alpha: 0.3),
         ),
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: lightSurface.withValues(alpha: 0.9),
         height: 70,
-        indicatorColor: forestGreen,
+        indicatorColor: sandstone,
         iconTheme: WidgetStateProperty.resolveWith<IconThemeData>((states) {
           if (states.contains(WidgetState.selected)) {
             return const IconThemeData(color: Colors.white, size: 24.0);
