@@ -68,7 +68,7 @@ class ImageProcessingService {
 
         // Call AI API
         LoggingService.apiOperation('Calling AI Snake identification API', tag: 'ImageProcessingService');
-        aiResult = await _identifyCoinWithAI(File(savedPath));
+        aiResult = await _identifySnakeWithAI(File(savedPath));
 
         if (aiResult != null) {
           LoggingService.apiOperation('AI Snake identification successful', tag: 'ImageProcessingService');
@@ -164,7 +164,7 @@ class ImageProcessingService {
   }
 
   /// Identify Snake using AI API
-  Future<Map<String, dynamic>?> _identifyCoinWithAI(File imageFile) async {
+  Future<Map<String, dynamic>?> _identifySnakeWithAI(File imageFile) async {
     try {
       LoggingService.apiOperation('Starting AI Snake identification',
           details: 'image: ${imageFile.path}', tag: 'ImageProcessingService');

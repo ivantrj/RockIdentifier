@@ -143,31 +143,31 @@ class IdentifiedItem {
   /// Get species from details (alias for commonName)
   String? get species => commonName;
 
-  // Legacy getters for backward compatibility
-  String? get coinType => family;
-  String? get denomination => commonName;
-  String? get mintYear => conservationStatus;
-  String? get country => geographicRange;
-  String? get mintMark => genus;
-  String? get metalComposition => diet;
-  String? get weight => averageWeight;
-  String? get diameter => averageLength;
-  String? get condition => venomousStatus;
-  String? get authenticity => safetyInformation;
-  String? get rarity => conservationStatus;
-  String? get estimatedValue => interestingFacts;
-  String? get historicalContext => interestingFacts;
-  String? get designDescription => behavior;
-  String? get edgeType => habitat;
-  String? get designer => scientificName;
-  String? get mintage => averageLength;
-  String? get marketDemand => conservationStatus;
-  String? get investmentPotential => interestingFacts;
-  String? get storageRecommendations => safetyInformation;
-  String? get cleaningInstructions => safetyInformation;
-  String? get similarCoins => similarSpecies;
-  String? get insuranceValue => safetyInformation;
-  String? get era => conservationStatus;
-  String? get coinCategory => family;
-  String? get order => behavior;
+  // Legacy getters for backward compatibility (mapped to snake properties)
+  String? get coinType => family; // Snake family
+  String? get denomination => commonName; // Snake common name
+  String? get mintYear => conservationStatus; // Conservation status
+  String? get country => geographicRange; // Geographic range
+  String? get mintMark => genus; // Snake genus
+  String? get metalComposition => diet; // Snake diet
+  String? get weight => averageWeight; // Snake weight
+  String? get diameter => averageLength; // Snake length
+  String? get condition => venomousStatus; // Venomous status
+  String? get authenticity => safetyInformation; // Safety information
+  String? get rarity => conservationStatus; // Conservation status
+  String? get estimatedValue => interestingFacts; // Interesting facts
+  String? get historicalContext => interestingFacts; // Interesting facts
+  String? get designDescription => behavior; // Snake behavior
+  String? get edgeType => habitat; // Snake habitat
+  String? get designer => scientificName; // Scientific name
+  String? get mintage => averageLength; // Snake length
+  String? get marketDemand => conservationStatus; // Conservation status
+  String? get investmentPotential => interestingFacts; // Interesting facts
+  String? get storageRecommendations => safetyInformation; // Safety information
+  String? get cleaningInstructions => safetyInformation; // Safety information
+  String? get similarCoins => similarSpecies; // Similar species
+  String? get insuranceValue => safetyInformation; // Safety information
+  String? get era => conservationStatus; // Conservation status
+  String? get coinCategory => family; // Snake family
+  String? get order => behavior; // Snake behavior
 }

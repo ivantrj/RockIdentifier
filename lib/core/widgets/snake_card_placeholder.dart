@@ -10,7 +10,8 @@ class SnakeCardPlaceholder extends StatelessWidget {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Shimmer.fromColors(
       baseColor: isDarkMode ? AppTheme.darkCharcoal : AppTheme.lightCard,
-      highlightColor: isDarkMode ? AppTheme.darkCharcoal.withOpacity(0.5) : AppTheme.lightCard.withOpacity(0.7),
+      highlightColor:
+          isDarkMode ? AppTheme.darkCharcoal.withValues(alpha: 0.5) : AppTheme.lightCard.withValues(alpha: 0.7),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppTheme.cardBorderRadius),

@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
-import 'package:snake_id/core/widgets/coin_card.dart';
-import 'package:snake_id/core/widgets/coin_card_placeholder.dart';
+import 'package:snake_id/core/widgets/snake_card.dart';
+import 'package:snake_id/core/widgets/snake_card_placeholder.dart';
 import 'package:snake_id/features/library/view/widgets/not_antique_dialog.dart';
 import 'package:snake_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
@@ -330,9 +330,9 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
       systemOverlayStyle:
           Theme.of(context).brightness == Brightness.dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
       title: Text(
-        'My Collection',
+        'Identification History',
         style: TextStyle(
-          fontSize: 24,
+          fontSize: 20,
           fontWeight: FontWeight.bold,
           color: isDarkMode ? Colors.white : Colors.black87,
         ),
@@ -349,7 +349,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
                 icon: Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
+                    color: isDarkMode ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Icon(
@@ -373,7 +373,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
             icon: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
+                color: isDarkMode ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(14),
               ),
               child: Icon(
@@ -613,7 +613,7 @@ class _ModernEmptyStateState extends State<_ModernEmptyState> with TickerProvide
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(widget.isDarkMode ? 0.3 : 0.1),
+                    color: Colors.black.withValues(alpha: widget.isDarkMode ? 0.3 : 0.1),
                     blurRadius: 15,
                     offset: const Offset(0, 5),
                   ),
@@ -626,8 +626,8 @@ class _ModernEmptyStateState extends State<_ModernEmptyState> with TickerProvide
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: widget.isDarkMode
-                          ? AppTheme.forestGreen.withOpacity(0.2)
-                          : AppTheme.emeraldGreen.withOpacity(0.15),
+                          ? AppTheme.forestGreen.withValues(alpha: 0.2)
+                          : AppTheme.emeraldGreen.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(

@@ -90,7 +90,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -125,7 +125,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
+            color: Colors.black.withValues(alpha: isDarkMode ? 0.3 : 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -200,17 +200,17 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
               Shadow(
                 offset: const Offset(0, 3),
                 blurRadius: 8,
-                color: Colors.black.withOpacity(0.9),
+                color: Colors.black.withValues(alpha: 0.9),
               ),
               Shadow(
                 offset: const Offset(0, 1),
                 blurRadius: 4,
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withValues(alpha: 0.7),
               ),
               Shadow(
                 offset: const Offset(0, -1),
                 blurRadius: 2,
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withValues(alpha: 0.5),
               ),
             ],
           ),
@@ -231,8 +231,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withOpacity(0.3),
-                    Colors.black.withOpacity(0.7),
+                    Colors.black.withValues(alpha: 0.3),
+                    Colors.black.withValues(alpha: 0.7),
                   ],
                   stops: const [0.0, 0.6, 1.0],
                 ),
@@ -257,15 +257,15 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
             height: 44,
             width: 44,
             decoration: BoxDecoration(
-              color: isDarkMode ? Colors.black.withOpacity(0.5) : Colors.white.withOpacity(0.8),
+              color: isDarkMode ? Colors.black.withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.8),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: isDarkMode ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.1),
+                color: isDarkMode ? Colors.white.withValues(alpha: 0.2) : Colors.black.withValues(alpha: 0.1),
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -375,7 +375,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
+            color: Colors.black.withValues(alpha: isDarkMode ? 0.3 : 0.1),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -391,7 +391,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
               gradient: LinearGradient(
                 colors: [
                   _getSafetyColor(venomousStatus),
-                  _getSafetyColor(venomousStatus).withOpacity(0.8),
+                  _getSafetyColor(venomousStatus).withValues(alpha: 0.8),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -427,10 +427,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withValues(alpha: 0.5),
                       width: 1,
                     ),
                   ),
@@ -467,7 +467,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: _getSafetyColor(venomousStatus).withOpacity(0.2),
+                        color: _getSafetyColor(venomousStatus).withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -529,7 +529,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
+                                color: Colors.black.withValues(alpha: 0.2),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
                               ),
@@ -603,10 +603,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.03),
+        color: isDarkMode ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.03),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
+          color: isDarkMode ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
           width: 1,
         ),
       ),
@@ -679,7 +679,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
+            color: Colors.black.withValues(alpha: isDarkMode ? 0.3 : 0.1),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -703,7 +703,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
             child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: isDarkMode ? AppTheme.forestGreen.withOpacity(0.1) : AppTheme.emeraldGreen.withOpacity(0.05),
+                color: isDarkMode
+                    ? AppTheme.forestGreen.withValues(alpha: 0.1)
+                    : AppTheme.emeraldGreen.withValues(alpha: 0.05),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
@@ -714,8 +716,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color:
-                          isDarkMode ? AppTheme.forestGreen.withOpacity(0.2) : AppTheme.emeraldGreen.withOpacity(0.15),
+                      color: isDarkMode
+                          ? AppTheme.forestGreen.withValues(alpha: 0.2)
+                          : AppTheme.emeraldGreen.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -811,11 +814,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
           backgroundColor: isDarkMode ? AppTheme.darkCharcoal : Colors.white,
           foregroundColor: isDarkMode ? Colors.white : Colors.black87,
           elevation: 0,
-          shadowColor: Colors.black.withOpacity(0.2),
+          shadowColor: Colors.black.withValues(alpha: 0.2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(
-              color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.1),
+              color: isDarkMode ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1),
               width: 1,
             ),
           ),
@@ -855,7 +858,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.1),
+              color: Colors.black.withValues(alpha: isDarkMode ? 0.3 : 0.1),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -869,7 +872,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: isDarkMode ? AppTheme.forestGreen.withOpacity(0.2) : AppTheme.emeraldGreen.withOpacity(0.15),
+                    color: isDarkMode
+                        ? AppTheme.forestGreen.withValues(alpha: 0.2)
+                        : AppTheme.emeraldGreen.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -970,7 +975,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.black.withOpacity(0.6), Colors.transparent, Colors.black.withOpacity(0.8)],
+                    colors: [
+                      Colors.black.withValues(alpha: 0.6),
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.8)
+                    ],
                     stops: const [0.0, 0.4, 1.0],
                   ),
                 ),
@@ -1005,7 +1014,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.black.withOpacity(0.6), Colors.transparent, Colors.black.withOpacity(0.8)],
+                    colors: [
+                      Colors.black.withValues(alpha: 0.6),
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.8)
+                    ],
                     stops: const [0.0, 0.4, 1.0],
                   ),
                 ),

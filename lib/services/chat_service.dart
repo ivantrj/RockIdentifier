@@ -48,30 +48,22 @@ class ChatService {
 
       // Create item details map with Snake-specific properties
       final itemDetails = {
-        'coinType': item.coinType ?? 'Unknown',
-        'denomination': item.denomination ?? 'Unknown',
+        'commonName': item.commonName ?? 'Unknown',
+        'scientificName': item.scientificName ?? 'Unknown',
+        'family': item.family ?? 'Unknown',
+        'genus': item.genus ?? 'Unknown',
         'confidence': '${(item.confidence * 100).toStringAsFixed(1)}%',
-        'mintYear': item.mintYear ?? 'Unknown',
-        'country': item.country ?? 'Unknown',
-        'mintMark': item.mintMark ?? 'Unknown',
-        'metalComposition': item.metalComposition ?? 'Unknown',
-        'weight': item.weight ?? 'Unknown',
-        'diameter': item.diameter ?? 'Unknown',
-        'condition': item.condition ?? 'Unknown',
-        'authenticity': item.authenticity ?? 'Unknown',
-        'rarity': item.rarity ?? 'Unknown',
-        'estimatedValue': item.estimatedValue ?? 'Unknown',
-        'historicalContext': item.historicalContext ?? 'Unknown',
-        'designDescription': item.designDescription ?? 'Unknown',
-        'edgeType': item.edgeType ?? 'Unknown',
-        'designer': item.designer ?? 'Unknown',
-        'mintage': item.mintage ?? 'Unknown',
-        'investmentPotential': item.investmentPotential ?? 'Unknown',
-        'marketDemand': item.marketDemand ?? 'Unknown',
-        'storageRecommendations': item.storageRecommendations ?? 'Unknown',
-        'cleaningInstructions': item.cleaningInstructions ?? 'Unknown',
-        'similarCoins': item.similarCoins ?? 'Unknown',
-        'insuranceValue': item.insuranceValue ?? 'Unknown',
+        'venomousStatus': item.venomousStatus ?? 'Unknown',
+        'habitat': item.habitat ?? 'Unknown',
+        'geographicRange': item.geographicRange ?? 'Unknown',
+        'averageLength': item.averageLength ?? 'Unknown',
+        'averageWeight': item.averageWeight ?? 'Unknown',
+        'behavior': item.behavior ?? 'Unknown',
+        'diet': item.diet ?? 'Unknown',
+        'conservationStatus': item.conservationStatus ?? 'Unknown',
+        'safetyInformation': item.safetyInformation ?? 'Unknown',
+        'similarSpecies': item.similarSpecies ?? 'Unknown',
+        'interestingFacts': item.interestingFacts ?? 'Unknown',
       };
 
       // Add Wikipedia link if available
@@ -114,7 +106,7 @@ class ChatService {
   }
 
   /// Determine the Snake type based on the item's properties
-  String _determineCoinType(IdentifiedItem item) {
+  String _determineSnakeType(IdentifiedItem item) {
     // Check if it's explicitly categorized
     if (item.category != null) {
       return item.category!;
@@ -123,107 +115,76 @@ class ChatService {
     // Check the result text for common Snake keywords
     String result = item.result.toLowerCase();
 
-    // Ancient coins
-    if (result.contains('roman') ||
-        result.contains('greek') ||
-        result.contains('byzantine') ||
-        result.contains('ancient') ||
-        result.contains('bc') ||
-        result.contains('ad')) {
-      return 'ancient_coins';
+    // Venomous snakes
+    if (result.contains('venomous') ||
+        result.contains('poisonous') ||
+        result.contains('cobra') ||
+        result.contains('viper') ||
+        result.contains('rattlesnake') ||
+        result.contains('mamba') ||
+        result.contains('taipan')) {
+      return 'venomous_snakes';
     }
 
-    // Medieval coins
-    if (result.contains('medieval') ||
-        result.contains('middle ages') ||
-        result.contains('crusader') ||
-        result.contains('gothic')) {
-      return 'medieval_coins';
+    // Constrictor snakes
+    if (result.contains('python') ||
+        result.contains('boa') ||
+        result.contains('constrictor') ||
+        result.contains('anaconda')) {
+      return 'constrictor_snakes';
     }
 
-    // Modern coins (1800s-1900s)
-    if (result.contains('1800') ||
-        result.contains('1900') ||
-        result.contains('victorian') ||
-        result.contains('edwardian') ||
-        result.contains('georgian')) {
-      return 'modern_coins';
+    // Colubrid snakes
+    if (result.contains('colubrid') ||
+        result.contains('garter') ||
+        result.contains('rat snake') ||
+        result.contains('corn snake') ||
+        result.contains('king snake')) {
+      return 'colubrid_snakes';
     }
 
-    // Contemporary coins (2000s+)
-    if (result.contains('2000') ||
-        result.contains('2020') ||
-        result.contains('contemporary') ||
-        result.contains('modern')) {
-      return 'contemporary_coins';
+    // Elapid snakes
+    if (result.contains('elapid') ||
+        result.contains('coral') ||
+        result.contains('krait') ||
+        result.contains('sea snake')) {
+      return 'elapid_snakes';
     }
 
-    // Gold coins
-    if (result.contains('gold') ||
-        result.contains('sovereign') ||
-        result.contains('eagle') ||
-        result.contains('krugerrand')) {
-      return 'gold_coins';
+    // Viper snakes
+    if (result.contains('viper') ||
+        result.contains('pit viper') ||
+        result.contains('rattlesnake') ||
+        result.contains('copperhead') ||
+        result.contains('cottonmouth')) {
+      return 'viper_snakes';
     }
 
-    // Silver coins
-    if (result.contains('silver') ||
-        result.contains('morgan') ||
-        result.contains('peace') ||
-        result.contains('walking liberty')) {
-      return 'silver_coins';
+    // Water snakes
+    if (result.contains('water') || result.contains('aquatic') || result.contains('sea') || result.contains('marine')) {
+      return 'water_snakes';
     }
 
-    // Commemorative coins
-    if (result.contains('commemorative') ||
-        result.contains('anniversary') ||
-        result.contains('celebration') ||
-        result.contains('special')) {
-      return 'commemorative_coins';
+    // Tree snakes
+    if (result.contains('tree') || result.contains('arboreal') || result.contains('vine') || result.contains('twig')) {
+      return 'tree_snakes';
     }
 
-    // Error coins
-    if (result.contains('error') ||
-        result.contains('misprint') ||
-        result.contains('double') ||
-        result.contains('off-center')) {
-      return 'error_coins';
+    // Desert snakes
+    if (result.contains('desert') || result.contains('sand') || result.contains('arid') || result.contains('xeric')) {
+      return 'desert_snakes';
     }
 
-    // Proof coins
-    if (result.contains('proof') || result.contains('mint state') || result.contains('uncirculated')) {
-      return 'proof_coins';
+    // Tropical snakes
+    if (result.contains('tropical') ||
+        result.contains('rainforest') ||
+        result.contains('jungle') ||
+        result.contains('amazon')) {
+      return 'tropical_snakes';
     }
 
-    // World coins
-    if (result.contains('foreign') || result.contains('international') || result.contains('world')) {
-      return 'world_coins';
-    }
-
-    // US coins
-    if (result.contains('penny') ||
-        result.contains('nickel') ||
-        result.contains('dime') ||
-        result.contains('quarter') ||
-        result.contains('half dollar') ||
-        result.contains('dollar') ||
-        result.contains('us') ||
-        result.contains('american')) {
-      return 'us_coins';
-    }
-
-    // British coins
-    if (result.contains('pound') ||
-        result.contains('shilling') ||
-        result.contains('pence') ||
-        result.contains('farthing') ||
-        result.contains('british') ||
-        result.contains('uk')) {
-      return 'british_coins';
-    }
-
-    // Default to general Snake if no specific category is found
-    return 'general_coins';
+    // Default to general snakes if no specific category is found
+    return 'general_snakes';
   }
 
   /// Get item by ID (placeholder - implement based on your data storage)

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:snake_id/core/theme/app_theme.dart';
 import 'package:snake_id/locator.dart';
 import 'package:snake_id/services/cache_service.dart';
 import 'package:snake_id/services/haptic_service.dart';
@@ -146,7 +145,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.05),
+            color: Colors.black.withValues(alpha: isDarkMode ? 0.3 : 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -198,7 +197,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         width: 36,
         height: 36,
         decoration: BoxDecoration(
-          color: theme.colorScheme.secondary.withOpacity(0.15),
+          color: theme.colorScheme.secondary.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(icon, color: theme.colorScheme.secondary, size: 20),
@@ -321,7 +320,7 @@ class _HapticFeedbackToggleState extends State<_HapticFeedbackToggle> {
         width: 36,
         height: 36,
         decoration: BoxDecoration(
-          color: theme.colorScheme.secondary.withOpacity(0.15),
+          color: theme.colorScheme.secondary.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(Icons.vibration, color: theme.colorScheme.secondary, size: 20),
@@ -362,7 +361,7 @@ class _ThemeToggle extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: theme.colorScheme.secondary.withOpacity(0.15),
+              color: theme.colorScheme.secondary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(

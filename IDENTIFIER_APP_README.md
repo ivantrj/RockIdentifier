@@ -62,7 +62,7 @@ lib/
 ### 3. AI Chat
 
 - **Contextual Conversations**: Chat about specific identified items
-- **Expert Knowledge**: Get detailed answers about coins
+- **Expert Knowledge**: Get detailed answers about snakes
 - **History**: Maintain conversation context
 
 ### 4. Subscription System
@@ -107,7 +107,7 @@ class ImageProcessingService {
   Future<String> saveImageToAppDir(String imagePath)
 
   // Calls AI backend for identification
-  Future<Map<String, dynamic>?> _identifyCoinWithAI(File imageFile)
+  Future<Map<String, dynamic>?> _identifySnakeWithAI(File imageFile)
 }
 ```
 
@@ -169,7 +169,7 @@ class IdentifiedItem {
 
 - **2-column grid** on mobile devices
 - **Hero animations** for smooth transitions
-- **Value badges** for valuable coins
+- **Safety badges** for venomous snakes
 - **Confidence indicators** for AI accuracy
 
 #### FAB Menu

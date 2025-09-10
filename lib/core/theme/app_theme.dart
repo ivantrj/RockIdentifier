@@ -54,7 +54,7 @@ class AppTheme {
             ),
             bodyLarge: TextStyle(
               fontSize: 16.0,
-              color: primaryTextColor.withOpacity(0.9),
+              color: primaryTextColor.withValues(alpha: 0.9),
               height: 1.5,
             ),
             bodyMedium: TextStyle(
@@ -113,7 +113,7 @@ class AppTheme {
         ),
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: darkCharcoal.withOpacity(0.8),
+        backgroundColor: darkCharcoal.withValues(alpha: 0.8),
         height: 70,
         indicatorColor: forestGreen,
         iconTheme: WidgetStateProperty.resolveWith<IconThemeData>((states) {
