@@ -283,9 +283,10 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                       children: [
                                         _featureRow(
                                             Icons.camera_alt_rounded, 'Identify unlimited snakes', emeraldGreen),
-                                        _featureRow(Icons.search_rounded, 'Get detailed analysis', emeraldGreen),
                                         _featureRow(
-                                            Icons.menu_book_rounded, 'Access historical information', emeraldGreen),
+                                            Icons.search_rounded, 'Get detailed species analysis', emeraldGreen),
+                                        _featureRow(Icons.location_on_rounded, 'Learn habitat & geographic range',
+                                            emeraldGreen),
                                         _featureRow(Icons.lock_open_rounded, 'Remove usage limits', emeraldGreen),
                                       ],
                                     ),
@@ -411,8 +412,8 @@ class _PaywallScreenState extends State<PaywallScreen> {
               child: Column(
                 children: [
                   _featureRow(Icons.camera_alt_rounded, 'Unlimited snake identification', emeraldGreen),
-                  _featureRow(Icons.search_rounded, 'Comprehensive AI analysis', emeraldGreen),
-                  _featureRow(Icons.menu_book_rounded, 'Detailed historical context', emeraldGreen),
+                  _featureRow(Icons.search_rounded, 'Comprehensive species analysis', emeraldGreen),
+                  _featureRow(Icons.location_on_rounded, 'Detailed habitat & location info', emeraldGreen),
                   _featureRow(Icons.lock_open_rounded, 'Unrestricted access', emeraldGreen),
                 ],
               ),

@@ -3,21 +3,21 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // --- Core Palette: Snake-Inspired Natural Colors ---
+  // --- Core Palette: Modern, Sophisticated Colors ---
   // Dark theme colors
-  static const Color darkCharcoal = Color(0xFF1A2E1A);
-  static const Color forestGreen = Color(0xFF2D5016);
-  static const Color emeraldGreen = Color(0xFF50C878);
-  static const Color nearBlack = Color(0xFF0F1B0A);
+  static const Color darkCharcoal = Color(0xFF1C1C1E);
+  static const Color forestGreen = Color(0xFF34C759);
+  static const Color emeraldGreen = Color(0xFF30D158);
+  static const Color nearBlack = Color(0xFF000000);
   static Color glassColor = Colors.white.withValues(alpha: 0.1);
 
   // Light theme colors
-  static const Color lightBackground = Color(0xFFF8FFFE);
+  static const Color lightBackground = Color(0xFFFFFFFF);
   static const Color lightSurface = Color(0xFFFFFFFF);
-  static const Color lightCard = Color(0xFFF0F8F5);
-  static const Color lightBorder = Color(0xFFE8F5E8);
-  static const Color lightTextPrimary = Color(0xFF1A2E1A);
-  static const Color lightTextSecondary = Color(0xFF4A6741);
+  static const Color lightCard = Color(0xFFFFFFFF);
+  static const Color lightBorder = Color(0xFFE5E5EA);
+  static const Color lightTextPrimary = Color(0xFF1C1C1E);
+  static const Color lightTextSecondary = Color(0xFF8E8E93);
 
   // --- Semantic Colors ---
   static const Color successColor = Color(0xFF28A745);

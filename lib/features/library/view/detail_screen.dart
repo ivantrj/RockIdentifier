@@ -118,18 +118,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
   Widget _buildModernSegmentedControl(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
-      height: 56,
+      margin: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+      height: 48,
       decoration: BoxDecoration(
-        color: isDarkMode ? AppTheme.darkCharcoal : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDarkMode ? 0.3 : 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: isDarkMode ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
@@ -152,22 +145,33 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
           setState(() => _selectedTabIndex = index);
         },
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 200),
           curve: Curves.easeInOut,
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          margin: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: isSelected ? (isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen) : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
+            color: isSelected ? (isDarkMode ? Colors.white : Colors.black) : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: isDarkMode ? 0.3 : 0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : null,
           ),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color:
-                  isSelected ? Colors.white : (isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary),
-              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-              fontSize: 16,
-              letterSpacing: 0.2,
+          child: Center(
+            child: Text(
+              title,
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: isSelected
+                    ? (isDarkMode ? Colors.black : Colors.white)
+                    : (isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary),
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                fontSize: 15,
+                letterSpacing: -0.1,
+              ),
             ),
           ),
         ),
@@ -299,12 +303,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
 
   Widget _buildModernDetailsTab(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 32),
       child: Column(
         children: [
           // Safety Card - More prominent and modern
           _buildModernSafetyCard(context),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
 
           // Information Cards with better visual hierarchy
           _buildModernInfoCard(
@@ -319,7 +323,6 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
               'Confidence': '${(widget.item.confidence * 100).toStringAsFixed(0)}%',
             },
           ),
-          const SizedBox(height: 16),
 
           _buildModernInfoCard(
             context,
@@ -332,19 +335,17 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
               'Diet': widget.item.diet ?? 'N/A',
             },
           ),
-          const SizedBox(height: 16),
 
           _buildModernInfoCard(
             context,
-            'Habitat & Distribution',
+            'Location & Habitat',
             HugeIcons.strokeRoundedGlobal,
             {
-              'Habitat': widget.item.habitat ?? 'N/A',
-              'Geographic Range': widget.item.geographicRange ?? 'N/A',
-              'Conservation Status': widget.item.conservationStatus ?? 'N/A',
+              'Found In': widget.item.geographicRange ?? 'N/A',
+              'Habitat Type': widget.item.habitat ?? 'N/A',
+              'Elevation': widget.item.details['elevationRange'] ?? 'N/A',
             },
           ),
-          const SizedBox(height: 16),
 
           _buildModernInfoCard(
             context,
@@ -359,7 +360,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
 
           // Wiki Link Button with modern design
           if (widget.item.details['wikiLink'] != null) ...[
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             _buildModernWikiButton(context, widget.item.details['wikiLink']!),
           ],
         ],
@@ -371,84 +372,72 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
     final theme = Theme.of(context);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final venomousStatus = widget.item.venomousStatus;
-    final safetyInfo = widget.item.safetyInformation;
-    final conservationStatus = widget.item.conservationStatus;
 
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
-        color: isDarkMode ? AppTheme.darkCharcoal : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDarkMode ? 0.3 : 0.1),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        color: isDarkMode ? const Color(0xFF1C1C1E) : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDarkMode ? const Color(0xFF38383A) : const Color(0xFFE5E5EA),
+          width: 0.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header with gradient
-          Container(
+          // Header
+          Padding(
             padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  _getSafetyColor(venomousStatus),
-                  _getSafetyColor(venomousStatus).withValues(alpha: 0.8),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
-            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Icon(
-                      _getSafetyIcon(venomousStatus),
-                      color: Colors.white,
-                      size: 28,
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: _getSafetyColor(venomousStatus).withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        _getSafetyIcon(venomousStatus),
+                        color: _getSafetyColor(venomousStatus),
+                        size: 20,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Text(
                       'Safety Status',
                       style: theme.textTheme.titleLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 20,
-                        letterSpacing: -0.3,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                        letterSpacing: -0.2,
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 16),
 
-                // Venomous Status - Large and prominent
+                // Venomous Status
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(16),
+                    color: _getSafetyColor(venomousStatus).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.5),
+                      color: _getSafetyColor(venomousStatus).withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
                   child: Text(
                     _getVenomousDisplayText(venomousStatus),
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 24,
-                      letterSpacing: -0.8,
-                      height: 1.1,
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: _getSafetyColor(venomousStatus),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
+                      letterSpacing: -0.3,
                     ),
                   ),
                 ),
@@ -458,192 +447,14 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
 
           // Safety details
           Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                // Safety Level with visual indicator
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Safety Level',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: isDarkMode ? Colors.white : Colors.black87,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: _getSafetyColor(venomousStatus).withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        _getSafetyLevel(venomousStatus),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: _getSafetyColor(venomousStatus),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                // Modern safety indicator
-                Container(
-                  height: 12,
-                  decoration: BoxDecoration(
-                    color: isDarkMode ? const Color(0xFF2D2D2D) : const Color(0xFFE0E0E0),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Stack(
-                    children: [
-                      // Background bar
-                      Container(
-                        height: 12,
-                        decoration: BoxDecoration(
-                          color: isDarkMode ? const Color(0xFF2D2D2D) : const Color(0xFFE0E0E0),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                      ),
-                      // Colored progress bar
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 800),
-                        curve: Curves.easeInOut,
-                        height: 12,
-                        width: MediaQuery.of(context).size.width * 0.7 * (_getSafetyValue(venomousStatus) / 100),
-                        decoration: BoxDecoration(
-                          color: _getSafetyColor(venomousStatus),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                      ),
-                      // Safety indicator dot
-                      AnimatedPositioned(
-                        duration: const Duration(milliseconds: 800),
-                        curve: Curves.easeInOut,
-                        left: MediaQuery.of(context).size.width * 0.7 * (_getSafetyValue(venomousStatus) / 100) - 6,
-                        top: 0,
-                        child: Container(
-                          width: 12,
-                          height: 12,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: _getSafetyColor(venomousStatus),
-                              width: 3,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.2),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Safety explanation
-                Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Text(
-                    _getSafetyExplanation(venomousStatus),
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                      height: 1.5,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Conservation Status and Safety Info
-                Row(
-                  children: [
-                    if (conservationStatus != null) ...[
-                      Expanded(
-                        child: _buildStatusItem(
-                          context,
-                          'Conservation',
-                          conservationStatus,
-                          HugeIcons.strokeRoundedLeaf01,
-                          isDarkMode,
-                        ),
-                      ),
-                    ],
-                    if (safetyInfo != null && safetyInfo.length > 50) ...[
-                      if (conservationStatus != null) const SizedBox(width: 16),
-                      Expanded(
-                        child: _buildStatusItem(
-                          context,
-                          'Safety Info',
-                          'See details',
-                          HugeIcons.strokeRoundedShieldUser,
-                          isDarkMode,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatusItem(
-    BuildContext context,
-    String title,
-    String value,
-    IconData icon,
-    bool isDarkMode,
-  ) {
-    final theme = Theme.of(context);
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDarkMode ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.03),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isDarkMode ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                icon,
-                size: 18,
-                color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            child: Text(
+              _getSafetyExplanation(venomousStatus),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                height: 1.5,
+                fontSize: 15,
               ),
-              const SizedBox(width: 8),
-              Text(
-                title,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: isDarkMode ? Colors.white : Colors.black87,
-              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -682,16 +493,14 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
     final isExpanded = _expandedCards[title] ?? false;
 
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       decoration: BoxDecoration(
-        color: isDarkMode ? AppTheme.darkCharcoal : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDarkMode ? 0.3 : 0.1),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        color: isDarkMode ? const Color(0xFF1C1C1E) : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDarkMode ? const Color(0xFF38383A) : const Color(0xFFE5E5EA),
+          width: 0.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -705,55 +514,46 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
               });
             },
             borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
             ),
             child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: isDarkMode
-                    ? AppTheme.forestGreen.withValues(alpha: 0.1)
-                    : AppTheme.emeraldGreen.withValues(alpha: 0.05),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-              ),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: isDarkMode
-                          ? AppTheme.forestGreen.withValues(alpha: 0.2)
-                          : AppTheme.emeraldGreen.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(12),
+                          ? AppTheme.forestGreen.withValues(alpha: 0.1)
+                          : AppTheme.emeraldGreen.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
                       icon,
-                      size: 24,
+                      size: 20,
                       color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       title,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        color: isDarkMode ? Colors.white : Colors.black87,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 18,
-                        letterSpacing: -0.2,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: isDarkMode ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        letterSpacing: -0.1,
                       ),
                     ),
                   ),
                   AnimatedRotation(
                     turns: isExpanded ? 0.5 : 0.0,
-                    duration: const Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 200),
                     child: Icon(
                       HugeIcons.strokeRoundedArrowDown01,
-                      size: 20,
-                      color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+                      size: 18,
+                      color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
                     ),
                   ),
                 ],
@@ -765,11 +565,16 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
           AnimatedCrossFade(
             firstChild: const SizedBox.shrink(),
             secondChild: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: Column(
                 children: details.entries.map((entry) {
                   return Container(
-                    margin: const EdgeInsets.only(bottom: 16),
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: isDarkMode ? const Color(0xFF2C2C2E) : const Color(0xFFF2F2F7),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -777,25 +582,23 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                           flex: 2,
                           child: Text(
                             entry.key,
-                            style: theme.textTheme.bodyMedium?.copyWith(
+                            style: theme.textTheme.bodySmall?.copyWith(
                               color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                              letterSpacing: 0.1,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13,
                             ),
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 12),
                         Expanded(
                           flex: 3,
                           child: Text(
                             entry.value,
-                            style: theme.textTheme.bodyLarge?.copyWith(
+                            style: theme.textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
-                              color: isDarkMode ? Colors.white : Colors.black87,
-                              height: 1.5,
-                              fontSize: 15,
-                              letterSpacing: 0.05,
+                              color: isDarkMode ? Colors.white : Colors.black,
+                              height: 1.4,
+                              fontSize: 14,
                             ),
                             textAlign: TextAlign.right,
                           ),
@@ -807,7 +610,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
               ),
             ),
             crossFadeState: isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-            duration: const Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 200),
           ),
         ],
       ),
@@ -819,20 +622,20 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
       width: double.infinity,
-      height: 60,
+      height: 56,
       child: ElevatedButton(
         onPressed: () => _openWikiLink(wikiUrl),
         style: ElevatedButton.styleFrom(
-          backgroundColor: isDarkMode ? AppTheme.darkCharcoal : Colors.white,
-          foregroundColor: isDarkMode ? Colors.white : Colors.black87,
+          backgroundColor: isDarkMode ? const Color(0xFF1C1C1E) : Colors.white,
+          foregroundColor: isDarkMode ? Colors.white : Colors.black,
           elevation: 0,
-          shadowColor: Colors.black.withValues(alpha: 0.2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(
-              color: isDarkMode ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1),
-              width: 1,
+              color: isDarkMode ? const Color(0xFF38383A) : const Color(0xFFE5E5EA),
+              width: 0.5,
             ),
           ),
         ),
@@ -841,17 +644,17 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
           children: [
             Icon(
               HugeIcons.strokeRoundedWikipedia,
-              size: 22,
+              size: 20,
               color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
             ),
             const SizedBox(width: 12),
             Text(
               'View on Wikipedia',
               style: theme.textTheme.titleMedium?.copyWith(
-                color: isDarkMode ? Colors.white : Colors.black87,
+                color: isDarkMode ? Colors.white : Colors.black,
                 fontWeight: FontWeight.w600,
-                fontSize: 16,
-                letterSpacing: 0.1,
+                fontSize: 15,
+                letterSpacing: -0.1,
               ),
             ),
           ],
@@ -865,19 +668,16 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: isDarkMode ? AppTheme.darkCharcoal : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: isDarkMode ? 0.3 : 0.1),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            ),
-          ],
+          color: isDarkMode ? const Color(0xFF1C1C1E) : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isDarkMode ? const Color(0xFF38383A) : const Color(0xFFE5E5EA),
+            width: 0.5,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -885,42 +685,42 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     color: isDarkMode
-                        ? AppTheme.forestGreen.withValues(alpha: 0.2)
-                        : AppTheme.emeraldGreen.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(12),
+                        ? AppTheme.forestGreen.withValues(alpha: 0.1)
+                        : AppTheme.emeraldGreen.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     HugeIcons.strokeRoundedLighthouse,
-                    size: 24,
+                    size: 20,
                     color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 12),
                 Text(
                   'Interesting Facts',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    color: isDarkMode ? Colors.white : Colors.black87,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 20,
-                    letterSpacing: -0.3,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: isDarkMode ? Colors.white : Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    letterSpacing: -0.1,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             Text(
               widget.item.interestingFacts ??
                   widget.item.details['Description'] ??
                   'No additional information available.',
-              style: theme.textTheme.bodyLarge?.copyWith(
-                height: 1.7,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                height: 1.6,
                 color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: FontWeight.w400,
-                letterSpacing: 0.1,
+                letterSpacing: 0.05,
               ),
             ),
           ],
@@ -1066,46 +866,6 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
         return Colors.amber;
       default:
         return Colors.grey;
-    }
-  }
-
-  int _getSafetyValue(String? venomousStatus) {
-    if (venomousStatus == null) return 0;
-    switch (venomousStatus.toLowerCase()) {
-      case 'venomous':
-      case 'highly venomous':
-      case 'extremely venomous':
-        return 90;
-      case 'mildly venomous':
-      case 'weakly venomous':
-        return 60;
-      case 'non-venomous':
-      case 'harmless':
-        return 20;
-      case 'unknown':
-        return 50;
-      default:
-        return 0;
-    }
-  }
-
-  String _getSafetyLevel(String? venomousStatus) {
-    if (venomousStatus == null) return 'Unknown';
-    switch (venomousStatus.toLowerCase()) {
-      case 'venomous':
-      case 'highly venomous':
-      case 'extremely venomous':
-        return 'High Risk';
-      case 'mildly venomous':
-      case 'weakly venomous':
-        return 'Medium Risk';
-      case 'non-venomous':
-      case 'harmless':
-        return 'Low Risk';
-      case 'unknown':
-        return 'Unknown Risk';
-      default:
-        return 'Unknown';
     }
   }
 

@@ -259,22 +259,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDarkMode
-                ? [
-                    AppTheme.nearBlack,
-                    AppTheme.darkCharcoal,
-                    AppTheme.nearBlack,
-                  ]
-                : [
-                    AppTheme.lightBackground,
-                    Color(0xFFF0F8F5),
-                    AppTheme.lightBackground,
-                  ],
-            stops: const [0.0, 0.5, 1.0],
-          ),
+          color: isDarkMode ? AppTheme.nearBlack : AppTheme.lightBackground,
         ),
         child: FadeTransition(
           opacity: _fadeAnimation,
@@ -716,38 +701,23 @@ class _BackgroundPatternPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..style = PaintingStyle.fill
-      ..color =
-          isDarkMode ? AppTheme.forestGreen.withValues(alpha: 0.02) : AppTheme.emeraldGreen.withValues(alpha: 0.03);
+    if (isDarkMode) {
+      // Only add subtle pattern for dark mode
+      final paint = Paint()
+        ..style = PaintingStyle.fill
+        ..color = Colors.white.withValues(alpha: 0.01);
 
-    // Draw subtle circular patterns
-    final spacing = 120.0;
-    for (double x = 0; x < size.width + spacing; x += spacing) {
-      for (double y = 0; y < size.height + spacing; y += spacing) {
-        canvas.drawCircle(
-          Offset(x, y),
-          40,
-          paint,
-        );
+      // Draw very subtle circular patterns
+      final spacing = 200.0;
+      for (double x = 0; x < size.width + spacing; x += spacing) {
+        for (double y = 0; y < size.height + spacing; y += spacing) {
+          canvas.drawCircle(
+            Offset(x, y),
+            60,
+            paint,
+          );
+        }
       }
-    }
-
-    // Add some subtle lines
-    final linePaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.5
-      ..color =
-          isDarkMode ? AppTheme.forestGreen.withValues(alpha: 0.05) : AppTheme.emeraldGreen.withValues(alpha: 0.08);
-
-    // Draw diagonal lines
-    for (int i = 0; i < 8; i++) {
-      final startY = (size.height / 8) * i;
-      canvas.drawLine(
-        Offset(0, startY),
-        Offset(size.width, startY + size.width * 0.1),
-        linePaint,
-      );
     }
   }
 
