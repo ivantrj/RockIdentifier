@@ -15,6 +15,7 @@ import 'package:snake_id/services/logging_service.dart';
 import 'widgets/fab_menu.dart';
 import 'widgets/library_item_card.dart';
 import 'widgets/loading_dialog.dart';
+import 'package:snake_id/services/scan_tracking_service.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -64,11 +65,10 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
   Future<void> _pickImage(ImageSource source) async {
     LoggingService.userAction('Image picker opened', details: 'source: ${source.name}', tag: 'LibraryScreen');
 
-    final items = context.read<LibraryViewModel>().items;
     final isSubscribed = main.RevenueCatService.isSubscribed;
 
-    if (!isSubscribed && items.isNotEmpty) {
-      LoggingService.userAction('Paywall shown', details: 'reason: subscription required', tag: 'LibraryScreen');
+    if (!isSubscribed && await ScanTrackingService.hasExceededFreeLimit()) {
+      LoggingService.userAction('Paywall shown', details: 'reason: free scan limit exceeded', tag: 'LibraryScreen');
       await _showPaywall();
       return;
     }
@@ -114,6 +114,8 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
         if (item != null) {
           LoggingService.userAction('Item added to library', details: 'result: ${item.result}', tag: 'LibraryScreen');
           context.read<LibraryViewModel>().addItem(item);
+          // Increment scan count after successful identification
+          await ScanTrackingService.incrementScanCount();
           Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
         } else {
           LoggingService.warning('AI did not return a valid result', tag: 'LibraryScreen');

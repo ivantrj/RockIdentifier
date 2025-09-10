@@ -22,6 +22,7 @@ import 'widgets/loading_dialog.dart';
 import 'package:snake_id/services/haptic_service.dart';
 import 'package:snake_id/core/theme/app_theme.dart';
 import 'package:snake_id/features/camera/custom_camera_screen.dart';
+import 'package:snake_id/services/scan_tracking_service.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -86,10 +87,9 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
 
   Future<void> _pickImage(ImageSource source) async {
     LoggingService.userAction('Image picker opened', details: 'source: ${source.name}', tag: 'LibraryScreen');
-    final items = context.read<LibraryViewModel>().items;
     final isSubscribed = main.RevenueCatService.isSubscribed;
-    if (!isSubscribed && items.isNotEmpty) {
-      LoggingService.userAction('Paywall shown', details: 'reason: subscription required', tag: 'LibraryScreen');
+    if (!isSubscribed && await ScanTrackingService.hasExceededFreeLimit()) {
+      LoggingService.userAction('Paywall shown', details: 'reason: free scan limit exceeded', tag: 'LibraryScreen');
       await _showPaywall();
       return;
     }
@@ -102,10 +102,9 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
 
   Future<void> _openCustomCamera() async {
     LoggingService.userAction('Custom camera opened', tag: 'LibraryScreen');
-    final items = context.read<LibraryViewModel>().items;
     final isSubscribed = main.RevenueCatService.isSubscribed;
-    if (!isSubscribed && items.isNotEmpty) {
-      LoggingService.userAction('Paywall shown', details: 'reason: subscription required', tag: 'LibraryScreen');
+    if (!isSubscribed && await ScanTrackingService.hasExceededFreeLimit()) {
+      LoggingService.userAction('Paywall shown', details: 'reason: free scan limit exceeded', tag: 'LibraryScreen');
       await _showPaywall();
       return;
     }
@@ -180,6 +179,8 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
           LoggingService.userAction('Item added to library', details: 'result:  [${item.result}', tag: 'LibraryScreen');
           try {
             await context.read<LibraryViewModel>().addItem(item);
+            // Increment scan count after successful identification
+            await ScanTrackingService.incrementScanCount();
             LoggingService.debug('Item successfully added to viewmodel', tag: 'LibraryScreen');
           } catch (e) {
             LoggingService.error('Error adding item to viewmodel', error: e, tag: 'LibraryScreen');
@@ -597,7 +598,7 @@ class _ModernEmptyStateState extends State<_ModernEmptyState> with TickerProvide
                       ],
                     ),
                     child: Icon(
-                      HugeIcons.strokeRoundedAbacus,
+                      HugeIcons.strokeRoundedCameraAi,
                       size: 60,
                       color: Colors.white,
                     ),
