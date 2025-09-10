@@ -21,6 +21,7 @@ import 'widgets/fab_menu.dart';
 import 'widgets/loading_dialog.dart';
 import 'package:snake_id/services/haptic_service.dart';
 import 'package:snake_id/core/theme/app_theme.dart';
+import 'package:snake_id/features/camera/custom_camera_screen.dart';
 
 class LibraryScreen extends StatelessWidget {
   const LibraryScreen({super.key});
@@ -99,6 +100,29 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
     }
   }
 
+  Future<void> _openCustomCamera() async {
+    LoggingService.userAction('Custom camera opened', tag: 'LibraryScreen');
+    final items = context.read<LibraryViewModel>().items;
+    final isSubscribed = main.RevenueCatService.isSubscribed;
+    if (!isSubscribed && items.isNotEmpty) {
+      LoggingService.userAction('Paywall shown', details: 'reason: subscription required', tag: 'LibraryScreen');
+      await _showPaywall();
+      return;
+    }
+
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CustomCameraScreen(
+          onImageCaptured: (imagePath) async {
+            LoggingService.userAction('Image captured with custom camera',
+                details: 'path: $imagePath', tag: 'LibraryScreen');
+            await _processImage(imagePath);
+          },
+        ),
+      ),
+    );
+  }
+
   Future<void> _showPaywall() async {
     await showModalBottomSheet(
       context: context,
@@ -121,6 +145,12 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
   }
 
   Future<void> _processImage(String imagePath) async {
+    // Prevent multiple processing
+    if (_isProcessing) {
+      LoggingService.warning('Image processing already in progress, ignoring duplicate request', tag: 'LibraryScreen');
+      return;
+    }
+
     LoggingService.debug('Starting image processing - path: $imagePath', tag: 'LibraryScreen');
     setState(() {
       _fabMenuOpen = false;
@@ -283,6 +313,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
                 onOpen: _openFabMenu,
                 onClose: _closeFabMenu,
                 onImagePicked: _pickImage,
+                onCustomCamera: _openCustomCamera,
               ),
             ],
           ),
@@ -297,6 +328,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
                 duration: const Duration(milliseconds: 250),
                 child: FloatingActionButton(
                   key: ValueKey(_isProcessing),
+                  heroTag: null, // Disable hero animation to avoid conflicts
                   elevation: 0,
                   highlightElevation: 0,
                   backgroundColor: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,

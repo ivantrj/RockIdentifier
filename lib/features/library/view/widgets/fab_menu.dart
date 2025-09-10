@@ -10,6 +10,7 @@ class FabMenu extends StatelessWidget {
   final VoidCallback onOpen;
   final VoidCallback onClose;
   final Function(ImageSource) onImagePicked;
+  final VoidCallback? onCustomCamera;
 
   const FabMenu({
     super.key,
@@ -18,6 +19,7 @@ class FabMenu extends StatelessWidget {
     required this.onOpen,
     required this.onClose,
     required this.onImagePicked,
+    this.onCustomCamera,
   });
 
   @override
@@ -44,6 +46,7 @@ class FabMenu extends StatelessWidget {
             child: _AnimatedFabMenuItems(
               onImagePicked: onImagePicked,
               onClose: onClose,
+              onCustomCamera: onCustomCamera,
             ),
           ),
         ],
@@ -128,7 +131,12 @@ class _CloseFabButton extends StatelessWidget {
 class _AnimatedFabMenuItems extends StatefulWidget {
   final Function(ImageSource) onImagePicked;
   final VoidCallback onClose;
-  const _AnimatedFabMenuItems({required this.onImagePicked, required this.onClose});
+  final VoidCallback? onCustomCamera;
+  const _AnimatedFabMenuItems({
+    required this.onImagePicked,
+    required this.onClose,
+    this.onCustomCamera,
+  });
 
   @override
   State<_AnimatedFabMenuItems> createState() => _AnimatedFabMenuItemsState();
@@ -166,7 +174,11 @@ class _AnimatedFabMenuItemsState extends State<_AnimatedFabMenuItems> with Ticke
             onTap: () async {
               await HapticService.instance.vibrate();
               widget.onClose();
-              widget.onImagePicked(ImageSource.camera);
+              if (widget.onCustomCamera != null) {
+                widget.onCustomCamera!();
+              } else {
+                widget.onImagePicked(ImageSource.camera);
+              }
             },
           ),
         ),

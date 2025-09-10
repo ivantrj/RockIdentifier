@@ -97,6 +97,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
         ],
       ),
       child: FloatingActionButton(
+        heroTag: null, // Disable hero animation to avoid conflicts
         elevation: 0,
         highlightElevation: 0,
         backgroundColor: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,

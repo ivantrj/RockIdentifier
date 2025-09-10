@@ -196,6 +196,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
       ),
       floatingActionButton: !_fabMenuOpen
           ? FloatingActionButton(
+              heroTag: null, // Disable hero animation to avoid conflicts
               onPressed: _isProcessing ? null : _openFabMenu,
               child: _isProcessing
                   ? const SizedBox(
