@@ -27,15 +27,25 @@ class FabMenu extends StatelessWidget {
         children: [
           // Backdrop with blur
           Positioned.fill(
-              child: GestureDetector(
-            onTap: onClose,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Container(
-                color: Colors.black.withValues(alpha: 0.18),
+            child: GestureDetector(
+              onTap: onClose,
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.18),
+                ),
               ),
             ),
-          )),
+          ),
+          // FAB menu
+          Positioned(
+            right: 24,
+            bottom: 100,
+            child: _AnimatedFabMenuItems(
+              onImagePicked: onImagePicked,
+              onClose: onClose,
+            ),
+          ),
         ],
       );
     }

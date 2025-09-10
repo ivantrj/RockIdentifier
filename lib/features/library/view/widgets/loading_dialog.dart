@@ -12,22 +12,22 @@ class LoadingDialog extends StatefulWidget {
 
 class _LoadingDialogState extends State<LoadingDialog> {
   static final List<String> _funTexts = [
-    'Scanning Snake surface...',
-    'Analyzing mint marks...',
-    'Checking for die cracks...',
-    'Consulting numismatic databases...',
-    'Measuring diameter and weight...',
-    'Comparing against catalogs...',
+    'Scanning snake scales...',
+    'Analyzing scale patterns...',
+    'Checking for distinctive markings...',
+    'Consulting herpetological databases...',
+    'Measuring length and weight...',
+    'Comparing against species catalogs...',
     'Identifying key features...',
-    'Analyzing metal composition...',
-    'Verifying authenticity...',
-    'Cross-referencing dates...',
-    'Matching edge lettering...',
-    'Evaluating strike quality...',
-    'Researching provenance...',
-    'Identifying engraver marks...',
-    'Analyzing design elements...',
-    'Checking overall condition...'
+    'Analyzing color patterns...',
+    'Verifying species authenticity...',
+    'Cross-referencing geographic ranges...',
+    'Matching head shape characteristics...',
+    'Evaluating venomous status...',
+    'Researching habitat preferences...',
+    'Identifying behavioral patterns...',
+    'Analyzing physical characteristics...',
+    'Checking conservation status...'
   ];
 
   late String _currentText;
