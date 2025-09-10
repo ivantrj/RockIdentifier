@@ -22,6 +22,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
   int _selectedTabIndex = 0;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  final Map<String, bool> _expandedCards = {
+    'Identification': false,
+    'Physical Characteristics': false,
+    'Habitat & Distribution': false,
+    'Additional Information': false,
+  };
 
   @override
   void initState() {
@@ -169,7 +175,6 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
 
   Widget _buildModernSliverAppBar(BuildContext context) {
     final theme = Theme.of(context);
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return SliverAppBar(
       expandedHeight: 340,
@@ -193,9 +198,19 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
             fontWeight: FontWeight.bold,
             shadows: [
               Shadow(
-                offset: const Offset(0, 2),
+                offset: const Offset(0, 3),
+                blurRadius: 8,
+                color: Colors.black.withOpacity(0.9),
+              ),
+              Shadow(
+                offset: const Offset(0, 1),
                 blurRadius: 4,
-                color: Colors.black.withOpacity(0.8),
+                color: Colors.black.withOpacity(0.7),
+              ),
+              Shadow(
+                offset: const Offset(0, -1),
+                blurRadius: 2,
+                color: Colors.black.withOpacity(0.5),
               ),
             ],
           ),
@@ -656,6 +671,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
   ) {
     final theme = Theme.of(context);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final isExpanded = _expandedCards[title] ?? false;
 
     return Container(
       decoration: BoxDecoration(
@@ -672,83 +688,110 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header with icon and title
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: isDarkMode ? AppTheme.forestGreen.withOpacity(0.1) : AppTheme.emeraldGreen.withOpacity(0.05),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              ),
+          // Header with icon and title - now clickable
+          InkWell(
+            onTap: () {
+              HapticService.instance.vibrate();
+              setState(() {
+                _expandedCards[title] = !isExpanded;
+              });
+            },
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
             ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: isDarkMode ? AppTheme.forestGreen.withOpacity(0.2) : AppTheme.emeraldGreen.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    icon,
-                    size: 24,
-                    color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
-                  ),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: isDarkMode ? AppTheme.forestGreen.withOpacity(0.1) : AppTheme.emeraldGreen.withOpacity(0.05),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: isDarkMode ? Colors.white : Colors.black87,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color:
+                          isDarkMode ? AppTheme.forestGreen.withOpacity(0.2) : AppTheme.emeraldGreen.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      icon,
+                      size: 24,
+                      color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        color: isDarkMode ? Colors.white : Colors.black87,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  AnimatedRotation(
+                    turns: isExpanded ? 0.5 : 0.0,
+                    duration: const Duration(milliseconds: 300),
+                    child: Icon(
+                      HugeIcons.strokeRoundedArrowDown01,
+                      size: 20,
+                      color: isDarkMode ? AppTheme.forestGreen : AppTheme.emeraldGreen,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
 
-          // Content
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: details.entries.map((entry) {
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Text(
-                          entry.key,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                            fontWeight: FontWeight.w500,
+          // Content - animated expand/collapse
+          AnimatedCrossFade(
+            firstChild: const SizedBox.shrink(),
+            secondChild: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: details.entries.map((entry) {
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(
+                            entry.key,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        flex: 3,
-                        child: Text(
-                          entry.value,
-                          style: theme.textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: isDarkMode ? Colors.white : Colors.black87,
-                            height: 1.4,
+                        const SizedBox(width: 16),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            entry.value,
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: isDarkMode ? Colors.white : Colors.black87,
+                              height: 1.4,
+                            ),
+                            textAlign: TextAlign.right,
                           ),
-                          textAlign: TextAlign.right,
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
+            crossFadeState: isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            duration: const Duration(milliseconds: 300),
           ),
         ],
       ),
