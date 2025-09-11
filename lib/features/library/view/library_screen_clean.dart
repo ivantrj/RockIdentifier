@@ -129,7 +129,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> {
           Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
           showDialog(
             context: context,
-            builder: (context) => const NotSnakeDialog(),
+            builder: (context) => const NotRockDialog(),
           );
         } else {
           LoggingService.error('Error processing image', error: e, tag: 'LibraryScreen');

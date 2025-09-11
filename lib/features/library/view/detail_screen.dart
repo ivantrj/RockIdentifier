@@ -230,8 +230,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
           fit: StackFit.expand,
           children: [
             Hero(
-              tag: 'snake_image_${widget.item.id}',
-              child: _buildSnakeImage(widget.item.imagePath),
+              tag: 'Rock_image_${widget.item.id}',
+              child: _buildRockImage(widget.item.imagePath),
             ),
             // Gradient overlay for better text readability
             DecoratedBox(
@@ -730,11 +730,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
     );
   }
 
-  // Keep the existing methods for _buildSnakeImage, _getSafetyColor, _getSafetyValue, etc.
-  Widget _buildSnakeImage(String imagePath) {
+  // Keep the existing methods for _buildRockImage, _getSafetyColor, _getSafetyValue, etc.
+  Widget _buildRockImage(String imagePath) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     // Debug logging
-    print('Building Snake image with path: $imagePath');
+    print('Building Rock image with path: $imagePath');
     print('Path type: ${imagePath.startsWith('/') ? 'File' : 'Asset'}');
     // Check if it's a file path (starts with /) or an asset path
     if (imagePath.startsWith('/')) {
@@ -876,13 +876,13 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
       case 'venomous':
       case 'highly venomous':
       case 'extremely venomous':
-        return 'DANGER: This snake is venomous and can be life-threatening. Keep distance and seek immediate medical attention if bitten.';
+        return 'DANGER: This Rock is venomous and can be life-threatening. Keep distance and seek immediate medical attention if bitten.';
       case 'mildly venomous':
       case 'weakly venomous':
-        return 'CAUTION: This snake has mild venom. While not typically life-threatening, medical attention is recommended if bitten.';
+        return 'CAUTION: This Rock has mild venom. While not typically life-threatening, medical attention is recommended if bitten.';
       case 'non-venomous':
       case 'harmless':
-        return 'SAFE: This snake is non-venomous and poses no venom risk to humans.';
+        return 'SAFE: This Rock is non-venomous and poses no venom risk to humans.';
       case 'unknown':
         return 'UNKNOWN: Venom status is unclear. Exercise caution and avoid handling.';
       default:
@@ -946,9 +946,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
     showCupertinoDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
-        title: const Text('Delete Snake'),
-        content: const Text(
-            'Are you sure you want to delete this snake from your collection? This action cannot be undone.'),
+        title: const Text('Delete Rock'),
+        content:
+            const Text('Are you sure you want to delete this Rock from your collection? This action cannot be undone.'),
         actions: [
           CupertinoDialogAction(
             child: const Text('Cancel'),

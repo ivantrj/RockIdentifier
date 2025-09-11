@@ -174,7 +174,7 @@ class _CustomCameraScreenState extends State<CustomCameraScreen> {
       // Save to app directory with a unique name
       final appDir = await getApplicationDocumentsDirectory();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final fileName = 'snake_cropped_$timestamp.jpg';
+      final fileName = 'Rock_cropped_$timestamp.jpg';
       final savedPath = path.join(appDir.path, fileName);
 
       final savedFile = File(savedPath);
@@ -247,7 +247,7 @@ class _CustomCameraScreenState extends State<CustomCameraScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Identify Snake'),
+        title: const Text('Identify Rock'),
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         systemOverlayStyle: SystemUiOverlayStyle.light,
@@ -324,7 +324,7 @@ class _CustomCameraScreenState extends State<CustomCameraScreen> {
                   ),
                   const SizedBox(width: 8),
                   const Text(
-                    'Position the snake within the frame',
+                    'Position the Rock within the frame',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 14,

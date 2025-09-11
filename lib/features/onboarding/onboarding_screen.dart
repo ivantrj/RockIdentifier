@@ -805,7 +805,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               ),
             ),
 
-            // Snake image with enhanced styling
+            // Rock image with enhanced styling
             AnimatedBuilder(
               animation: _photoHandOpacity,
               builder: (context, child) {
@@ -832,7 +832,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       ),
                       child: ClipOval(
                         child: Image.asset(
-                          'assets/images/Snake.jpg', // TODO: Replace with rock image
+                          'assets/images/Rock.jpg', // TODO: Replace with rock image
                           fit: BoxFit.cover,
                         ),
                       ),

@@ -12,7 +12,7 @@ class LoadingDialog extends StatefulWidget {
 
 class _LoadingDialogState extends State<LoadingDialog> {
   static final List<String> _funTexts = [
-    'Scanning snake scales...',
+    'Scanning Rock scales...',
     'Analyzing scale patterns...',
     'Checking for distinctive markings...',
     'Consulting herpetological databases...',

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-class NotSnakeDialog extends StatefulWidget {
-  const NotSnakeDialog({super.key});
+class NotRockDialog extends StatefulWidget {
+  const NotRockDialog({super.key});
 
   @override
-  State<NotSnakeDialog> createState() => _NotSnakeDialogState();
+  State<NotRockDialog> createState() => _NotRockDialogState();
 }
 
-class _NotSnakeDialogState extends State<NotSnakeDialog> with SingleTickerProviderStateMixin {
+class _NotRockDialogState extends State<NotRockDialog> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _shakeAnim;
 
@@ -68,7 +68,7 @@ class _NotSnakeDialogState extends State<NotSnakeDialog> with SingleTickerProvid
             const SizedBox(width: 12),
             const Expanded(
               child: Text(
-                'No Snake Detected',
+                'No Rock Detected',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -82,17 +82,17 @@ class _NotSnakeDialogState extends State<NotSnakeDialog> with SingleTickerProvid
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'The AI couldn\'t identify a snake in this image. This could be because:',
+              'The AI couldn\'t identify a Rock in this image. This could be because:',
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 12),
-            _buildTip('The image doesn\'t contain a snake'),
+            _buildTip('The image doesn\'t contain a Rock'),
             _buildTip('The image is too blurry or poorly lit'),
-            _buildTip('The snake is not clearly visible or identifiable'),
+            _buildTip('The Rock is not clearly visible or identifiable'),
             _buildTip('The image may be of a different reptile or animal'),
             const SizedBox(height: 12),
             const Text(
-              'Try taking a clearer photo of the snake from multiple angles with good lighting.',
+              'Try taking a clearer photo of the Rock from multiple angles with good lighting.',
               style: TextStyle(
                 fontSize: 14,
                 fontStyle: FontStyle.italic,

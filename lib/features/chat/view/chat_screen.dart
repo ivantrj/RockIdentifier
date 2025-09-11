@@ -51,7 +51,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   void _addWelcomeMessage() {
     _messages.add(ChatMessage(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
-      message: "Ask me anything about this snake",
+      message: "Ask me anything about this Rock",
       isUser: false,
       timestamp: DateTime.now(),
     ));
@@ -135,8 +135,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           opacity: _fadeAnimation,
           child: Column(
             children: [
-              // Snake info card at the top
-              _buildSnakeInfoCard(context),
+              // Rock info card at the top
+              _buildRockInfoCard(context),
 
               // Messages list
               Expanded(
@@ -206,7 +206,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSnakeInfoCard(BuildContext context) {
+  Widget _buildRockInfoCard(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
@@ -226,7 +226,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       ),
       child: Row(
         children: [
-          // Snake image
+          // Rock image
           Container(
             width: 60,
             height: 60,
@@ -261,7 +261,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             ),
           ),
           const SizedBox(width: 16),
-          // Snake info
+          // Rock info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -316,7 +316,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 fontSize: 16,
               ),
               decoration: InputDecoration(
-                hintText: 'Ask about this Snake...',
+                hintText: 'Ask about this Rock...',
                 hintStyle: TextStyle(
                   color: isDarkMode ? Colors.white54 : Colors.black38,
                 ),

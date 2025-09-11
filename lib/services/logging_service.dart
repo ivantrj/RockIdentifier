@@ -1,7 +1,7 @@
 import 'package:fimber/fimber.dart';
 
 class LoggingService {
-  static const String _tag = 'SnakeID';
+  static const String _tag = 'RockID';
 
   // Debug logging
   static void debug(String message, {String? tag}) {

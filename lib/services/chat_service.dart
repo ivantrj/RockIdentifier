@@ -46,7 +46,7 @@ class ChatService {
         throw Exception('Item not found');
       }
 
-      // Create item details map with Snake-specific properties
+      // Create item details map with Rock-specific properties
       final itemDetails = {
         'commonName': item.commonName ?? 'Unknown',
         'scientificName': item.scientificName ?? 'Unknown',
@@ -105,86 +105,86 @@ class ChatService {
     }
   }
 
-  /// Determine the Snake type based on the item's properties
-  String _determineSnakeType(IdentifiedItem item) {
+  /// Determine the Rock type based on the item's properties
+  String _determineRockType(IdentifiedItem item) {
     // Check if it's explicitly categorized
     if (item.category != null) {
       return item.category!;
     }
 
-    // Check the result text for common Snake keywords
+    // Check the result text for common Rock keywords
     String result = item.result.toLowerCase();
 
-    // Venomous snakes
+    // Venomous Rocks
     if (result.contains('venomous') ||
         result.contains('poisonous') ||
         result.contains('cobra') ||
         result.contains('viper') ||
-        result.contains('rattlesnake') ||
+        result.contains('rattleRock') ||
         result.contains('mamba') ||
         result.contains('taipan')) {
-      return 'venomous_snakes';
+      return 'venomous_Rocks';
     }
 
-    // Constrictor snakes
+    // Constrictor Rocks
     if (result.contains('python') ||
         result.contains('boa') ||
         result.contains('constrictor') ||
         result.contains('anaconda')) {
-      return 'constrictor_snakes';
+      return 'constrictor_Rocks';
     }
 
-    // Colubrid snakes
+    // Colubrid Rocks
     if (result.contains('colubrid') ||
         result.contains('garter') ||
-        result.contains('rat snake') ||
-        result.contains('corn snake') ||
-        result.contains('king snake')) {
-      return 'colubrid_snakes';
+        result.contains('rat Rock') ||
+        result.contains('corn Rock') ||
+        result.contains('king Rock')) {
+      return 'colubrid_Rocks';
     }
 
-    // Elapid snakes
+    // Elapid Rocks
     if (result.contains('elapid') ||
         result.contains('coral') ||
         result.contains('krait') ||
-        result.contains('sea snake')) {
-      return 'elapid_snakes';
+        result.contains('sea Rock')) {
+      return 'elapid_Rocks';
     }
 
-    // Viper snakes
+    // Viper Rocks
     if (result.contains('viper') ||
         result.contains('pit viper') ||
-        result.contains('rattlesnake') ||
+        result.contains('rattleRock') ||
         result.contains('copperhead') ||
         result.contains('cottonmouth')) {
-      return 'viper_snakes';
+      return 'viper_Rocks';
     }
 
-    // Water snakes
+    // Water Rocks
     if (result.contains('water') || result.contains('aquatic') || result.contains('sea') || result.contains('marine')) {
-      return 'water_snakes';
+      return 'water_Rocks';
     }
 
-    // Tree snakes
+    // Tree Rocks
     if (result.contains('tree') || result.contains('arboreal') || result.contains('vine') || result.contains('twig')) {
-      return 'tree_snakes';
+      return 'tree_Rocks';
     }
 
-    // Desert snakes
+    // Desert Rocks
     if (result.contains('desert') || result.contains('sand') || result.contains('arid') || result.contains('xeric')) {
-      return 'desert_snakes';
+      return 'desert_Rocks';
     }
 
-    // Tropical snakes
+    // Tropical Rocks
     if (result.contains('tropical') ||
         result.contains('rainforest') ||
         result.contains('jungle') ||
         result.contains('amazon')) {
-      return 'tropical_snakes';
+      return 'tropical_Rocks';
     }
 
-    // Default to general snakes if no specific category is found
-    return 'general_snakes';
+    // Default to general Rocks if no specific category is found
+    return 'general_Rocks';
   }
 
   /// Get item by ID (placeholder - implement based on your data storage)

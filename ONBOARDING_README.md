@@ -1,4 +1,4 @@
-# Snake Identifier Onboarding Screen
+# Rock Identifier Onboarding Screen
 
 This document describes the new onboarding screen implementation that recreates the SwiftUI design in Flutter.
 
@@ -18,15 +18,15 @@ This document describes the new onboarding screen implementation that recreates 
 - Trust indicator: "Trusted by herpetologists worldwide"
 
 #### Step 2: Photo Identification
-- Photo-taking demonstration with snake image
+- Photo-taking demonstration with Rock image
 - Hand animation showing touch interaction
 - Flash effect and identification result
-- Trust indicator: "Millions of snakes identified"
+- Trust indicator: "Millions of Rocks identified"
 
 #### Step 3: AI Power
 - Binary code animation scrolling horizontally
 - AI icon overlay
-- Trust indicator: "Trained on extensive snake database"
+- Trust indicator: "Trained on extensive Rock database"
 
 ### ✨ Animations
 - **Testimonial**: Scale, rotation, and blur effects
@@ -43,7 +43,7 @@ This document describes the new onboarding screen implementation that recreates 
 - Text: `Colors.white` with alpha variations
 
 ### Images
-- **Snake Image**: Uses `assets/images/snake.jpg`
+- **Rock Image**: Uses `assets/images/Rock.jpg`
 - **Header/Footer**: Currently uses gradient overlays with icons
 - **Avatar**: Placeholder person icon (can be replaced with actual user images)
 

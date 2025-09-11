@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
-import 'package:rock_id/core/widgets/snake_card.dart';
-import 'package:rock_id/core/widgets/snake_card_placeholder.dart';
+import 'package:rock_id/core/widgets/rock_card.dart';
+import 'package:rock_id/core/widgets/rock_card_placeholder.dart';
 import 'package:rock_id/features/library/view/widgets/not_antique_dialog.dart';
 import 'package:rock_id/features/paywall/paywall_screen.dart';
 import 'package:flutter/material.dart';
@@ -213,7 +213,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
           showDialog(
             context: context,
             barrierDismissible: true,
-            builder: (context) => const NotSnakeDialog(),
+            builder: (context) => const NotRockDialog(),
           );
         } else {
           LoggingService.error('Error processing image', error: e, tag: 'LibraryScreen');
@@ -475,7 +475,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
         itemCount: 6,
-        itemBuilder: (context, index) => const SnakeCardPlaceholder(),
+        itemBuilder: (context, index) => const RockCardPlaceholder(),
       );
     }
 
@@ -492,7 +492,7 @@ class _LibraryScreenBodyState extends State<_LibraryScreenBody> with TickerProvi
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
-        return SnakeCard(
+        return RockCard(
           item: item,
           onTap: () => _onOpenDetail(item),
         );
@@ -563,7 +563,7 @@ class _ModernEmptyStateState extends State<_ModernEmptyState> with TickerProvide
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Animated floating Snake icon
+            // Animated floating Rock icon
             AnimatedBuilder(
               animation: _floatAnimation,
               builder: (context, child) {

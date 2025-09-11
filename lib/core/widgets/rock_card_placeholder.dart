@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:rock_id/core/theme/app_theme.dart';
 
-class SnakeCardPlaceholder extends StatelessWidget {
-  const SnakeCardPlaceholder({super.key});
+class RockCardPlaceholder extends StatelessWidget {
+  const RockCardPlaceholder({super.key});
 
   @override
   Widget build(BuildContext context) {

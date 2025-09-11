@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:rock_id/core/theme/app_theme.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-class SnakeCard extends StatelessWidget {
+class RockCard extends StatelessWidget {
   final IdentifiedItem item;
   final VoidCallback? onTap;
 
-  const SnakeCard({super.key, required this.item, this.onTap});
+  const RockCard({super.key, required this.item, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class SnakeCard extends StatelessWidget {
           children: [
             // Hero image with venom status overlay
             Hero(
-              tag: 'snake_image_${item.id}',
+              tag: 'Rock_image_${item.id}',
               child: AspectRatio(
                 aspectRatio: 1.0,
                 child: Stack(
@@ -107,7 +107,7 @@ class SnakeCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Snake details with improved typography
+            // Rock details with improved typography
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
