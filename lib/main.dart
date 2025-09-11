@@ -45,7 +45,7 @@ class RevenueCatService {
       LoggingService.debug('RevenueCat log level set to debug', tag: 'RevenueCatService');
 
       // Configure RevenueCat
-      await Purchases.configure(PurchasesConfiguration('appl_NLKoYelGSugaNoOdDIZKSUaHRvC'));
+      await Purchases.configure(PurchasesConfiguration('appl_QmdHhPmyZooCHYYEyTfhOCuQvQe'));
       LoggingService.debug('RevenueCat configured successfully', tag: 'RevenueCatService');
 
       // Test connection by getting customer info

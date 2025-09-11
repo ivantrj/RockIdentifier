@@ -311,6 +311,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
           _buildModernAuthenticityCard(context),
           const SizedBox(height: 16),
 
+          // Value Card - Show prominently if available
+          if (widget.item.marketValue != null || widget.item.economicValue != null) ...[
+            _buildModernValueCard(context),
+            const SizedBox(height: 16),
+          ],
+
           // Value & Quality Card
           _buildModernInfoCard(
             context,
@@ -390,6 +396,150 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
             const SizedBox(height: 16),
             _buildModernWikiButton(context, widget.item.details['wikiLink']!),
           ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModernValueCard(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final marketValue = widget.item.marketValue ?? widget.item.economicValue;
+    final estimatedPrice = widget.item.estimatedPrice;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        color: isDarkMode ? const Color(0xFF1C1C1E) : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDarkMode ? const Color(0xFF38383A) : const Color(0xFFE5E5EA),
+          width: 0.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppTheme.sandstone.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    HugeIcons.strokeRoundedMoney01,
+                    color: AppTheme.sandstone,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'Estimated Value',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: isDarkMode ? Colors.white : Colors.black,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    letterSpacing: -0.2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Value details
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (marketValue != null) ...[
+                  Text(
+                    'Market Value',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    marketValue,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: AppTheme.sandstone,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+                if (estimatedPrice != null && estimatedPrice != marketValue) ...[
+                  Text(
+                    'Price Range',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    estimatedPrice,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: AppTheme.sandstone,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+                if (marketValue == null && estimatedPrice == null) ...[
+                  Text(
+                    'Value information not available',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppTheme.sandstone.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: AppTheme.sandstone.withValues(alpha: 0.2),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        HugeIcons.strokeRoundedInformationCircle,
+                        size: 16,
+                        color: AppTheme.sandstone,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Values are estimates based on market data. Professional appraisal recommended for high-value items.',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                            height: 1.4,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -475,13 +625,66 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
           // Authenticity details
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-            child: Text(
-              _getAuthenticityExplanation(authenticity),
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                height: 1.5,
-                fontSize: 15,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _getAuthenticityExplanation(authenticity),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                    height: 1.5,
+                    fontSize: 15,
+                  ),
+                ),
+
+                // Additional guidance for unknown authenticity
+                if (authenticity.toLowerCase() == 'unknown' || authenticity.toLowerCase() == 'uncertain') ...[
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.amber.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.amber.withValues(alpha: 0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              HugeIcons.strokeRoundedBulb,
+                              size: 16,
+                              color: Colors.amber.shade700,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Tips to verify authenticity:',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: Colors.amber.shade700,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '• Check for natural inclusions and imperfections\n• Test specific gravity with proper equipment\n• Consult a professional gemologist\n• Look for certificates of authenticity',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                            height: 1.4,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
         ],

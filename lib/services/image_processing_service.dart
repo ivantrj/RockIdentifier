@@ -121,6 +121,18 @@ class ImageProcessingService {
       if (aiResult['similarRocks'] != null) 'similarRocks': aiResult['similarRocks'],
       if (aiResult['interestingFacts'] != null) 'interestingFacts': aiResult['interestingFacts'],
       if (aiResult['wikiLink'] != null) 'wikiLink': aiResult['wikiLink'],
+      // Add sample value data for demonstration (in real app this would come from AI)
+      if (aiResult['economicValue'] == null && (aiResult['commonName']?.toLowerCase().contains('quartz') ?? false))
+        'marketValue': '\$5-20 per carat',
+      if (aiResult['economicValue'] == null && (aiResult['commonName']?.toLowerCase().contains('amethyst') ?? false))
+        'marketValue': '\$2-50 per carat',
+      if (aiResult['economicValue'] == null && (aiResult['commonName']?.toLowerCase().contains('diamond') ?? false))
+        'marketValue': '\$1,000-5,000+ per carat',
+      if (aiResult['economicValue'] == null && (aiResult['commonName']?.toLowerCase().contains('emerald') ?? false))
+        'marketValue': '\$500-10,000 per carat',
+
+      // Authenticity - most scanned items will be unknown initially
+      'authenticity': aiResult['authenticity'] ?? 'unknown',
     };
 
     // Generate a unique ID

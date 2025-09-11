@@ -474,7 +474,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'The most accurate way to identify rocks and learn about their geological formations, mineral composition, and historical significance. Used by geologists worldwide.',
+                      'The most accurate way to identify rocks, gems, and crystals. Get authenticity verification, estimated values, and comprehensive geological information. Perfect for collectors, dealers, and geology enthusiasts worldwide.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.w400,
@@ -540,7 +540,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      'Point your camera at any rock and get instant identification with detailed information about mineral composition, geological formation, age, and properties.',
+                      'Point your camera at any rock, gem, or crystal and get instant identification with authenticity verification, estimated market value, mineral composition, and comprehensive geological data.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.white,
                             height: 1.5,
@@ -555,9 +555,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       runSpacing: 8,
                       alignment: WrapAlignment.center,
                       children: [
-                        _buildFeatureChip('Mineral ID', Icons.science_rounded),
+                        _buildFeatureChip('Authenticity', Icons.verified_rounded),
+                        _buildFeatureChip('Value Estimate', Icons.attach_money_rounded),
                         _buildFeatureChip('Properties', Icons.build_rounded),
-                        _buildFeatureChip('Formation', Icons.terrain_rounded),
                       ],
                     ),
                   ],
@@ -635,8 +635,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                       alignment: WrapAlignment.center,
                       children: [
                         _buildFeatureChip('99.8% Accuracy', Icons.verified_rounded),
-                        _buildFeatureChip('Instant Results', Icons.flash_on_rounded),
-                        _buildFeatureChip('Geological Database', Icons.explore_rounded),
+                        _buildFeatureChip('Market Values', Icons.attach_money_rounded),
+                        _buildFeatureChip('Authenticity Check', Icons.verified_user_rounded),
                       ],
                     ),
                   ],
@@ -1147,11 +1147,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   String _getTrustText() {
     switch (_step) {
       case 0:
-        return 'Trusted by geologists worldwide';
+        return 'Trusted by gemologists worldwide';
       case 1:
-        return 'Millions of rocks identified';
+        return 'Authenticity verification included';
       case 2:
-        return 'Trained on extensive geological database';
+        return 'Market value estimates provided';
       default:
         return 'Professional-grade technology';
     }

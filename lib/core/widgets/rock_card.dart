@@ -15,6 +15,7 @@ class RockCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final authenticityStatus = item.authenticity ?? item.details['authenticity'] ?? 'unknown';
+    final valueInfo = item.marketValue ?? item.economicValue ?? item.details['priceRange'];
     final authenticityColor = _getAuthenticityColor(authenticityStatus);
     final authenticityIcon = _getAuthenticityIcon(authenticityStatus);
 
@@ -128,17 +129,21 @@ class RockCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      // Authenticity status text
+                      // Authenticity status text or value info
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: authenticityColor.withValues(alpha: 0.1),
+                          color: (authenticityStatus == 'unknown' && valueInfo != null)
+                              ? AppTheme.sandstone.withValues(alpha: 0.1)
+                              : authenticityColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          _getAuthenticityStatusText(authenticityStatus),
+                          _getStatusDisplayText(authenticityStatus, valueInfo),
                           style: TextStyle(
-                            color: authenticityColor,
+                            color: (authenticityStatus == 'unknown' && valueInfo != null)
+                                ? AppTheme.sandstone
+                                : authenticityColor,
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
                           ),
@@ -239,6 +244,25 @@ class RockCard extends StatelessWidget {
       default:
         return HugeIcons.strokeRoundedQuestion;
     }
+  }
+
+  String _getStatusDisplayText(String? authenticity, String? valueInfo) {
+    // If authenticity is known, show it
+    if (authenticity != null && authenticity.toLowerCase() != 'unknown' && authenticity.toLowerCase() != 'uncertain') {
+      return _getAuthenticityStatusText(authenticity);
+    }
+
+    // If authenticity is unknown but we have value info, show value
+    if (valueInfo != null && valueInfo.isNotEmpty) {
+      // Truncate long value strings for the card
+      if (valueInfo.length > 12) {
+        return valueInfo.substring(0, 10) + '...';
+      }
+      return valueInfo;
+    }
+
+    // Default to authenticity status
+    return _getAuthenticityStatusText(authenticity);
   }
 
   String _getAuthenticityStatusText(String? authenticity) {

@@ -125,6 +125,12 @@ class IdentifiedItem {
   /// Get economic value from details
   String? get economicValue => details['economicValue'] as String?;
 
+  /// Get estimated price range from details
+  String? get estimatedPrice => details['estimatedPrice'] ?? details['priceRange'] as String?;
+
+  /// Get market value from details
+  String? get marketValue => details['marketValue'] ?? economicValue;
+
   /// Get usage information from details
   String? get usageInformation => details['usageInformation'] as String?;
 
