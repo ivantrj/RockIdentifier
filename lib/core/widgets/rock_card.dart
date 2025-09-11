@@ -14,9 +14,9 @@ class RockCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final venomStatus = item.mineralComposition;
-    final venomColor = _getVenomColor(venomStatus);
-    final venomIcon = _getVenomIcon(venomStatus);
+    final authenticityStatus = item.authenticity ?? item.details['authenticity'] ?? 'unknown';
+    final authenticityColor = _getAuthenticityColor(authenticityStatus);
+    final authenticityIcon = _getAuthenticityIcon(authenticityStatus);
 
     return GestureDetector(
       onTap: onTap,
@@ -26,7 +26,7 @@ class RockCard extends StatelessWidget {
           color: isDarkMode ? AppTheme.darkStone : Colors.white,
           boxShadow: [
             BoxShadow(
-              color: venomColor.withValues(alpha: isDarkMode ? 0.15 : 0.1),
+              color: authenticityColor.withValues(alpha: isDarkMode ? 0.15 : 0.1),
               blurRadius: 12,
               offset: const Offset(0, 4),
               spreadRadius: 0,
@@ -39,14 +39,14 @@ class RockCard extends StatelessWidget {
             ),
           ],
           border: Border.all(
-            color: venomColor.withValues(alpha: 0.2),
+            color: authenticityColor.withValues(alpha: 0.2),
             width: 1,
           ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Hero image with venom status overlay
+            // Hero image with authenticity status overlay
             Hero(
               tag: 'Rock_image_${item.id}',
               child: AspectRatio(
@@ -61,7 +61,7 @@ class RockCard extends StatelessWidget {
                       ),
                       child: _buildImage(),
                     ),
-                    // Venom status indicator
+                    // Authenticity status indicator
                     Positioned(
                       top: 12,
                       right: 12,
@@ -71,13 +71,13 @@ class RockCard extends StatelessWidget {
                           color: Colors.black.withValues(alpha: 0.7),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: venomColor.withValues(alpha: 0.8),
+                            color: authenticityColor.withValues(alpha: 0.8),
                             width: 1.5,
                           ),
                         ),
                         child: Icon(
-                          venomIcon,
-                          color: venomColor,
+                          authenticityIcon,
+                          color: authenticityColor,
                           size: 16,
                         ),
                       ),
@@ -128,17 +128,17 @@ class RockCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      // Venom status text
+                      // Authenticity status text
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: venomColor.withValues(alpha: 0.1),
+                          color: authenticityColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          _getVenomStatusText(venomStatus),
+                          _getAuthenticityStatusText(authenticityStatus),
                           style: TextStyle(
-                            color: venomColor,
+                            color: authenticityColor,
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
                           ),
@@ -193,67 +193,75 @@ class RockCard extends StatelessWidget {
     }
   }
 
-  Color _getVenomColor(String? venomStatus) {
-    if (venomStatus == null) return Colors.grey;
-    switch (venomStatus.toLowerCase()) {
-      case 'venomous':
-      case 'highly venomous':
-      case 'extremely venomous':
-        return Colors.red.shade600;
-      case 'mildly venomous':
-      case 'weakly venomous':
-        return Colors.orange.shade600;
-      case 'non-venomous':
-      case 'harmless':
+  Color _getAuthenticityColor(String? authenticity) {
+    if (authenticity == null) return Colors.grey;
+    switch (authenticity.toLowerCase()) {
+      case 'authentic':
+      case 'real':
+      case 'genuine':
+      case 'natural':
         return Colors.green.shade600;
+      case 'synthetic':
+      case 'lab-grown':
+      case 'man-made':
+        return Colors.blue.shade600;
+      case 'fake':
+      case 'imitation':
+      case 'glass':
+        return Colors.red.shade600;
       case 'unknown':
+      case 'uncertain':
         return Colors.amber.shade600;
       default:
         return Colors.grey.shade600;
     }
   }
 
-  IconData _getVenomIcon(String? venomStatus) {
-    if (venomStatus == null) return HugeIcons.strokeRoundedQuestion;
-    switch (venomStatus.toLowerCase()) {
-      case 'venomous':
-      case 'highly venomous':
-      case 'extremely venomous':
-        return HugeIcons.strokeRoundedShieldUser;
-      case 'mildly venomous':
-      case 'weakly venomous':
-        return HugeIcons.strokeRoundedAlertCircle;
-      case 'non-venomous':
-      case 'harmless':
-        return HugeIcons.strokeRoundedShieldUser;
+  IconData _getAuthenticityIcon(String? authenticity) {
+    if (authenticity == null) return HugeIcons.strokeRoundedQuestion;
+    switch (authenticity.toLowerCase()) {
+      case 'authentic':
+      case 'real':
+      case 'genuine':
+      case 'natural':
+        return HugeIcons.strokeRoundedShield01;
+      case 'synthetic':
+      case 'lab-grown':
+      case 'man-made':
+        return HugeIcons.strokeRoundedSettings01;
+      case 'fake':
+      case 'imitation':
+      case 'glass':
+        return HugeIcons.strokeRoundedAlert02;
       case 'unknown':
+      case 'uncertain':
         return HugeIcons.strokeRoundedQuestion;
       default:
         return HugeIcons.strokeRoundedQuestion;
     }
   }
 
-  String _getVenomStatusText(String? venomStatus) {
-    if (venomStatus == null) return 'Unknown';
-    switch (venomStatus.toLowerCase()) {
-      case 'venomous':
-        return 'Venomous';
-      case 'highly venomous':
-        return 'High Risk';
-      case 'extremely venomous':
-        return 'Extreme';
-      case 'mildly venomous':
-        return 'Mild';
-      case 'weakly venomous':
-        return 'Weak';
-      case 'non-venomous':
-        return 'Safe';
-      case 'harmless':
-        return 'Safe';
+  String _getAuthenticityStatusText(String? authenticity) {
+    if (authenticity == null) return 'Unknown';
+    switch (authenticity.toLowerCase()) {
+      case 'authentic':
+      case 'real':
+      case 'genuine':
+      case 'natural':
+        return 'Authentic';
+      case 'synthetic':
+      case 'lab-grown':
+      case 'man-made':
+        return 'Synthetic';
+      case 'fake':
+      case 'imitation':
+      case 'glass':
+        return 'Fake';
       case 'unknown':
+      case 'uncertain':
         return 'Unknown';
       default:
-        return venomStatus;
+        return authenticity;
     }
   }
 }

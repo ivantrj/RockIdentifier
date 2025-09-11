@@ -137,6 +137,36 @@ class IdentifiedItem {
   /// Get wiki link from details
   String? get wikiLink => details['wikiLink'] as String?;
 
+  /// Get authenticity status from details
+  String? get authenticity => details['authenticity'] ?? details['isReal'] as String?;
+
+  /// Get quality grade from details
+  String? get qualityGrade => details['qualityGrade'] as String?;
+
+  /// Get clarity rating from details
+  String? get clarity => details['clarity'] as String?;
+
+  /// Get cleavage pattern from details
+  String? get cleavage => details['cleavage'] as String?;
+
+  /// Get luster from details
+  String? get luster => details['luster'] as String?;
+
+  /// Get streak color from details
+  String? get streak => details['streak'] as String?;
+
+  /// Get fracture pattern from details
+  String? get fracture => details['fracture'] as String?;
+
+  /// Get specific gravity from details
+  String? get specificGravity => details['specificGravity'] as String?;
+
+  /// Get refractive index from details
+  String? get refractiveIndex => details['refractiveIndex'] as String?;
+
+  /// Get pleochroism from details
+  String? get pleochroism => details['pleochroism'] as String?;
+
   /// Get rarity level from details (alias for economicValue)
   String? get rarityLevel => economicValue;
 
@@ -153,7 +183,6 @@ class IdentifiedItem {
   String? get weight => density; // Rock density
   String? get diameter => hardness; // Rock hardness
   String? get condition => crystalStructure; // Crystal structure
-  String? get authenticity => usageInformation; // Usage information
   String? get rarity => economicValue; // Economic value
   String? get estimatedValue => interestingFacts; // Interesting facts
   String? get historicalContext => formation; // Geological formation

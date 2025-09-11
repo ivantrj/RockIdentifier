@@ -23,10 +23,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   final Map<String, bool> _expandedCards = {
-    'Identification': false,
-    'Physical Characteristics': false,
-    'Habitat & Distribution': false,
-    'Additional Information': false,
+    'Authenticity & Quality': false,
+    'Physical Properties': false,
+    'Origin & Formation': false,
+    'Care & Usage': false,
   };
 
   @override
@@ -307,55 +307,81 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 32),
       child: Column(
         children: [
-          // Safety Card - More prominent and modern
-          _buildModernSafetyCard(context),
+          // Authenticity Card - Most important for gems/rocks
+          _buildModernAuthenticityCard(context),
           const SizedBox(height: 16),
 
-          // Information Cards with better visual hierarchy
+          // Value & Quality Card
           _buildModernInfoCard(
             context,
-            'Identification',
-            HugeIcons.strokeRoundedIdentification,
+            'Value & Quality',
+            HugeIcons.strokeRoundedDiamond,
             {
-              'Common Name': widget.item.commonName ?? widget.item.result,
-              'Scientific Name': widget.item.scientificName ?? widget.item.subtitle,
-              'Family': widget.item.rockType ?? 'N/A',
-              'Genus': widget.item.scientificName ?? 'N/A',
-              'Confidence': '${(widget.item.confidence * 100).toStringAsFixed(0)}%',
+              'Estimated Value': widget.item.economicValue ?? 'N/A',
+              'Quality Grade': widget.item.details['qualityGrade'] ?? 'N/A',
+              'Clarity': widget.item.details['clarity'] ?? 'N/A',
+              'Color Grade': widget.item.colorVariations ?? 'N/A',
+              'Rarity Level': widget.item.rarityLevel ?? 'N/A',
             },
           ),
 
+          // Physical Properties Card
           _buildModernInfoCard(
             context,
-            'Physical Characteristics',
-            HugeIcons.strokeRoundedRuler,
+            'Physical Properties',
+            HugeIcons.strokeRoundedAtom01,
             {
-              'Average Length': widget.item.density ?? 'N/A',
-              'Average Weight': widget.item.hardness ?? 'N/A',
-              'Behavior': widget.item.usageInformation ?? 'N/A',
-              'Diet': widget.item.usageInformation ?? 'N/A',
+              'Hardness (Mohs)': widget.item.hardness ?? 'N/A',
+              'Specific Gravity': widget.item.specificGravity ?? widget.item.density ?? 'N/A',
+              'Crystal Structure': widget.item.crystalStructure ?? 'N/A',
+              'Mineral Composition': widget.item.mineralComposition ?? 'N/A',
+              'Cleavage': widget.item.cleavage ?? 'N/A',
+              'Fracture': widget.item.fracture ?? 'N/A',
+              'Luster': widget.item.luster ?? 'N/A',
+              'Streak': widget.item.streak ?? 'N/A',
             },
           ),
 
+          // Origin & Formation Card
           _buildModernInfoCard(
             context,
-            'Location & Habitat',
+            'Origin & Formation',
             HugeIcons.strokeRoundedGlobal,
             {
-              'Found In': widget.item.geographicLocation ?? 'N/A',
-              'Habitat Type': widget.item.formation ?? 'N/A',
-              'Elevation': widget.item.details['elevationRange'] ?? 'N/A',
+              'Geographic Location': widget.item.geographicLocation ?? 'N/A',
+              'Geological Formation': widget.item.formation ?? 'N/A',
+              'Age': widget.item.age ?? 'N/A',
+              'Mine/Quarry': widget.item.details['mineLocation'] ?? 'N/A',
+              'Country of Origin': widget.item.details['country'] ?? 'N/A',
             },
           ),
 
+          // Optical Properties Card (for gems/crystals)
+          if (widget.item.refractiveIndex != null || widget.item.pleochroism != null) ...[
+            _buildModernInfoCard(
+              context,
+              'Optical Properties',
+              HugeIcons.strokeRoundedView,
+              {
+                'Refractive Index': widget.item.refractiveIndex ?? 'N/A',
+                'Pleochroism': widget.item.pleochroism ?? 'N/A',
+                'Dispersion': widget.item.details['dispersion'] ?? 'N/A',
+                'Fluorescence': widget.item.details['fluorescence'] ?? 'N/A',
+              },
+            ),
+          ],
+
+          // Care & Usage Card
           _buildModernInfoCard(
             context,
-            'Additional Information',
-            HugeIcons.strokeRoundedInformationCircle,
+            'Care & Usage',
+            HugeIcons.strokeRoundedShieldUser,
             {
-              'Safety Information': widget.item.usageInformation ?? 'N/A',
-              'Similar Species': widget.item.similarRocks ?? 'N/A',
-              'Interesting Facts': widget.item.interestingFacts ?? 'N/A',
+              'Care Instructions': widget.item.usageInformation ?? 'N/A',
+              'Storage Recommendations': widget.item.details['storage'] ?? 'N/A',
+              'Cleaning Instructions': widget.item.details['cleaning'] ?? 'N/A',
+              'Common Uses': widget.item.details['uses'] ?? 'N/A',
+              'Similar Rocks': widget.item.similarRocks ?? 'N/A',
             },
           ),
 
@@ -369,10 +395,10 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
     );
   }
 
-  Widget _buildModernSafetyCard(BuildContext context) {
+  Widget _buildModernAuthenticityCard(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final mineralComposition = widget.item.mineralComposition;
+    final authenticity = widget.item.details['authenticity'] ?? widget.item.details['isReal'] ?? 'unknown';
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -398,18 +424,18 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: _getSafetyColor(mineralComposition).withValues(alpha: 0.1),
+                        color: _getAuthenticityColor(authenticity).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
-                        _getSafetyIcon(mineralComposition),
-                        color: _getSafetyColor(mineralComposition),
+                        _getAuthenticityIcon(authenticity),
+                        color: _getAuthenticityColor(authenticity),
                         size: 20,
                       ),
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      'Safety Status',
+                      'Authenticity Status',
                       style: theme.textTheme.titleLarge?.copyWith(
                         color: isDarkMode ? Colors.white : Colors.black,
                         fontWeight: FontWeight.w600,
@@ -421,21 +447,21 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
                 ),
                 const SizedBox(height: 16),
 
-                // Venomous Status
+                // Authenticity Status
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
-                    color: _getSafetyColor(mineralComposition).withValues(alpha: 0.1),
+                    color: _getAuthenticityColor(authenticity).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: _getSafetyColor(mineralComposition).withValues(alpha: 0.3),
+                      color: _getAuthenticityColor(authenticity).withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
                   child: Text(
-                    _getVenomousDisplayText(mineralComposition),
+                    _getAuthenticityDisplayText(authenticity),
                     style: theme.textTheme.titleLarge?.copyWith(
-                      color: _getSafetyColor(mineralComposition),
+                      color: _getAuthenticityColor(authenticity),
                       fontWeight: FontWeight.w700,
                       fontSize: 18,
                       letterSpacing: -0.3,
@@ -446,11 +472,11 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
             ),
           ),
 
-          // Safety details
+          // Authenticity details
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
             child: Text(
-              _getSafetyExplanation(mineralComposition),
+              _getAuthenticityExplanation(authenticity),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
                 height: 1.5,
@@ -463,20 +489,24 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
     );
   }
 
-  IconData _getSafetyIcon(String? mineralComposition) {
-    if (mineralComposition == null) return HugeIcons.strokeRoundedQuestion;
-    switch (mineralComposition.toLowerCase()) {
-      case 'venomous':
-      case 'highly venomous':
-      case 'extremely venomous':
-        return HugeIcons.strokeRoundedShieldUser;
-      case 'mildly venomous':
-      case 'weakly venomous':
-        return HugeIcons.strokeRoundedAlertCircle;
-      case 'non-venomous':
-      case 'harmless':
-        return HugeIcons.strokeRoundedShieldUser;
+  IconData _getAuthenticityIcon(String? authenticity) {
+    if (authenticity == null) return HugeIcons.strokeRoundedQuestion;
+    switch (authenticity.toLowerCase()) {
+      case 'authentic':
+      case 'real':
+      case 'genuine':
+      case 'natural':
+        return HugeIcons.strokeRoundedShield01;
+      case 'synthetic':
+      case 'lab-grown':
+      case 'man-made':
+        return HugeIcons.strokeRoundedSettings01;
+      case 'fake':
+      case 'imitation':
+      case 'glass':
+        return HugeIcons.strokeRoundedAlert02;
       case 'unknown':
+      case 'uncertain':
         return HugeIcons.strokeRoundedQuestion;
       default:
         return HugeIcons.strokeRoundedQuestion;
@@ -850,67 +880,75 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
     }
   }
 
-  Color _getSafetyColor(String? venomousStatus) {
-    if (venomousStatus == null) return Colors.grey;
-    switch (venomousStatus.toLowerCase()) {
-      case 'venomous':
-      case 'highly venomous':
-      case 'extremely venomous':
-        return Colors.red;
-      case 'mildly venomous':
-      case 'weakly venomous':
-        return Colors.orange;
-      case 'non-venomous':
-      case 'harmless':
+  Color _getAuthenticityColor(String? authenticity) {
+    if (authenticity == null) return Colors.grey;
+    switch (authenticity.toLowerCase()) {
+      case 'authentic':
+      case 'real':
+      case 'genuine':
+      case 'natural':
         return Colors.green;
+      case 'synthetic':
+      case 'lab-grown':
+      case 'man-made':
+        return Colors.blue;
+      case 'fake':
+      case 'imitation':
+      case 'glass':
+        return Colors.red;
       case 'unknown':
+      case 'uncertain':
         return Colors.amber;
       default:
         return Colors.grey;
     }
   }
 
-  String _getSafetyExplanation(String? venomousStatus) {
-    if (venomousStatus == null) return 'Safety information not available';
-    switch (venomousStatus.toLowerCase()) {
-      case 'venomous':
-      case 'highly venomous':
-      case 'extremely venomous':
-        return 'DANGER: This Rock is venomous and can be life-threatening. Keep distance and seek immediate medical attention if bitten.';
-      case 'mildly venomous':
-      case 'weakly venomous':
-        return 'CAUTION: This Rock has mild venom. While not typically life-threatening, medical attention is recommended if bitten.';
-      case 'non-venomous':
-      case 'harmless':
-        return 'SAFE: This Rock is non-venomous and poses no venom risk to humans.';
+  String _getAuthenticityExplanation(String? authenticity) {
+    if (authenticity == null) return 'Authenticity information not available';
+    switch (authenticity.toLowerCase()) {
+      case 'authentic':
+      case 'real':
+      case 'genuine':
+      case 'natural':
+        return 'AUTHENTIC: This specimen appears to be a genuine natural rock/gem/crystal. All characteristics match known properties for this type.';
+      case 'synthetic':
+      case 'lab-grown':
+      case 'man-made':
+        return 'SYNTHETIC: This is a man-made or lab-grown specimen. While valuable, it may have different properties than natural specimens.';
+      case 'fake':
+      case 'imitation':
+      case 'glass':
+        return 'IMITATION: This appears to be a fake or imitation specimen (possibly glass or composite material). Not recommended for serious collectors.';
       case 'unknown':
-        return 'UNKNOWN: Venom status is unclear. Exercise caution and avoid handling.';
+      case 'uncertain':
+        return 'UNCERTAIN: Authenticity cannot be determined with available information. Consider professional appraisal.';
       default:
-        return 'Safety information not available.';
+        return 'Authenticity information not available.';
     }
   }
 
-  String _getVenomousDisplayText(String? venomousStatus) {
-    if (venomousStatus == null) return 'Unknown';
-    switch (venomousStatus.toLowerCase()) {
-      case 'venomous':
-        return '⚠️ VENOMOUS';
-      case 'highly venomous':
-        return '🚨 HIGHLY VENOMOUS';
-      case 'extremely venomous':
-        return '☠️ EXTREMELY VENOMOUS';
-      case 'mildly venomous':
-        return '⚡ MILDY VENOMOUS';
-      case 'weakly venomous':
-        return '⚡ WEAKLY VENOMOUS';
-      case 'non-venomous':
-        return '✅ NON-VENOMOUS';
-      case 'harmless':
-        return '✅ HARMLESS';
+  String _getAuthenticityDisplayText(String? authenticity) {
+    if (authenticity == null) return 'Unknown';
+    switch (authenticity.toLowerCase()) {
+      case 'authentic':
+      case 'real':
+      case 'genuine':
+      case 'natural':
+        return '✅ AUTHENTIC';
+      case 'synthetic':
+      case 'lab-grown':
+      case 'man-made':
+        return '🔬 SYNTHETIC';
+      case 'fake':
+      case 'imitation':
+      case 'glass':
+        return '❌ FAKE';
       case 'unknown':
+      case 'uncertain':
         return '❓ UNKNOWN';
       default:
-        return venomousStatus.toUpperCase();
+        return authenticity.toUpperCase();
     }
   }
 
@@ -946,9 +984,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
     showCupertinoDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
-        title: const Text('Delete Rock'),
-        content:
-            const Text('Are you sure you want to delete this Rock from your collection? This action cannot be undone.'),
+        title: const Text('Delete Specimen'),
+        content: const Text(
+            'Are you sure you want to delete this specimen from your collection? This action cannot be undone.'),
         actions: [
           CupertinoDialogAction(
             child: const Text('Cancel'),
