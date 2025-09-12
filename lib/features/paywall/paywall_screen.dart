@@ -271,7 +271,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 18),
-                                  Text('Unlimited Access',
+                                  Text('Rock Identifier Pro',
                                       style: TextStyle(
                                           fontSize: 26,
                                           fontWeight: FontWeight.bold,
@@ -281,10 +281,12 @@ class _PaywallScreenState extends State<PaywallScreen> {
                                     padding: const EdgeInsets.symmetric(horizontal: 32),
                                     child: Column(
                                       children: [
-                                        _featureRow(Icons.camera_alt_rounded, 'Identify unlimited Rocks', sandstone),
-                                        _featureRow(Icons.search_rounded, 'Get detailed species analysis', sandstone),
                                         _featureRow(
-                                            Icons.location_on_rounded, 'Learn habitat & geographic range', sandstone),
+                                            Icons.camera_alt_rounded, 'Identify unlimited rocks & minerals', sandstone),
+                                        _featureRow(
+                                            Icons.search_rounded, 'Get detailed geological analysis', sandstone),
+                                        _featureRow(Icons.location_on_rounded, 'Learn formation & geographic origin',
+                                            sandstone),
                                         _featureRow(Icons.lock_open_rounded, 'Remove usage limits', sandstone),
                                       ],
                                     ),
@@ -409,9 +411,9 @@ class _PaywallScreenState extends State<PaywallScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: Column(
                 children: [
-                  _featureRow(Icons.camera_alt_rounded, 'Unlimited Rock identification', sandstone),
-                  _featureRow(Icons.search_rounded, 'Comprehensive species analysis', sandstone),
-                  _featureRow(Icons.location_on_rounded, 'Detailed habitat & location info', sandstone),
+                  _featureRow(Icons.camera_alt_rounded, 'Unlimited rock & mineral identification', sandstone),
+                  _featureRow(Icons.search_rounded, 'Comprehensive geological analysis', sandstone),
+                  _featureRow(Icons.location_on_rounded, 'Detailed formation & origin info', sandstone),
                   _featureRow(Icons.lock_open_rounded, 'Unrestricted access', sandstone),
                 ],
               ),
@@ -430,7 +432,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
                     textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Start Using Pro'),
+                  child: const Text('Start Using Rock Pro'),
                 ),
               ),
             ),
@@ -569,7 +571,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
             badge: 'BEST VALUE',
             badgeColor: Colors.green,
             onTap: () => setState(() => _selectedPackage = lifetime),
-            customTitle: 'Lifetime Pro',
+            customTitle: 'Lifetime Rock Pro',
             customSubtitle: '${lifetime.storeProduct.priceString} one-time payment',
           ),
         if (yearly != null)
@@ -581,7 +583,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
             badge: 'SAVE 80%',
             badgeColor: Colors.red,
             onTap: () => setState(() => _selectedPackage = yearly),
-            customTitle: 'Yearly Pro',
+            customTitle: 'Yearly Rock Pro',
             customSubtitle: '${yearly.storeProduct.priceString} per year',
           ),
         if (trialWeekly != null)
@@ -593,7 +595,7 @@ class _PaywallScreenState extends State<PaywallScreen> {
             badge: 'FREE',
             badgeColor: sandstone,
             onTap: () => setState(() => _selectedPackage = trialWeekly),
-            customTitle: '3-Day Trial',
+            customTitle: '3-Day Rock Trial',
             customSubtitle: 'then ${trialWeekly.storeProduct.priceString} per week',
           ),
       ],
