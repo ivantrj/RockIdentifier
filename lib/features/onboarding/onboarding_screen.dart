@@ -15,6 +15,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
   int _step = 0;
   int _animatedStep = 0;
   double _onboardingOpacity = 1.0;
+  bool _isFinishing = false;
 
   late AnimationController _testimonialController;
   late AnimationController _photoAnimationController;
@@ -207,8 +208,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
     await HapticService.instance.vibrate();
 
     if (_step == 2) {
-      Future.delayed(const Duration(seconds: 1), () {
-        widget.onFinish();
+      // Show loading state and fade out content
+      setState(() {
+        _isFinishing = true;
+        _onboardingOpacity = 0.0;
+      });
+
+      // Add a small delay for visual feedback, then finish
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) {
+          widget.onFinish();
+        }
       });
     } else {
       setState(() {
@@ -1079,9 +1089,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: _nextStep,
+              onPressed: _isFinishing ? null : _nextStep,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.granite,
+                backgroundColor: _isFinishing ? AppTheme.granite.withValues(alpha: 0.6) : AppTheme.granite,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 18),
                 shape: RoundedRectangleBorder(
@@ -1090,14 +1100,37 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                 elevation: 8,
                 shadowColor: AppTheme.granite.withValues(alpha: 0.4),
               ),
-              child: Text(
-                _step < 2 ? 'Continue' : 'Get Started',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
+              child: _isFinishing
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const Text(
+                          'Getting Started...',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    )
+                  : Text(
+                      _step < 2 ? 'Continue' : 'Get Started',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
             ),
           ),
 
