@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:rock_id/data/models/identified_item.dart';
 import 'package:flutter/material.dart';
 import 'package:rock_id/core/theme/app_theme.dart';
-import 'package:hugeicons/hugeicons.dart';
 
 class RockCard extends StatelessWidget {
   final IdentifiedItem item;
@@ -15,9 +14,7 @@ class RockCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final authenticityStatus = item.authenticity ?? item.details['authenticity'] ?? 'unknown';
-    final valueInfo = item.marketValue ?? item.economicValue ?? item.details['priceRange'];
     final authenticityColor = _getAuthenticityColor(authenticityStatus);
-    final authenticityIcon = _getAuthenticityIcon(authenticityStatus);
 
     return GestureDetector(
       onTap: onTap,
@@ -62,60 +59,42 @@ class RockCard extends StatelessWidget {
                       ),
                       child: _buildImage(),
                     ),
-                    // Authenticity status indicator
-                    Positioned(
-                      top: 12,
-                      right: 12,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.7),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: authenticityColor.withValues(alpha: 0.8),
-                            width: 1.5,
-                          ),
-                        ),
-                        child: Icon(
-                          authenticityIcon,
-                          color: authenticityColor,
-                          size: 16,
-                        ),
-                      ),
-                    ),
-                    // Confidence badge
-                    if (item.confidence > 0)
-                      Positioned(
-                        top: 12,
-                        left: 12,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.7),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            '${(item.confidence * 100).toStringAsFixed(0)}%',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
                   ],
                 ),
               ),
             ),
-            // Rock details with improved typography
-            Padding(
+            // Rock details with fixed height for consistency
+            Container(
+              height: 130, // Fixed height for consistent card sizing
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Main title with authenticity indicator
                   Row(
                     children: [
+                      // Authenticity status circle
+                      Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: authenticityColor,
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 1.5,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: authenticityColor.withValues(alpha: 0.3),
+                              blurRadius: 4,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Rock name
                       Expanded(
                         child: Text(
                           item.result,
@@ -124,43 +103,44 @@ class RockCard extends StatelessWidget {
                             fontSize: 16,
                             color: isDarkMode ? Colors.white : Colors.black87,
                           ),
-                          maxLines: 1,
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      // Authenticity status text or value info
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: (authenticityStatus == 'unknown' && valueInfo != null)
-                              ? AppTheme.sandstone.withValues(alpha: 0.1)
-                              : authenticityColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          _getStatusDisplayText(authenticityStatus, valueInfo),
-                          style: TextStyle(
-                            color: (authenticityStatus == 'unknown' && valueInfo != null)
-                                ? AppTheme.sandstone
-                                : authenticityColor,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                          ),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 6),
+                  // Subtitle - show rock type/classification
                   Text(
-                    item.subtitle,
+                    _getCleanSubtitle(item.subtitle),
                     style: textTheme.bodyMedium?.copyWith(
                       color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
                       fontSize: 13,
                     ),
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  const Spacer(), // Push confidence to bottom
+                  // Only confidence indicator at bottom
+                  if (item.confidence > 0)
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.verified_rounded,
+                          size: 14,
+                          color: authenticityColor,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${(item.confidence * 100).toStringAsFixed(0)}% confidence',
+                          style: TextStyle(
+                            color: authenticityColor,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ),
@@ -222,70 +202,32 @@ class RockCard extends StatelessWidget {
     }
   }
 
-  IconData _getAuthenticityIcon(String? authenticity) {
-    if (authenticity == null) return HugeIcons.strokeRoundedQuestion;
-    switch (authenticity.toLowerCase()) {
-      case 'authentic':
-      case 'real':
-      case 'genuine':
-      case 'natural':
-        return HugeIcons.strokeRoundedShield01;
-      case 'synthetic':
-      case 'lab-grown':
-      case 'man-made':
-        return HugeIcons.strokeRoundedSettings01;
-      case 'fake':
-      case 'imitation':
-      case 'glass':
-        return HugeIcons.strokeRoundedAlert02;
-      case 'unknown':
-      case 'uncertain':
-        return HugeIcons.strokeRoundedQuestion;
-      default:
-        return HugeIcons.strokeRoundedQuestion;
-    }
-  }
-
-  String _getStatusDisplayText(String? authenticity, String? valueInfo) {
-    // If authenticity is known, show it
-    if (authenticity != null && authenticity.toLowerCase() != 'unknown' && authenticity.toLowerCase() != 'uncertain') {
-      return _getAuthenticityStatusText(authenticity);
+  String _getCleanSubtitle(String? subtitle) {
+    if (subtitle == null || subtitle.isEmpty) {
+      return 'Rock classification';
     }
 
-    // If authenticity is unknown but we have value info, show value
-    if (valueInfo != null && valueInfo.isNotEmpty) {
-      // Truncate long value strings for the card
-      if (valueInfo.length > 12) {
-        return valueInfo.substring(0, 10) + '...';
-      }
-      return valueInfo;
+    // Clean up the subtitle to show meaningful information
+    String cleanSubtitle = subtitle.trim();
+
+    // If it's a chemical formula (contains numbers and letters), make it more readable
+    if (RegExp(r'[A-Z][a-z]?\d*').hasMatch(cleanSubtitle) && cleanSubtitle.length < 20) {
+      return 'Mineral composition: $cleanSubtitle';
     }
 
-    // Default to authenticity status
-    return _getAuthenticityStatusText(authenticity);
-  }
-
-  String _getAuthenticityStatusText(String? authenticity) {
-    if (authenticity == null) return 'Unknown';
-    switch (authenticity.toLowerCase()) {
-      case 'authentic':
-      case 'real':
-      case 'genuine':
-      case 'natural':
-        return 'Authentic';
-      case 'synthetic':
-      case 'lab-grown':
-      case 'man-made':
-        return 'Synthetic';
-      case 'fake':
-      case 'imitation':
-      case 'glass':
-        return 'Fake';
-      case 'unknown':
-      case 'uncertain':
-        return 'Unknown';
-      default:
-        return authenticity;
+    // If it's a subgroup or type, make it clearer
+    if (cleanSubtitle.toLowerCase().contains('subgroup') ||
+        cleanSubtitle.toLowerCase().contains('group') ||
+        cleanSubtitle.toLowerCase().contains('type')) {
+      return 'Rock type: $cleanSubtitle';
     }
+
+    // If it's a geological term, add context
+    if (cleanSubtitle.length > 3 && cleanSubtitle.length < 30) {
+      return 'Classification: $cleanSubtitle';
+    }
+
+    // Default fallback
+    return cleanSubtitle;
   }
 }

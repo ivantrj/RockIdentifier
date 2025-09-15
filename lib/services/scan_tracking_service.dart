@@ -3,7 +3,7 @@ import 'package:rock_id/services/logging_service.dart';
 
 class ScanTrackingService {
   static const String _scanCountKey = 'total_scan_count';
-  static const int _freeScansLimit = 1;
+  static const int _freeScansLimit = 999;
 
   /// Get the total number of scans performed by the user
   static Future<int> getTotalScanCount() async {
