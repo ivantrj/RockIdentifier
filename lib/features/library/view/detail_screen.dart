@@ -549,171 +549,165 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> with TickerProvider
     final theme = Theme.of(context);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final authenticity = widget.item.details['authenticity'] ?? widget.item.details['isReal'] ?? 'unknown';
+    final authenticityColor = _getAuthenticityColor(authenticity);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
-        color: isDarkMode ? const Color(0xFF1C1C1E) : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isDarkMode ? const Color(0xFF38383A) : const Color(0xFFE5E5EA),
-          width: 0.5,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            authenticityColor.withValues(alpha: 0.05),
+            authenticityColor.withValues(alpha: 0.02),
+          ],
         ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: authenticityColor.withValues(alpha: 0.15),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: authenticityColor.withValues(alpha: 0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
+          // Header with modern design
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: _getAuthenticityColor(authenticity).withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        _getAuthenticityIcon(authenticity),
-                        color: _getAuthenticityColor(authenticity),
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Authenticity Status',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        color: isDarkMode ? Colors.white : Colors.black,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        letterSpacing: -0.2,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                // Authenticity Status
+                // Status badge with modern styling
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   decoration: BoxDecoration(
-                    color: _getAuthenticityColor(authenticity).withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: _getAuthenticityColor(authenticity).withValues(alpha: 0.3),
-                      width: 1,
-                    ),
+                    color: authenticityColor,
+                    borderRadius: BorderRadius.circular(25),
+                    boxShadow: [
+                      BoxShadow(
+                        color: authenticityColor.withValues(alpha: 0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                  child: Text(
-                    _getAuthenticityDisplayText(authenticity),
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: _getAuthenticityColor(authenticity),
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18,
-                      letterSpacing: -0.3,
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        _getAuthenticityDisplayText(authenticity),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                // Title with better typography
+                Text(
+                  'Authenticity Status',
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    color: isDarkMode ? Colors.white : Colors.black87,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 24,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                // Description with improved styling
+                Text(
+                  _getAuthenticityExplanation(authenticity),
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                    height: 1.6,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
             ),
           ),
 
-          // Authenticity details
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _getAuthenticityExplanation(authenticity),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                    height: 1.5,
-                    fontSize: 15,
-                  ),
+          // Additional guidance for unknown authenticity with modern design
+          if (authenticity.toLowerCase() == 'unknown' || authenticity.toLowerCase() == 'uncertain') ...[
+            Container(
+              margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.amber.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: Colors.amber.withValues(alpha: 0.2),
+                  width: 1,
                 ),
-
-                // Additional guidance for unknown authenticity
-                if (authenticity.toLowerCase() == 'unknown' || authenticity.toLowerCase() == 'uncertain') ...[
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.amber.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: Colors.amber.withValues(alpha: 0.3),
-                        width: 1,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.amber.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          Icons.lightbulb_outline_rounded,
+                          size: 20,
+                          color: Colors.amber.shade700,
+                        ),
                       ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              HugeIcons.strokeRoundedBulb,
-                              size: 16,
-                              color: Colors.amber.shade700,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Tips to verify authenticity:',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: Colors.amber.shade700,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
+                      const SizedBox(width: 12),
+                      Text(
+                        'Verification Tips',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: Colors.amber.shade700,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '• Check for natural inclusions and imperfections\n• Test specific gravity with proper equipment\n• Consult a professional gemologist\n• Look for certificates of authenticity',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
-                            height: 1.4,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    '• Check for natural inclusions and imperfections\n• Test specific gravity with proper equipment\n• Consult a professional gemologist\n• Look for certificates of authenticity',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: isDarkMode ? AppTheme.secondaryTextColor : AppTheme.lightTextSecondary,
+                      height: 1.6,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ],
-              ],
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
-  }
-
-  IconData _getAuthenticityIcon(String? authenticity) {
-    if (authenticity == null) return HugeIcons.strokeRoundedQuestion;
-    switch (authenticity.toLowerCase()) {
-      case 'authentic':
-      case 'real':
-      case 'genuine':
-      case 'natural':
-        return HugeIcons.strokeRoundedShield01;
-      case 'synthetic':
-      case 'lab-grown':
-      case 'man-made':
-        return HugeIcons.strokeRoundedSettings01;
-      case 'fake':
-      case 'imitation':
-      case 'glass':
-        return HugeIcons.strokeRoundedAlert02;
-      case 'unknown':
-      case 'uncertain':
-        return HugeIcons.strokeRoundedQuestion;
-      default:
-        return HugeIcons.strokeRoundedQuestion;
-    }
   }
 
   Widget _buildModernInfoCard(
