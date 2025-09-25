@@ -98,7 +98,8 @@ class _CustomCameraScreenState extends State<CustomCameraScreen> {
       final XFile image = await _cameraController!.takePicture();
 
       // Crop the image to the focus rectangle area
-      final croppedImagePath = await _cropImageToFocusArea(image.path);
+      final screenHeight = MediaQuery.of(context).size.height;
+      final croppedImagePath = await _cropImageToFocusArea(image.path, screenHeight);
 
       if (croppedImagePath != null) {
         LoggingService.userAction('Image captured with custom camera', tag: 'CustomCameraScreen');
@@ -135,7 +136,7 @@ class _CustomCameraScreenState extends State<CustomCameraScreen> {
     }
   }
 
-  Future<String?> _cropImageToFocusArea(String imagePath) async {
+  Future<String?> _cropImageToFocusArea(String imagePath, double screenHeight) async {
     try {
       // Get the image file
       final File imageFile = File(imagePath);
@@ -153,11 +154,14 @@ class _CustomCameraScreenState extends State<CustomCameraScreen> {
       final imageWidth = originalImage.width;
       final imageHeight = originalImage.height;
 
-      // Calculate the crop area (center of the image)
+      // Calculate the crop area (center of the image, adjusted for visual centering)
       final cropWidth = (imageWidth * _focusRectWidth).round();
       final cropHeight = (imageHeight * _focusRectHeight).round();
       final cropX = ((imageWidth - cropWidth) / 2).round();
-      final cropY = ((imageHeight - cropHeight) / 2).round();
+      // Adjust crop Y to match the visual positioning (moved up by 40 pixels on screen)
+      // Convert screen pixels to image pixels proportionally
+      final adjustedPixels = (40 * imageHeight / screenHeight).round();
+      final cropY = ((imageHeight - cropHeight) / 2 - adjustedPixels).round();
 
       // Crop the image
       final img.Image croppedImage = img.copyCrop(
@@ -417,8 +421,11 @@ class FocusOverlayPainter extends CustomPainter {
     // Calculate focus rectangle dimensions
     final focusRectWidth = size.width * this.focusRectWidth;
     final focusRectHeight = size.height * this.focusRectHeight;
+
+    // Center the focus rectangle, but adjust for better visual centering
+    // Move it slightly higher to account for the bottom controls
     final focusRectLeft = (size.width - focusRectWidth) / 2;
-    final focusRectTop = (size.height - focusRectHeight) / 2;
+    final focusRectTop = (size.height - focusRectHeight) / 2 - 80; // Move up by 40 pixels
 
     final focusRect = Rect.fromLTWH(
       focusRectLeft,
