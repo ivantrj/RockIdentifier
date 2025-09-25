@@ -59,13 +59,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
 
   late Animation<double> _testimonialOpacity;
   late Animation<double> _testimonialScale;
-  late Animation<double> _testimonialBlur;
   late Animation<double> _testimonialRotation;
 
   late Animation<double> _photoHandOpacity;
   late Animation<double> _photoFlashOpacity;
   late Animation<double> _photoIdentifiedOpacity;
-  late Animation<double> _photoAllOpacity;
 
   late Animation<double> _aiOpacity;
 
@@ -90,10 +88,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
       CurvedAnimation(parent: _testimonialController, curve: Curves.easeInOut),
     );
 
-    _testimonialBlur = Tween<double>(begin: 20.0, end: 0.0).animate(
-      CurvedAnimation(parent: _testimonialController, curve: Curves.easeInOut),
-    );
-
     _testimonialRotation = Tween<double>(begin: 30.0, end: 0.0).animate(
       CurvedAnimation(parent: _testimonialController, curve: Curves.easeInOut),
     );
@@ -113,10 +107,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
     );
 
     _photoIdentifiedOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _photoAnimationController, curve: Curves.easeInOut),
-    );
-
-    _photoAllOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _photoAnimationController, curve: Curves.easeInOut),
     );
 
