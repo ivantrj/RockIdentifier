@@ -247,7 +247,7 @@ class _CustomCameraScreenState extends State<CustomCameraScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Identify Rock'),
+        title: const Text('Identify Rock', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         systemOverlayStyle: SystemUiOverlayStyle.light,
